@@ -12,7 +12,16 @@
     "vue": "^3.2.37"
   },
   "devDependencies": {
+    "@vicons/antd": "^0.12.0",
     "@vitejs/plugin-vue": "^3.1.0",
-    "vite": "^3.1.0"
+    "axios": "^1.1.3",
+    "naive-ui": "^2.33.5",
+    "nprogress": "^0.2.0",
+    "unplugin-auto-import": "^0.11.4",
+    "unplugin-vue-components": "^0.22.9",
+    "vite": "^3.1.0",
+    "vue-router": "^4.1.6",
+    "vuex": "^4.1.0",
+    "vuex-persist": "^3.1.3"
   }
 }

@@ -1,31 +1,70 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue';
+import AppHeader from './AppHeader.vue';
+import NaiveMessage from './plugins/naiveMessage.vue';
+import config from '../config';
+import { darkTheme, zhCN, dateZhCN } from 'naive-ui';
+import store from './store';
+import router from './router';
+import { useRoute } from 'vue-router';
+
+const open = url => {
+  window.open(url, '_blank');
+};
+const route = useRoute();
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <n-config-provider
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+    :theme="store.state.theme === 'dark' ? darkTheme : null"
+  >
+    <n-global-style />
+
+    <n-message-provider>
+      <NaiveMessage />
+      <n-notification-provider>
+        <n-layout style="min-height: 100vh">
+          <!-- Header -->
+          <n-layout-header bordered>
+            <AppHeader />
+          </n-layout-header>
+
+          <!-- Body -->
+          <n-layout has-sider style="padding: 50px 7%">
+            <RouterView />
+          </n-layout>
+
+          <!-- Footer -->
+          <n-layout-footer style="text-align: center" v-if="config.useFooter">
+            {{ config.name }} Powered By Genuine-oj. &nbsp;
+            <n-button
+              text
+              v-if="config.footer.icp"
+              @click="open('https://beian.miit.gov.cn/')"
+            >
+              {{ config.footer.icp }}
+            </n-button>
+          </n-layout-footer>
+        </n-layout>
+      </n-notification-provider>
+    </n-message-provider>
+  </n-config-provider>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
+.n-layout-header {
+  padding: 15px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.n-layout-footer {
+  width: 100%;
+  height: 45px;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.n-layout {
+  padding-bottom: 45px;
 }
 </style>
