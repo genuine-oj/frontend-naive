@@ -1,98 +1,48 @@
 <script setup>
-import { h, ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { Axios } from '@/plugins/axios';
 import router from '@/router';
-import { NButton, NTime } from 'naive-ui';
+import { judgeStatus, languages } from '@/plugins/consts';
+import SubmissionTable from '@/components/SubmissionTable.vue';
 
-const message = useMessage();
+const languageOptions = [],
+  statusOptions = [];
 
-const columns = [
-  {
-    title: 'ID',
-    key: 'id',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push(`/problem/${row.id}`);
-          },
-        },
-        { default: () => row.id }
-      );
-    },
-  },
-  {
-    title: '分数',
-    key: 'score',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick() {
-            router.push(`/user/${row.id}`);
-          },
-        },
-        { default: () => row.score }
-      );
-    },
-  },
-  {
-    title: '题目',
-    key: 'problem',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick() {
-            router.push(`/problem/${row.problem.id}`);
-          },
-        },
-        { default: () => row.problem.title }
-      );
-    },
-  },
-  {
-    title: '用户',
-    key: 'user',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push(`/user/${row.user.id}`);
-          },
-        },
-        { default: () => row.user.username }
-      );
-    },
-  },
-  {
-    title: '提交时间',
-    key: 'create_time',
-    render(row) {
-      return h(NTime, { time: new Date(row.create_time) });
-    },
-  },
-];
+for (const key in languages) {
+  if (typeof languages[key] === 'string') {
+    languageOptions.push({
+      label: languages.getDisplay(languages[key]),
+      value: languages[key],
+    });
+  }
+}
+for (const key in judgeStatus) {
+  console.log(key, judgeStatus[key]);
+  if (typeof judgeStatus[key] === 'number') {
+    statusOptions.push({
+      label: judgeStatus.getDisplay(judgeStatus[key]),
+      value: judgeStatus[key],
+    });
+  }
+}
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
+  search = ref({
+    user__username: '',
+    problem__id: '',
+    language: null,
+    status: null,
+  }),
   data = ref([]),
   loading = ref(false);
+
 const loadData = () => {
   loading.value = true;
   Axios.get('/submission/', {
     params: {
       limit: pagination.value.pageSize,
       offset: (pagination.value.page - 1) * pagination.value.pageSize,
+      ...search.value,
     },
   })
     .then(res => {
@@ -109,16 +59,38 @@ loadData();
 
 <template>
   <n-layout>
-    <h1>提交记录</h1>
+    <h1>提交列表</h1>
     <n-layout-content>
-      <n-spin :show="loading">
-        <n-data-table
-          remote
-          :columns="columns"
-          :data="data"
-          :bordered="false"
-        />
-      </n-spin>
+      <n-form inline>
+        <n-form-item label="用户名称">
+          <n-input v-model:value="search.user__username" />
+        </n-form-item>
+        <n-form-item label="题目ID">
+          <n-input v-model:value="search.problem__id" />
+        </n-form-item>
+        <n-form-item label="语言">
+          <n-select
+            v-model:value="search.language"
+            :options="languageOptions"
+            clearable
+            style="min-width: 100px"
+          />
+        </n-form-item>
+        <n-form-item label="状态">
+          <n-select
+            v-model:value="search.status"
+            :options="statusOptions"
+            clearable
+            style="min-width: 200px"
+          />
+        </n-form-item>
+        <n-form-item>
+          <n-button type="primary" @click="loadData">搜索</n-button>
+        </n-form-item>
+      </n-form>
+    </n-layout-content>
+    <n-layout-content>
+      <SubmissionTable :data="data" :loading="loading" />
     </n-layout-content>
     <n-layout-content>
       <div style="margin-top: 30px; text-align: center">

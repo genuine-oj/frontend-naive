@@ -6,6 +6,12 @@ import { darkTheme, zhCN, dateZhCN } from 'naive-ui';
 import store from './store';
 import router from './router';
 import { useRoute } from 'vue-router';
+import hljs from 'highlight.js/lib/core';
+import c from 'highlight.js/lib/languages/c';
+import cpp from 'highlight.js/lib/languages/cpp';
+
+hljs.registerLanguage('c', c);
+hljs.registerLanguage('cpp', cpp);
 
 const open = url => {
   window.open(url, '_blank');
@@ -18,6 +24,7 @@ const route = useRoute();
     :locale="zhCN"
     :date-locale="dateZhCN"
     :theme="store.state.theme === 'dark' ? darkTheme : null"
+    :hljs="hljs"
   >
     <n-global-style />
 
@@ -31,7 +38,7 @@ const route = useRoute();
           </n-layout-header>
 
           <!-- Body -->
-          <n-layout has-sider style="padding: 50px 7%">
+          <n-layout has-sider style="padding: 30px 7%">
             <RouterView />
           </n-layout>
 

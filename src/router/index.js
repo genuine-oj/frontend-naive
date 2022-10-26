@@ -32,6 +32,16 @@ const routes = [
       requiredLogin: true,
     },
   },
+  {
+    path: '/submission/:id',
+    name: 'submission_show',
+    component: () => import('@/pages/submission/_id.vue'),
+    meta: {
+      title: '提交详情',
+      cate: 'submission',
+      requiredLogin: true,
+    },
+  },
 ];
 
 const router = createRouter({
