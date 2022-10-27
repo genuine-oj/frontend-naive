@@ -2,12 +2,17 @@
 import { ref } from 'vue';
 import { Axios } from '@/plugins/axios';
 import router from '@/router';
+import store from '@/store';
 import { useRoute } from 'vue-router';
+import { formatTime, formatSize } from '@/plugins/utils';
+import { judgeStatus } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 
 const route = useRoute();
+
 const id = route.params.id,
-  data = ref({});
+  data = ref({}),
+  detail_data = ref({});
 
 const loadData = () => {
   Axios.get(`/submission/${id}/`).then(res => {
@@ -16,39 +21,75 @@ const loadData = () => {
 };
 
 loadData();
+
+const loadDetail = ({ name, expanded }) => {
+  if (!detail_data.value[name]) {
+    detail_data.value[name] = {};
+    Axios.get(`/submission/${id}/test-point/${name}/`).then(res => {
+      detail_data.value[name] = res;
+    });
+  }
+};
 </script>
 
 <template>
-  <n-layout>
-    <h1>提交详情</h1>
-    <n-layout-content>
-      <n-layout-content v-if="data.id">
-        <SubmissionTable :data="[data]" />
-      </n-layout-content>
-      <n-collapse
-        style="margin-top: 20px"
-        :default-expanded-names="['code', 'log', 'test_case']"
-        display-directive="show"
-      >
-        <n-collapse-item title="源代码" name="code">
-          <div style="overflow: auto">
-            <n-code :code="data.source" language="cpp" show-line-numbers />
-          </div>
-        </n-collapse-item>
-        <n-collapse-item title="运行日志" name="log" v-if="data.log">
-          <div style="overflow: auto">
-            <n-code :code="data.log" />
-          </div>
-        </n-collapse-item>
-        <n-collapse-item title="测试点" name="test_case">
-          <n-table :data="data.test_case" :bordered="false">
-            <n-table-column title="测试点" key="test_case" />
-            <n-table-column title="状态" key="status" />
-            <n-table-column title="用时" key="execute_time" />
-            <n-table-column title="内存" key="execute_memory" />
-          </n-table>
+  <h1>提交详情</h1>
+  <n-layout-content v-if="data.id">
+    <SubmissionTable :data="[data]" />
+  </n-layout-content>
+  <n-collapse
+    style="margin-top: 20px; height: 100%"
+    :default-expanded-names="['code', 'log']"
+    display-directive="show"
+  >
+    <n-collapse-item title="源代码" name="code">
+      <n-code :code="data.source" language="cpp" show-line-numbers />
+    </n-collapse-item>
+    <n-collapse-item title="运行日志" name="log" v-if="data.log">
+      <n-code :code="data.log" />
+    </n-collapse-item>
+    <n-collapse-item title="测试点" name="test_point" v-if="data.detail">
+      <n-collapse @item-header-click="loadDetail">
+        <n-collapse-item
+          v-for="(item, index) in data.detail"
+          :key="index"
+          :title="`测试点 #${index + 1}`"
+          :name="index + 1"
+        >
+          <template #header-extra>
+            <n-space>
+              <n-tag
+                style="padding: 0 10px"
+                :color="{
+                  color: judgeStatus.getColorClass(item.status),
+                  borderColor: judgeStatus.getColorClass(item.status),
+                  textColor: store.state.theme === 'dark' ? '#000' : '#FFF',
+                }"
+              >
+                {{ judgeStatus.getDisplay(item.status) }}
+              </n-tag>
+              <span>
+                {{ formatTime(item.statistics.time) }}
+              </span>
+              <span>
+                {{ formatSize(item.statistics.memory) }}
+              </span>
+            </n-space>
+          </template>
+          <n-collapse :default-expanded-names="['in', 'out', 'ans']">
+            <n-collapse-item title="输入" name="in">
+              <n-code :code="detail_data[index + 1].in" />
+            </n-collapse-item>
+            <n-collapse-item title="输出" name="out">
+              <n-code :code="detail_data[index + 1].out" />
+            </n-collapse-item>
+            <n-collapse-item title="预期输出" name="ans">
+              <n-code :code="detail_data[index + 1].ans" />
+            </n-collapse-item>
+          </n-collapse>
         </n-collapse-item>
       </n-collapse>
-    </n-layout-content>
-  </n-layout>
+    </n-collapse-item>
+    <n-collapse-item style="display: none"> </n-collapse-item>
+  </n-collapse>
 </template>

@@ -2,12 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Genuine OJ</title>
+    <style>
+      ::-webkit-scrollbar {
+        width: 7px;
+        height: 0;
+        background-color: none;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: none;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: rgba(140, 140, 140, 0.5);
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app" style="margin-right: calc(100% - 100vw)"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

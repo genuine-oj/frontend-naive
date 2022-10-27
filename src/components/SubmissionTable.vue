@@ -27,7 +27,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick: () => {
-            router.push(`/problem/${row.id}`);
+            router.push(`/problem/${row.id}/`);
           },
         },
         { default: () => row.id }
@@ -43,8 +43,9 @@ const columns = [
         {
           text: true,
           size: 'small',
+          color: judgeStatus.getColorClass(row.status),
           onClick() {
-            router.push(`/submission/${row.id}`);
+            router.push(`/submission/${row.id}/`);
           },
         },
         { default: () => row.score }
@@ -61,7 +62,7 @@ const columns = [
           size: 'small',
           color: judgeStatus.getColorClass(row.status),
           onClick() {
-            router.push(`/submission/${row.id}`);
+            router.push(`/submission/${row.id}/`);
           },
         },
         { default: () => judgeStatus.getDisplay(row.status) }
@@ -78,7 +79,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick() {
-            router.push(`/problem/${row.problem.id}`);
+            router.push(`/problem/${row.problem.id}/`);
           },
         },
         { default: () => row.problem.title }
@@ -95,7 +96,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick: () => {
-            router.push(`/user/${row.user.id}`);
+            router.push(`/user/${row.user.id}/`);
           },
         },
         { default: () => row.user.username }

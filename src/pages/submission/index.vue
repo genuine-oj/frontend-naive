@@ -4,6 +4,9 @@ import { Axios } from '@/plugins/axios';
 import router from '@/router';
 import { judgeStatus, languages } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const languageOptions = [],
   statusOptions = [];
@@ -17,7 +20,6 @@ for (const key in languages) {
   }
 }
 for (const key in judgeStatus) {
-  console.log(key, judgeStatus[key]);
   if (typeof judgeStatus[key] === 'number') {
     statusOptions.push({
       label: judgeStatus.getDisplay(judgeStatus[key]),
@@ -28,10 +30,10 @@ for (const key in judgeStatus) {
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref({
-    user__username: '',
-    problem__id: '',
-    language: null,
-    status: null,
+    user__username: route.query.user__username ?? '',
+    problem__id: route.query.problem__id ?? '',
+    language: route.query.language ?? null,
+    status: route.query.status ?? null,
   }),
   data = ref([]),
   loading = ref(false);

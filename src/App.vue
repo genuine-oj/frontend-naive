@@ -38,9 +38,12 @@ const route = useRoute();
           </n-layout-header>
 
           <!-- Body -->
-          <n-layout has-sider style="padding: 30px 7%">
+          <!-- <n-layout-content has-sider style="padding: 30px 7%">
             <RouterView />
-          </n-layout>
+          </n-layout-content> -->
+          <div style="padding: 30px 7%">
+            <RouterView />
+          </div>
 
           <!-- Footer -->
           <n-layout-footer style="text-align: center" v-if="config.useFooter">

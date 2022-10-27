@@ -14,12 +14,30 @@ const routes = [
     },
   },
   {
-    path: '/user/login',
+    path: '/user/login/',
     name: 'login',
     component: () => import('@/pages/user/login.vue'),
     meta: {
       title: '登录',
       cate: 'login',
+    },
+  },
+  {
+    path: '/problem/',
+    name: 'problem_index',
+    component: () => import('@/pages/problem/index.vue'),
+    meta: {
+      title: '题目',
+      cate: 'problem',
+    },
+  },
+  {
+    path: '/problem/:id/',
+    name: 'problem_detail',
+    component: () => import('@/pages/problem/_id.vue'),
+    meta: {
+      title: '题目详情',
+      requiredLogin: true,
     },
   },
   {
@@ -33,8 +51,8 @@ const routes = [
     },
   },
   {
-    path: '/submission/:id',
-    name: 'submission_show',
+    path: '/submission/:id/',
+    name: 'submission_detail',
     component: () => import('@/pages/submission/_id.vue'),
     meta: {
       title: '提交详情',

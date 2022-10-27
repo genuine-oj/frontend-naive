@@ -22,14 +22,7 @@ Axios.interceptors.request.use(
 );
 
 Axios.interceptors.response.use(
-  response => {
-    response = response.data;
-    if (response.status && response.status !== 'success') {
-      window.$message.error(response.message);
-      return Promise.reject(response);
-    }
-    return response;
-  },
+  response => response.data,
   async error => {
     if (!error.response) {
       window.$message.error(error.message);

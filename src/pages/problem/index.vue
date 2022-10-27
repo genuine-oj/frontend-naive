@@ -1,122 +1,49 @@
 <script setup>
-import { h, ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { Axios } from '@/plugins/axios';
 import router from '@/router';
-import { NButton, NTime } from 'naive-ui';
-import { formatTime, formatSize } from '@/plugins/utils';
+import { judgeStatus, languages } from '@/plugins/consts';
+import ProblemTable from '@/components/ProblemTable.vue';
+import { useRoute } from 'vue-router';
 
-const columns = [
-  {
-    title: 'ID',
-    key: 'id',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push(`/problem/${row.id}`);
-          },
-        },
-        { default: () => row.id }
-      );
-    },
-  },
-  {
-    title: '分数',
-    key: 'score',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick() {
-            router.push(`/user/${row.id}`);
-          },
-        },
-        { default: () => row.score }
-      );
-    },
-  },
-  {
-    title: '题目',
-    key: 'problem',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick() {
-            router.push(`/problem/${row.problem.id}`);
-          },
-        },
-        { default: () => row.problem.title }
-      );
-    },
-  },
-  {
-    title: '用户',
-    key: 'user',
-    render(row) {
-      return h(
-        NButton,
-        {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push(`/user/${row.user.id}`);
-          },
-        },
-        { default: () => row.user.username }
-      );
-    },
-  },
-  {
-    title: '用时',
-    key: 'execute_time',
-    render(row) {
-      return formatTime(row.execute_time);
-    },
-  },
-  {
-    title: '内存',
-    key: 'execute_memory',
-    render(row) {
-      return formatSize(row.execute_memory);
-    },
-  },
-  {
-    title: '语言',
-    key: 'language',
-    render(row) {
-      return row.language;
-    },
-  },
-  {
-    title: '提交时间',
-    key: 'created_at',
-    render(row) {
-      return h(NTime, { value: row.created_at });
-    },
-  },
-];
+const route = useRoute();
+
+const languageOptions = [],
+  statusOptions = [];
+
+for (const key in languages) {
+  if (typeof languages[key] === 'string') {
+    languageOptions.push({
+      label: languages.getDisplay(languages[key]),
+      value: languages[key],
+    });
+  }
+}
+for (const key in judgeStatus) {
+  if (typeof judgeStatus[key] === 'number') {
+    statusOptions.push({
+      label: judgeStatus.getDisplay(judgeStatus[key]),
+      value: judgeStatus[key],
+    });
+  }
+}
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
+  search = ref(''),
   data = ref([]),
   loading = ref(false);
 
 const loadData = () => {
   loading.value = true;
-  Axios.get('/submission/', {
+  Axios.get('/problem/', {
     params: {
       limit: pagination.value.pageSize,
       offset: (pagination.value.page - 1) * pagination.value.pageSize,
+      search: search.value,
     },
   })
     .then(res => {
+      console.log(res);
       pagination.value.count = res.count;
       data.value = res.results;
     })
@@ -130,16 +57,28 @@ loadData();
 
 <template>
   <n-layout>
-    <h1>题目列表</h1>
+    <h1 style="display: inline">题目列表</h1>
     <n-layout-content>
-      <n-spin :show="loading">
-        <n-data-table
-          remote
-          :columns="columns"
-          :data="data"
-          :bordered="false"
-        />
-      </n-spin>
+      <div style="float: left; display: inline-block">
+        <n-form inline>
+          <n-form-item>
+            <n-input v-model:value="search" />
+          </n-form-item>
+          <n-form-item>
+            <n-button type="primary" @click="loadData">搜索</n-button>
+          </n-form-item>
+        </n-form>
+      </div>
+      <n-button
+        style="float: right; margin-top: 25px"
+        type="primary"
+        @click="() => router.push('/problem/create')"
+      >
+        创建题目
+      </n-button>
+    </n-layout-content>
+    <n-layout-content>
+      <ProblemTable :data="data" :loading="loading" />
     </n-layout-content>
     <n-layout-content>
       <div style="margin-top: 30px; text-align: center">
