@@ -5,15 +5,15 @@ import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';
 import MdEditor from '@/components/MdEditor.vue';
-import Submission from '@/pages/submission/index.vue';
+import { languageOptions } from '@/plugins/consts';
 
 const route = useRoute();
 const id = route.params.id,
-  data = ref({});
+  problemData = ref({});
 
 const loadData = () => {
   Axios.get(`/problem/${id}/`).then(res => {
-    data.value = res;
+    problemData.value = res;
   });
 };
 
@@ -29,10 +29,20 @@ const beforeLeave = tabName => {
   }
   return true;
 };
+
+const submitData = ref({ source: '', language: 'cpp' });
+
+const submit = () => {
+  Axios.post('/submission/', { problem_id: id, ...submitData.value }).then(
+    res => {
+      router.push(`/submission/${res.id}/`);
+    }
+  );
+};
 </script>
 
 <template>
-  <h1>#{{ data.id }}&ensp;{{ data.title }}</h1>
+  <h1>#{{ problemData.id }}&ensp;{{ problemData.title }}</h1>
   <n-layout has-sider>
     <n-layout-content>
       <n-tabs
@@ -44,22 +54,22 @@ const beforeLeave = tabName => {
         <n-tab-pane name="description" tab="题目描述">
           <h2>题目描述</h2>
           <n-card class="description">
-            <MdEditor :content="data.description" previewOnly />
+            <MdEditor :content="problemData.description" previewOnly />
           </n-card>
 
           <h2>输入格式</h2>
           <n-card class="description">
-            <MdEditor :content="data.input_format" previewOnly />
+            <MdEditor :content="problemData.input_format" previewOnly />
           </n-card>
 
           <h2>输出格式</h2>
           <n-card class="description">
-            <MdEditor :content="data.output_format" previewOnly />
+            <MdEditor :content="problemData.output_format" previewOnly />
           </n-card>
 
           <h2>样例</h2>
           <div
-            v-for="item in data.samples"
+            v-for="item in problemData.samples"
             :key="item.index"
             style="width: 100%"
           >
@@ -88,10 +98,38 @@ const beforeLeave = tabName => {
             </n-row>
           </div>
         </n-tab-pane>
-        <n-tab-pane name="提交"> </n-tab-pane>
-        <n-tab-pane name="submission" tab="提交记录">
-          <Submission />
+        <n-tab-pane name="submit" tab="提交">
+          <n-row>
+            <n-col :span="16" style="padding: 0 25px">
+              <n-input
+                v-model:value="submitData.source"
+                type="textarea"
+                placeholder="请输入你的代码"
+                :maxlength="200000"
+                :rows="20"
+                :autosize="{ minRows: 20, maxRows: 30 }"
+              />
+            </n-col>
+            <n-col :span="8" style="padding: 0 25px">
+              <n-space vertical :size="30">
+                <n-select
+                  v-model:value="submitData.language"
+                  size="large"
+                  :options="languageOptions"
+                />
+                <n-button
+                  type="primary"
+                  size="large"
+                  style="width: 100%"
+                  @click="submit"
+                >
+                  提交
+                </n-button>
+              </n-space>
+            </n-col>
+          </n-row>
         </n-tab-pane>
+        <n-tab-pane name="submission" tab="提交记录" />
       </n-tabs>
     </n-layout-content>
   </n-layout>

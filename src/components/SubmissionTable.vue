@@ -121,7 +121,7 @@ const columns = [
     title: '语言',
     key: 'language',
     render(row) {
-      return row.language;
+      return languages.getDisplay(row.language);
     },
   },
   {

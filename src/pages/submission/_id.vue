@@ -7,6 +7,7 @@ import { useRoute } from 'vue-router';
 import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
+// import CodeWithCard from '@/components/CodeWithCard.vue';
 
 const route = useRoute();
 
@@ -17,6 +18,9 @@ const id = route.params.id,
 const loadData = () => {
   Axios.get(`/submission/${id}/`).then(res => {
     data.value = res;
+    if (res.status <= -3) {
+      setTimeout(loadData, 1000);
+    }
   });
 };
 
@@ -43,10 +47,27 @@ const loadDetail = ({ name, expanded }) => {
     display-directive="show"
   >
     <n-collapse-item title="源代码" name="code">
-      <n-code :code="data.source" language="cpp" show-line-numbers />
+      <n-card>
+        <n-scrollbar x-scrollable style="margin-bottom: -10px">
+          <div style="padding-bottom: 15px">
+            <n-code
+              v-if="data.language"
+              :code="data.source"
+              :language="data.language"
+              show-line-numbers
+            />
+          </div>
+        </n-scrollbar>
+      </n-card>
     </n-collapse-item>
     <n-collapse-item title="运行日志" name="log" v-if="data.log">
-      <n-code :code="data.log" />
+      <n-card>
+        <n-scrollbar x-scrollable style="margin-bottom: -10px">
+          <div style="padding-bottom: 15px">
+            <n-code :code="data.log" />
+          </div>
+        </n-scrollbar>
+      </n-card>
     </n-collapse-item>
     <n-collapse-item
       title="测试点"
@@ -82,13 +103,42 @@ const loadDetail = ({ name, expanded }) => {
           </template>
           <n-collapse :default-expanded-names="['in', 'out', 'ans']">
             <n-collapse-item title="输入" name="in">
-              <n-code :code="detail_data[index + 1].in" />
+              <n-card>
+                <n-scrollbar x-scrollable style="margin-bottom: -10px">
+                  <div style="padding-bottom: 15px">
+                    <n-code :code="detail_data[item.case_name].in" />
+                  </div>
+                </n-scrollbar>
+              </n-card>
             </n-collapse-item>
-            <n-collapse-item title="输出" name="out">
-              <n-code :code="detail_data[index + 1].out" />
+            <n-collapse-item
+              title="输出"
+              name="out"
+              v-if="data.status !== judgeStatus.ACCEPTED"
+            >
+              <n-card>
+                <n-scrollbar x-scrollable style="margin-bottom: -10px">
+                  <div style="padding-bottom: 15px">
+                    <n-code :code="detail_data[item.case_name].out" />
+                  </div>
+                </n-scrollbar>
+              </n-card>
             </n-collapse-item>
-            <n-collapse-item title="预期输出" name="ans">
-              <n-code :code="detail_data[index + 1].ans" />
+            <n-collapse-item
+              :title="
+                data.status === judgeStatus.ACCEPTED
+                  ? '输出 / 预期输出'
+                  : ' 预期输出'
+              "
+              name="ans"
+            >
+              <n-card>
+                <n-scrollbar x-scrollable style="margin-bottom: -10px">
+                  <div style="padding-bottom: 15px">
+                    <n-code :code="detail_data[item.case_name].ans" />
+                  </div>
+                </n-scrollbar>
+              </n-card>
             </n-collapse-item>
           </n-collapse>
         </n-collapse-item>

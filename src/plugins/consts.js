@@ -37,11 +37,13 @@ const judgeStatusColor = {
 const languages = {
   C: 'c',
   CPP: 'cpp',
+  PYTHON: 'python',
 };
 
 const languagesDisplay = {
   C: 'C',
   CPP: 'C++',
+  PYTHON: 'Python',
 };
 
 const initDisplay = (obj, objDisplay) => {
@@ -65,4 +67,23 @@ initDisplay(languages, languagesDisplay);
 
 initColor(judgeStatus, judgeStatusColor);
 
-export { judgeStatus, languages };
+const languageOptions = [],
+  statusOptions = [];
+for (const key in languages) {
+  if (typeof languages[key] === 'string') {
+    languageOptions.push({
+      label: languages.getDisplay(languages[key]),
+      value: languages[key],
+    });
+  }
+}
+for (const key in judgeStatus) {
+  if (typeof judgeStatus[key] === 'number') {
+    statusOptions.push({
+      label: judgeStatus.getDisplay(judgeStatus[key]),
+      value: judgeStatus[key],
+    });
+  }
+}
+
+export { judgeStatus, languages, languageOptions, statusOptions };
