@@ -38,9 +38,6 @@ const route = useRoute();
           </n-layout-header>
 
           <!-- Body -->
-          <!-- <n-layout-content has-sider style="padding: 30px 7%">
-            <RouterView />
-          </n-layout-content> -->
           <div style="padding: 30px 7%">
             <RouterView />
           </div>

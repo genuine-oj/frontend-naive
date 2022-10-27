@@ -48,7 +48,11 @@ const loadDetail = ({ name, expanded }) => {
     <n-collapse-item title="运行日志" name="log" v-if="data.log">
       <n-code :code="data.log" />
     </n-collapse-item>
-    <n-collapse-item title="测试点" name="test_point" v-if="data.detail">
+    <n-collapse-item
+      title="测试点"
+      name="test_point"
+      v-if="data.detail && data.detail.length"
+    >
       <n-collapse @item-header-click="loadDetail">
         <n-collapse-item
           v-for="(item, index) in data.detail"
@@ -90,6 +94,5 @@ const loadDetail = ({ name, expanded }) => {
         </n-collapse-item>
       </n-collapse>
     </n-collapse-item>
-    <n-collapse-item style="display: none"> </n-collapse-item>
   </n-collapse>
 </template>

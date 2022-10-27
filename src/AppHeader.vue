@@ -3,6 +3,7 @@ import store from './store';
 import router from './router';
 import { useRoute } from 'vue-router';
 import { Axios } from '@/plugins/axios';
+import { useThemeVars } from 'naive-ui';
 
 const route = useRoute();
 
@@ -51,7 +52,7 @@ const logout = () => {
         size="large"
         :tertiary="route.meta.cate === 'login'"
         :quaternary="route.meta.cate !== 'login'"
-        @click="router.push('/user/login')"
+        @click="router.push('/user/login/')"
       >
         登录
       </n-button>
@@ -59,7 +60,7 @@ const logout = () => {
         size="large"
         :tertiary="route.meta.cate === 'register'"
         :quaternary="route.meta.cate !== 'register'"
-        @click="router.push('/user/register')"
+        @click="router.push('/user/register/')"
       >
         注册
       </n-button>
