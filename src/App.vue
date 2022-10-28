@@ -9,9 +9,11 @@ import { useRoute } from 'vue-router';
 import hljs from 'highlight.js/lib/core';
 import c from 'highlight.js/lib/languages/c';
 import cpp from 'highlight.js/lib/languages/cpp';
+import python from 'highlight.js/lib/languages/python';
 
 hljs.registerLanguage('c', c);
 hljs.registerLanguage('cpp', cpp);
+hljs.registerLanguage('python', python);
 
 const open = url => {
   window.open(url, '_blank');
@@ -44,7 +46,7 @@ const route = useRoute();
 
           <!-- Footer -->
           <n-layout-footer style="text-align: center" v-if="config.useFooter">
-            {{ config.name }} Powered By Genuine-oj. &nbsp;
+            {{ config.name }} Powered By Genuine-OJ. &nbsp;
             <n-button
               text
               v-if="config.footer.icp"

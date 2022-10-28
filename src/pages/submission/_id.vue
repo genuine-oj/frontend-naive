@@ -60,7 +60,7 @@ const loadDetail = ({ name, expanded }) => {
         </n-scrollbar>
       </n-card>
     </n-collapse-item>
-    <n-collapse-item title="运行日志" name="log" v-if="data.log">
+    <n-collapse-item title="日志" name="log" v-if="data.log">
       <n-card>
         <n-scrollbar x-scrollable style="margin-bottom: -10px">
           <div style="padding-bottom: 15px">
