@@ -27,7 +27,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick: () => {
-            router.push(`/problem/${row.id}/`);
+            router.push(`/submission/${row.id}/`);
           },
         },
         { default: () => row.id }

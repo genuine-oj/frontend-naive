@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { Axios } from '@/plugins/axios';
 import router from '@/router';
+import store from '@/store';
 import { judgeStatus, languages } from '@/plugins/consts';
 import ProblemTable from '@/components/ProblemTable.vue';
 import { useRoute } from 'vue-router';
@@ -72,7 +73,8 @@ loadData();
       <n-button
         style="float: right; margin-top: 25px"
         type="primary"
-        @click="() => router.push('/problem/create')"
+        @click="() => router.push('/problem/edit/')"
+        v-if="store.state.user.is_staff"
       >
         创建题目
       </n-button>

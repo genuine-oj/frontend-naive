@@ -41,6 +41,16 @@ const routes = [
     },
   },
   {
+    path: '/problem/edit/',
+    name: 'problem_edit',
+    component: () => import('@/pages/problem/edit.vue'),
+    meta: {
+      title: '创建题目',
+      requiredLogin: true,
+      requiredAdmin: true,
+    },
+  },
+  {
     path: '/submission/',
     name: 'submission_index',
     component: () => import('@/pages/submission/index.vue'),
@@ -60,6 +70,10 @@ const routes = [
       requiredLogin: true,
     },
   },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
+  },
 ];
 
 const router = createRouter({
@@ -76,6 +90,9 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiredLogin && !store.getters.loggedIn) {
     window.$message.warning('请先登录');
     next({ name: 'login', query: { next: to.path } });
+  } else if (to.meta.requiredAdmin && !store.state.user.is_staff) {
+    window.$message.error('该页面需要管理员权限！');
+    NProgress.done();
   } else next();
 });
 

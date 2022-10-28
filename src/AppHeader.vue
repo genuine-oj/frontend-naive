@@ -66,9 +66,14 @@ const logout = () => {
       </n-button>
     </n-space>
     <n-space size="small" v-else>
-      <n-button size="large" quaternary @click="logout">
-        欢迎回来，{{ store.state.user.username }}
-      </n-button>
+      <n-popconfirm @positive-click="logout">
+        <template #trigger>
+          <n-button size="large" quaternary>
+            欢迎回来，{{ store.state.user.username }}
+          </n-button>
+        </template>
+        确认要退出登录吗？
+      </n-popconfirm>
     </n-space>
   </div>
 </template>
