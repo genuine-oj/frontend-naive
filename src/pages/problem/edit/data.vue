@@ -6,6 +6,8 @@ import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 
+console.log(1);
+
 const route = useRoute(),
   message = useMessage();
 const id = route.params.id;

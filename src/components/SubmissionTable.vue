@@ -107,14 +107,18 @@ const columns = [
     title: '用时',
     key: 'execute_time',
     render(row) {
-      return formatTime(row.execute_time);
+      return row.status !== judgeStatus.TIME_LIMIT_EXCEEDED
+        ? formatTime(row.execute_time)
+        : '-';
     },
   },
   {
     title: '内存',
     key: 'execute_memory',
     render(row) {
-      return formatSize(row.execute_memory);
+      return row.status !== judgeStatus.MEMORY_LIMIT_EXCEEDED
+        ? formatSize(row.execute_memory)
+        : '-';
     },
   },
   {

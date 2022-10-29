@@ -30,7 +30,7 @@ const logout = () => {
         size="large"
         :tertiary="route.meta.cate === 'problem'"
         :quaternary="route.meta.cate !== 'problem'"
-        @click="router.push('/problem/')"
+        @click="router.push({ name: 'problem_list' })"
       >
         题库
       </n-button>
@@ -38,7 +38,7 @@ const logout = () => {
         size="large"
         :tertiary="route.meta.cate === 'submission'"
         :quaternary="route.meta.cate !== 'submission'"
-        @click="router.push('/submission/')"
+        @click="router.push({ name: 'submission_list' })"
       >
         提交
       </n-button>

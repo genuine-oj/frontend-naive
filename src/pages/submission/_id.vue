@@ -94,10 +94,10 @@ const loadDetail = ({ name, expanded }) => {
               >
                 {{ judgeStatus.getDisplay(item.status) }}
               </n-tag>
-              <span>
+              <span v-if="item.status !== judgeStatus.TIME_LIMIT_EXCEEDED">
                 {{ formatTime(item.statistics.time) }}
               </span>
-              <span>
+              <span v-if="item.status !== judgeStatus.MEMORY_LIMIT_EXCEEDED">
                 {{ formatSize(item.statistics.memory) }}
               </span>
             </n-space>

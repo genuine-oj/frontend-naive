@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import config from '../../config';
 import store from '@/store';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -24,10 +25,10 @@ const routes = [
   },
   {
     path: '/problem/',
-    name: 'problem_index',
+    name: 'problem_list',
     component: () => import('@/pages/problem/index.vue'),
     meta: {
-      title: '题目',
+      title: '题目列表',
       cate: 'problem',
     },
   },
@@ -36,16 +37,18 @@ const routes = [
     name: 'problem_detail',
     component: () => import('@/pages/problem/_id.vue'),
     meta: {
-      title: '题目详情',
+      title: '题目详情 #{id}',
+      cate: 'problem',
       requiredLogin: true,
     },
   },
   {
-    path: '/problem/edit/',
-    name: 'problem_edit',
+    path: '/problem/create/',
+    name: 'problem_create',
     component: () => import('@/pages/problem/edit.vue'),
     meta: {
-      title: '编辑题目',
+      title: '创建题目',
+      cate: 'problem',
       requiredLogin: true,
       requiredAdmin: true,
     },
@@ -55,27 +58,18 @@ const routes = [
     name: 'problem_edit',
     component: () => import('@/pages/problem/edit.vue'),
     meta: {
-      title: '编辑题目',
-      requiredLogin: true,
-      requiredAdmin: true,
-    },
-  },
-  {
-    path: '/problem/:id/edit-data/',
-    name: 'problem_edit_data',
-    component: () => import('@/pages/problem/edit-data.vue'),
-    meta: {
-      title: '编辑题目数据',
+      title: '编辑题目 #{id}',
+      cate: 'problem',
       requiredLogin: true,
       requiredAdmin: true,
     },
   },
   {
     path: '/submission/',
-    name: 'submission_index',
+    name: 'submission_list',
     component: () => import('@/pages/submission/index.vue'),
     meta: {
-      title: '提交',
+      title: '提交列表',
       cate: 'submission',
       requiredLogin: true,
     },
@@ -85,7 +79,7 @@ const routes = [
     name: 'submission_detail',
     component: () => import('@/pages/submission/_id.vue'),
     meta: {
-      title: '提交详情',
+      title: '提交详情 #{id}',
       cate: 'submission',
       requiredLogin: true,
     },
@@ -116,7 +110,15 @@ router.beforeEach((to, from, next) => {
   } else next();
 });
 
-router.afterEach(() => {
+router.afterEach(to => {
+  if (to.meta.title) {
+    const title = to.meta.title.replace(/\{(.+?)\}/g, (match, p1) => {
+      return to.params[p1];
+    });
+    document.title = `${title} - ${config.title}`;
+  } else {
+    document.title = config.title;
+  }
   NProgress.done();
 });
 

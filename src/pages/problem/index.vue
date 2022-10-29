@@ -74,7 +74,7 @@ loadData();
       <n-button
         style="float: right; margin-top: 25px"
         type="primary"
-        @click="() => router.push('/problem/edit/')"
+        @click="() => router.push({ name: 'problem_create' })"
         v-if="store.state.user.is_staff"
       >
         创建题目

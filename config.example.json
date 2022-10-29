@@ -1,4 +1,8 @@
 {
   "name": "GENUINE-OJ",
-  "icp": "ICP-XXXXXXXXXX"
+  "title": "GENUINE-OJ",
+  "icp": "ICP-XXXXXXXXXX",
+  "footer": {
+    "icp": "ICP-XXXXXXXXXX"
+  }
 }

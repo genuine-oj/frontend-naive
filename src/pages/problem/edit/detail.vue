@@ -56,7 +56,8 @@ const submit = () => {
   else req = Axios.post('/problem/', problem.value);
   req
     .then(res => {
-      router.push(`/problem/${res.id}/`);
+      if (!id) router.push({ name: 'problem_detail', params: { id: res.id } });
+      else message.success('修改成功');
     })
     .finally(() => {
       submiting.value = false;
@@ -150,7 +151,7 @@ const submit = () => {
             :min="1"
             :max="10000"
           >
-            <template #suffix> MS </template>
+            <template #suffix> ms </template>
           </n-input-number>
         </n-col>
       </n-row>
@@ -164,6 +165,6 @@ const submit = () => {
     :loading="submiting"
     :disabled="submiting"
   >
-    提交
+    保存
   </n-button>
 </template>
