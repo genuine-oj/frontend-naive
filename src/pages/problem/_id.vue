@@ -32,7 +32,7 @@ const beforeLeave = tabName => {
   } else if (tabName === 'edit') {
     router.push({
       name: 'problem_edit',
-      query: { id },
+      params: { id },
     });
     return false;
   }

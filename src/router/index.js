@@ -51,7 +51,17 @@ const routes = [
     },
   },
   {
-    path: '/problem/edit-data/:id/',
+    path: '/problem/:id/edit/',
+    name: 'problem_edit',
+    component: () => import('@/pages/problem/edit.vue'),
+    meta: {
+      title: '编辑题目',
+      requiredLogin: true,
+      requiredAdmin: true,
+    },
+  },
+  {
+    path: '/problem/:id/edit-data/',
     name: 'problem_edit_data',
     component: () => import('@/pages/problem/edit-data.vue'),
     meta: {

@@ -79,8 +79,8 @@ const loadDetail = ({ name, expanded }) => {
         <n-collapse-item
           v-for="(item, index) in data.detail"
           :key="index"
-          :title="`测试点 #${index + 1}`"
-          :name="index + 1"
+          :title="`测试点 ${item.case_name}`"
+          :name="item.case_name"
         >
           <template #header-extra>
             <n-space>
@@ -115,7 +115,7 @@ const loadDetail = ({ name, expanded }) => {
             <n-collapse-item
               title="输出"
               name="out"
-              v-if="data.status !== judgeStatus.ACCEPTED"
+              v-if="item.status !== judgeStatus.ACCEPTED"
             >
               <n-card>
                 <n-scrollbar x-scrollable style="margin-bottom: -10px">
@@ -127,7 +127,7 @@ const loadDetail = ({ name, expanded }) => {
             </n-collapse-item>
             <n-collapse-item
               :title="
-                data.status === judgeStatus.ACCEPTED
+                item.status === judgeStatus.ACCEPTED
                   ? '输出 / 预期输出'
                   : ' 预期输出'
               "

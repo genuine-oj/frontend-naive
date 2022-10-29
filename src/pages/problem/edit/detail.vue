@@ -65,8 +65,6 @@ const submit = () => {
 </script>
 
 <template>
-  <h1>编辑题目</h1>
-  <n-divider />
   <n-space vertical size="large">
     <div>
       <h2>题目标题</h2>

@@ -186,8 +186,6 @@ const submit = async () => {
 </script>
 
 <template>
-  <h1>编辑题目数据</h1>
-  <n-divider />
   <n-table :bordered="false" :single-line="false">
     <thead>
       <tr>
