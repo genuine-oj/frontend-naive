@@ -10,7 +10,7 @@ const id = ref(route.params.id);
 </script>
 
 <template>
-  <h1>{{ id ? '编辑' : '创建' }}题目</h1>
+  <h1>{{ id ? '编辑' : '创建' }}题目 {{ id ? ` #${id}` : '' }}</h1>
   <n-tabs type="line" animated>
     <n-tab-pane name="detail" tab="详情" display-directive="show:lazy">
       <EditDetail />

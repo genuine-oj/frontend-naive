@@ -50,7 +50,7 @@ const submit = () => {
   submiting.value = true;
   Axios.post('/submission/', { problem_id: id, ...submitData.value })
     .then(res => {
-      router.push(`/submission/${res.id}/`);
+      router.push({ name: 'submission_detail', params: { id: res.id } });
     })
     .finally(() => {
       submiting.value = false;
@@ -75,7 +75,7 @@ const submit = () => {
             <div>
               <n-space size="small">
                 <n-tag :bordered="false">
-                  {{ problemData.time_limit }} MS
+                  {{ problemData.time_limit }} ms
                 </n-tag>
                 <n-tag :bordered="false">
                   {{ problemData.memory_limit }} MB

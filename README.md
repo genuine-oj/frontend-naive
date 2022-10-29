@@ -1,7 +1,40 @@
-# Vue 3 + Vite
+# Frontend-Naive | 网站前端 NaiveUI 版
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Pre-request | 前置要求
 
-## Recommended IDE Setup
+- Node.js
+- yarn
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+## Install | 安装
+
+```bash
+yarn
+```
+
+## Development | 开发
+
+```bash
+yarn dev
+```
+
+## Build | 构建
+
+```bash
+yarn build
+```
+
+该命令会构建前端发行版到 dist 目录。但是需要对静态文件服务器进行配置、将 404 界面重定向到首页后才能正常使用。
+
+Nginx 可参考如下配置：
+
+```nginx
+server {
+    listen 80;
+    server_name localhost;
+    root /path/to/frontend-naive/dist;
+    index index.html;
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```

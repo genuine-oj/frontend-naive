@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import router from '@/router';
 import { formatTime, formatSize } from '@/plugins/utils';
-import { judgeStatus, languages } from '@/plugins/consts';
+import { judgeStatus, languages, noTime, noMemory } from '@/plugins/consts';
 import { NButton, NTime } from 'naive-ui';
 
 defineProps({
@@ -27,7 +27,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick: () => {
-            router.push(`/submission/${row.id}/`);
+            router.push({ name: 'submission_detail', params: { id: row.id } });
           },
         },
         { default: () => row.id }
@@ -45,7 +45,7 @@ const columns = [
           size: 'small',
           color: judgeStatus.getColorClass(row.status),
           onClick() {
-            router.push(`/submission/${row.id}/`);
+            router.push({ name: 'submission_detail', params: { id: row.id } });
           },
         },
         { default: () => row.score }
@@ -62,7 +62,7 @@ const columns = [
           size: 'small',
           color: judgeStatus.getColorClass(row.status),
           onClick() {
-            router.push(`/submission/${row.id}/`);
+            router.push({ name: 'submission_detail', params: { id: row.id } });
           },
         },
         { default: () => judgeStatus.getDisplay(row.status) }
@@ -79,7 +79,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick() {
-            router.push(`/problem/${row.problem.id}/`);
+            router.push({ name: 'problem_detail', params: { id: row.id } });
           },
         },
         { default: () => row.problem.title }
@@ -96,7 +96,10 @@ const columns = [
           text: true,
           size: 'small',
           onClick: () => {
-            router.push(`/user/${row.user.id}/`);
+            router.push({
+              name: 'submission_list',
+              query: { user__username: row.user.username },
+            });
           },
         },
         { default: () => row.user.username }
@@ -107,18 +110,16 @@ const columns = [
     title: '用时',
     key: 'execute_time',
     render(row) {
-      return row.status !== judgeStatus.TIME_LIMIT_EXCEEDED
-        ? formatTime(row.execute_time)
-        : '-';
+      return noTime.includes(row.status) ? '-' : formatTime(row.execute_time);
     },
   },
   {
     title: '内存',
     key: 'execute_memory',
     render(row) {
-      return row.status !== judgeStatus.MEMORY_LIMIT_EXCEEDED
-        ? formatSize(row.execute_memory)
-        : '-';
+      return noMemory.includes(row.status)
+        ? '-'
+        : formatSize(row.execute_memory);
     },
   },
   {

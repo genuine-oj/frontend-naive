@@ -51,7 +51,7 @@ const columns = [
           text: true,
           size: 'small',
           onClick: () => {
-            router.push(`/problem/${row.id}/`);
+            router.push({ name: 'problem_detail', params: { id: row.id } });
           },
         },
         { default: () => row.id }
@@ -68,7 +68,7 @@ const columns = [
           size: 'small',
           text: true,
           onClick() {
-            router.push(`/problem/${row.id}/`);
+            router.push({ name: 'problem_detail', params: { id: row.id } });
           },
         },
         { default: () => row.title }

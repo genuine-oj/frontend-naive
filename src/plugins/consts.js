@@ -34,6 +34,22 @@ const judgeStatusColor = {
   SYSTEM_ERROR: '#808080',
 };
 
+const noTime = [
+  judgeStatus.PENDING,
+  judgeStatus.JUDGING,
+  judgeStatus.COMPILE_ERROR,
+  judgeStatus.TIME_LIMIT_EXCEEDED,
+  judgeStatus.SYSTEM_ERROR,
+];
+
+const noMemory = [
+  judgeStatus.PENDING,
+  judgeStatus.JUDGING,
+  judgeStatus.COMPILE_ERROR,
+  judgeStatus.MEMORY_LIMIT_EXCEEDED,
+  judgeStatus.SYSTEM_ERROR,
+];
+
 const languages = {
   C: 'c',
   CPP: 'cpp',
@@ -86,4 +102,11 @@ for (const key in judgeStatus) {
   }
 }
 
-export { judgeStatus, languages, languageOptions, statusOptions };
+export {
+  judgeStatus,
+  languages,
+  languageOptions,
+  statusOptions,
+  noTime,
+  noMemory,
+};

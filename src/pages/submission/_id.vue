@@ -6,7 +6,7 @@ import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';
 import { formatTime, formatSize } from '@/plugins/utils';
-import { judgeStatus } from '@/plugins/consts';
+import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 // import CodeWithCard from '@/components/CodeWithCard.vue';
 
@@ -94,10 +94,10 @@ const loadDetail = ({ name, expanded }) => {
               >
                 {{ judgeStatus.getDisplay(item.status) }}
               </n-tag>
-              <span v-if="item.status !== judgeStatus.TIME_LIMIT_EXCEEDED">
+              <span v-if="!noTime.includes(item.status)">
                 {{ formatTime(item.statistics.time) }}
               </span>
-              <span v-if="item.status !== judgeStatus.MEMORY_LIMIT_EXCEEDED">
+              <span v-if="!noMemory.includes(item.status)">
                 {{ formatSize(item.statistics.memory) }}
               </span>
             </n-space>

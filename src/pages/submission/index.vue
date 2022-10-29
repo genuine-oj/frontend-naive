@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Axios from '@/plugins/axios';
 
 import router from '@/router';
@@ -23,6 +23,15 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   }),
   data = ref([]),
   loading = ref(false);
+watch(
+  () => route.query,
+  () => {
+    for (const key in search.value) {
+      search.value[key] = route.query[key] ?? '';
+    }
+    loadData();
+  }
+);
 
 const loadData = () => {
   loading.value = true;
