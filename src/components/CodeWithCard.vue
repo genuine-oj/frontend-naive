@@ -2,12 +2,7 @@
   <n-card>
     <n-scrollbar x-scrollable style="margin-bottom: -10px">
       <div style="padding-bottom: 15px">
-        <n-code
-          v-if="language"
-          :code="code"
-          :language="language"
-          show-line-numbers
-        />
+        <n-code :code="code" :language="language" show-line-numbers />
       </div>
     </n-scrollbar>
   </n-card>

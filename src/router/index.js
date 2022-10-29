@@ -45,7 +45,17 @@ const routes = [
     name: 'problem_edit',
     component: () => import('@/pages/problem/edit.vue'),
     meta: {
-      title: '创建题目',
+      title: '编辑题目',
+      requiredLogin: true,
+      requiredAdmin: true,
+    },
+  },
+  {
+    path: '/problem/edit-data/:id/',
+    name: 'problem_edit_data',
+    component: () => import('@/pages/problem/edit-data.vue'),
+    meta: {
+      title: '编辑题目数据',
       requiredLogin: true,
       requiredAdmin: true,
     },

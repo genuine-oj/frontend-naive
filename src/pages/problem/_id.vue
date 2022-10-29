@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Axios } from '@/plugins/axios';
+import Axios from '@/plugins/axios';
+
 import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';
@@ -8,7 +9,8 @@ import MdEditor from '@/components/MdEditor.vue';
 import { languageOptions } from '@/plugins/consts';
 import CodeMirror from '@/components/CodeMirror.vue';
 
-const route = useRoute();
+const route = useRoute(),
+  message = useMessage();
 const id = route.params.id,
   problemData = ref({});
 
@@ -41,6 +43,10 @@ const submitData = ref({ source: '', language: 'cpp' }),
   submiting = ref(false);
 
 const submit = () => {
+  if (!submitData.value.source) {
+    message.warning('代码不能为空');
+    return;
+  }
   submiting.value = true;
   Axios.post('/submission/', { problem_id: id, ...submitData.value })
     .then(res => {

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Axios } from '@/plugins/axios';
+import Axios from '@/plugins/axios';
+
 import { useMessage } from 'naive-ui';
 import store from '@/store';
 import router from '@/router';

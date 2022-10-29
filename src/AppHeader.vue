@@ -2,7 +2,8 @@
 import store from './store';
 import router from './router';
 import { useRoute } from 'vue-router';
-import { Axios } from '@/plugins/axios';
+import Axios from '@/plugins/axios';
+
 import { useThemeVars } from 'naive-ui';
 
 const route = useRoute();

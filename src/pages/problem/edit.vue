@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue';
-import { Axios } from '@/plugins/axios';
+import Axios from '@/plugins/axios';
+
 import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 
-const route = useRoute();
+const route = useRoute(),
+  message = useMessage();
 const id = route.query.id;
 
 const problem = ref({
@@ -36,7 +38,18 @@ Axios.get('/problem/tag/').then(res => {
 });
 
 const submiting = ref(false);
+const notNull = [
+  { key: 'title', name: '标题' },
+  { key: 'description', name: '描述' },
+  { key: 'tags', name: '标签' },
+];
 const submit = () => {
+  for (const item of notNull) {
+    if (!problem.value[item.key]) {
+      message.warning(`题目${item.name}不能为空`);
+      return;
+    }
+  }
   submiting.value = true;
   let req;
   if (id) req = Axios.put(`/problem/${id}/`, problem.value);

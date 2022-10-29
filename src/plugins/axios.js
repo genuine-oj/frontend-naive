@@ -65,9 +65,4 @@ Axios.interceptors.response.use(
   }
 );
 
-export default {
-  Axios,
-  install(app) {
-    app.config.globalProperties.$axios = Axios;
-  },
-};
+export default Axios;

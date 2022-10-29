@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Axios } from '@/plugins/axios';
+import Axios from '@/plugins/axios';
+
 import router from '@/router';
 import store from '@/store';
 import { judgeStatus, languages } from '@/plugins/consts';

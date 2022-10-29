@@ -37,13 +37,13 @@ const judgeStatusColor = {
 const languages = {
   C: 'c',
   CPP: 'cpp',
-  PYTHON: 'python',
+  PYTHON38: 'python38',
 };
 
 const languagesDisplay = {
   C: 'C',
   CPP: 'C++',
-  PYTHON: 'Python',
+  PYTHON38: 'Python 3.8',
 };
 
 const initDisplay = (obj, objDisplay) => {
