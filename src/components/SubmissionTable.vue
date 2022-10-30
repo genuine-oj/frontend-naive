@@ -79,7 +79,10 @@ const columns = [
           text: true,
           size: 'small',
           onClick() {
-            router.push({ name: 'problem_detail', params: { id: row.id } });
+            router.push({
+              name: 'problem_detail',
+              params: { id: row.problem.id },
+            });
           },
         },
         { default: () => row.problem.title }
