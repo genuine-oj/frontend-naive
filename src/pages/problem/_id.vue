@@ -25,7 +25,7 @@ loadData();
 const beforeLeave = tabName => {
   if (tabName === 'submission') {
     router.push({
-      name: 'submission_index',
+      name: 'submission_list',
       query: { problem__id: id },
     });
     return false;
