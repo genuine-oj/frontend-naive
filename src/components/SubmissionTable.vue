@@ -19,7 +19,6 @@ defineProps({
 const columns = [
   {
     title: 'ID',
-    key: 'id',
     render(row) {
       return h(
         NButton,
@@ -36,7 +35,6 @@ const columns = [
   },
   {
     title: '分数',
-    key: 'score',
     render(row) {
       return h(
         NButton,
@@ -54,7 +52,6 @@ const columns = [
   },
   {
     title: '状态',
-    key: 'status',
     render(row) {
       return h(
         NButton,
@@ -71,7 +68,6 @@ const columns = [
   },
   {
     title: '题目',
-    key: 'problem',
     render(row) {
       return h(
         NButton,
@@ -91,7 +87,6 @@ const columns = [
   },
   {
     title: '用户',
-    key: 'user',
     render(row) {
       return h(
         NButton,
@@ -111,14 +106,12 @@ const columns = [
   },
   {
     title: '用时',
-    key: 'execute_time',
     render(row) {
       return noTime.includes(row.status) ? '-' : formatTime(row.execute_time);
     },
   },
   {
     title: '内存',
-    key: 'execute_memory',
     render(row) {
       return noMemory.includes(row.status)
         ? '-'
@@ -127,16 +120,16 @@ const columns = [
   },
   {
     title: '语言',
-    key: 'language',
     render(row) {
       return languages.getDisplay(row.language);
     },
   },
   {
     title: '提交时间',
-    key: 'created_at',
     render(row) {
-      return h(NTime, { value: row.created_at });
+      return h(NTime, {
+        time: new Date(row.create_time),
+      });
     },
   },
 ];
