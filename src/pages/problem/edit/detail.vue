@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-
+import { difficultyOptions } from '@/plugins/consts';
 import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
@@ -127,7 +127,7 @@ const submit = () => {
     </div>
     <div>
       <h2>运行限制</h2>
-      <n-row>
+      <n-row style="padding: 0 1px">
         <n-col :span="6">
           <h3>运行内存</h3>
           <n-input-number
@@ -153,6 +153,24 @@ const submit = () => {
           >
             <template #suffix> ms </template>
           </n-input-number>
+        </n-col>
+      </n-row>
+    </div>
+    <div>
+      <h2>其它设置</h2>
+      <n-row style="padding: 0 1px">
+        <n-col :span="6">
+          <h3>是否隐藏</h3>
+          <n-switch v-model:value="problem.is_hidden" />
+        </n-col>
+        <n-col :span="1"></n-col>
+        <n-col :span="6">
+          <h3>难度设置</h3>
+          <n-select
+            v-model:value="problem.difficulty"
+            :options="difficultyOptions"
+            placeholder="请选择难度"
+          />
         </n-col>
       </n-row>
     </div>

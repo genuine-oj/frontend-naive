@@ -14,10 +14,31 @@ const route = useRoute();
 
 const id = route.params.id,
   data = ref({}),
-  detail_data = ref({});
+  detailData = ref({}),
+  useSubcheck = ref(false),
+  subchecks = ref([]),
+  showingSubchecks = ref([]);
 
 const loadData = () => {
   Axios.get(`/submission/${id}/`).then(res => {
+    subchecks.value = [];
+    for (const i of res.detail) {
+      if (i.subcheck) {
+        useSubcheck.value = true;
+      }
+      if (useSubcheck.value && !subchecks.value.includes(i.subcheck)) {
+        subchecks.value.push(i.subcheck);
+      }
+    }
+    if (useSubcheck.value) {
+      subchecks.value.sort((a, b) => a < b);
+      showingSubchecks.value = subchecks.value;
+      res.detail.sort((a, b) => {
+        if (a.subcheck !== b.subcheck)
+          return Number(a.subcheck) < Number(b.subcheck);
+        return a.case_name < b.case_name;
+      });
+    }
     data.value = res;
     if (res.status <= -3) {
       setTimeout(loadData, 1000);
@@ -28,10 +49,10 @@ const loadData = () => {
 loadData();
 
 const loadDetail = ({ name, expanded }) => {
-  if (!detail_data.value[name]) {
-    detail_data.value[name] = {};
+  if (!detailData.value[name]) {
+    detailData.value[name] = {};
     Axios.get(`/submission/${id}/test-point/${name}/`).then(res => {
-      detail_data.value[name] = res;
+      detailData.value[name] = res;
     });
   }
 };
@@ -75,13 +96,35 @@ const loadDetail = ({ name, expanded }) => {
       name="test_point"
       v-if="data.detail && data.detail.length"
     >
+      <n-checkbox-group v-model:value="showingSubchecks" v-if="useSubcheck">
+        <n-space
+          item-style="display: flex"
+          style="margin-left: 32px; margin-bottom: 20px"
+        >
+          显示捆绑测试：
+          <n-checkbox
+            v-for="item in subchecks"
+            :key="item"
+            :value="item"
+            :label="item"
+          />
+        </n-space>
+      </n-checkbox-group>
       <n-collapse @item-header-click="loadDetail">
         <n-collapse-item
+          :name="item.case_name"
           v-for="(item, index) in data.detail"
           :key="index"
-          :title="`测试点 ${item.case_name}`"
-          :name="item.case_name"
+          v-show="!useSubcheck || showingSubchecks.includes(item.subcheck)"
         >
+          <template #header>
+            <n-space>
+              测试点 {{ item.case_name }}
+              <n-tag v-if="useSubcheck" size="small" type="info">
+                捆绑测试 {{ item.subcheck }}
+              </n-tag>
+            </n-space>
+          </template>
           <template #header-extra>
             <n-space>
               <n-tag
@@ -107,7 +150,7 @@ const loadDetail = ({ name, expanded }) => {
               <n-card>
                 <n-scrollbar x-scrollable style="margin-bottom: -10px">
                   <div style="padding-bottom: 15px">
-                    <n-code :code="detail_data[item.case_name].in" />
+                    <n-code :code="detailData[item.case_name].in" />
                   </div>
                 </n-scrollbar>
               </n-card>
@@ -120,7 +163,7 @@ const loadDetail = ({ name, expanded }) => {
               <n-card>
                 <n-scrollbar x-scrollable style="margin-bottom: -10px">
                   <div style="padding-bottom: 15px">
-                    <n-code :code="detail_data[item.case_name].out" />
+                    <n-code :code="detailData[item.case_name].out" />
                   </div>
                 </n-scrollbar>
               </n-card>
@@ -136,7 +179,7 @@ const loadDetail = ({ name, expanded }) => {
               <n-card>
                 <n-scrollbar x-scrollable style="margin-bottom: -10px">
                   <div style="padding-bottom: 15px">
-                    <n-code :code="detail_data[item.case_name].ans" />
+                    <n-code :code="detailData[item.case_name].ans" />
                   </div>
                 </n-scrollbar>
               </n-card>

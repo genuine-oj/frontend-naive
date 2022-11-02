@@ -70,7 +70,7 @@ loadData();
             v-model:value="search.language"
             :options="languageOptions"
             clearable
-            style="min-width: 100px"
+            style="min-width: 125px"
           />
         </n-form-item>
         <n-form-item label="状态">
@@ -78,7 +78,7 @@ loadData();
             v-model:value="search.status"
             :options="statusOptions"
             clearable
-            style="min-width: 200px"
+            style="min-width: 125px"
           />
         </n-form-item>
         <n-form-item>

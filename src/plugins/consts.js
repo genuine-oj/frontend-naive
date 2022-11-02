@@ -102,6 +102,38 @@ for (const key in judgeStatus) {
   }
 }
 
+const difficulty = {
+  0: '未设定',
+  1: '入门',
+  2: '普及-',
+  3: '普及/提高-',
+  4: '普及+/提高',
+  5: '提高+/省选-',
+  6: '省选/NOI-',
+  7: 'NOI/NOI+/CTSC',
+};
+
+const difficultyColor = {
+  0: '#BFBFBF',
+  1: '#FE4C61',
+  2: '#F39C11',
+  3: '#FFC116',
+  4: '#52C41A',
+  5: '#3498DB',
+  6: '#9D3BCF',
+  7: '#000000',
+};
+
+const difficultyOptions = [];
+for (const key in difficulty) {
+  if (typeof difficulty[key] === 'string') {
+    difficultyOptions.push({
+      label: difficulty[key],
+      value: Number(key),
+    });
+  }
+}
+
 export {
   judgeStatus,
   languages,
@@ -109,4 +141,7 @@ export {
   statusOptions,
   noTime,
   noMemory,
+  difficulty,
+  difficultyColor,
+  difficultyOptions,
 };
