@@ -1,14 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-
 import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';
 import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
-// import CodeWithCard from '@/components/CodeWithCard.vue';
 
 const route = useRoute();
 
@@ -23,7 +21,7 @@ const loadData = () => {
   Axios.get(`/submission/${id}/`).then(res => {
     subchecks.value = [];
     for (const i of res.detail) {
-      if (i.subcheck) {
+      if (i.subcheck !== null) {
         useSubcheck.value = true;
       }
       if (useSubcheck.value && !subchecks.value.includes(i.subcheck)) {

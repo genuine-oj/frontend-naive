@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import Axios from '@/plugins/axios';
 
 import router from '@/router';
 import store from '@/store';
-import { judgeStatus, languages } from '@/plugins/consts';
+import { judgeStatus, languages, difficultyOptions } from '@/plugins/consts';
 import ProblemTable from '@/components/ProblemTable.vue';
 import { useRoute } from 'vue-router';
 
@@ -32,8 +32,23 @@ for (const key in judgeStatus) {
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref(''),
+  difficulty = ref(null),
   data = ref([]),
   loading = ref(false);
+
+watch(
+  () => route.query,
+  () => {
+    if (route.query.search) {
+      search.value = route.query.search;
+    }
+    if (route.query.difficulty) {
+      difficulty.value =
+        (route.query.difficulty && parseInt(route.query.difficulty)) || null;
+    }
+    loadData();
+  }
+);
 
 const loadData = () => {
   loading.value = true;
@@ -42,10 +57,10 @@ const loadData = () => {
       limit: pagination.value.pageSize,
       offset: (pagination.value.page - 1) * pagination.value.pageSize,
       search: search.value,
+      difficulty: difficulty.value,
     },
   })
     .then(res => {
-      console.log(res);
       pagination.value.count = res.count;
       data.value = res.results;
     })
@@ -65,6 +80,16 @@ loadData();
         <n-form inline>
           <n-form-item>
             <n-input v-model:value="search" />
+          </n-form-item>
+          <n-form-item>
+            <n-select
+              v-model:value="difficulty"
+              :options="
+                [{ label: '全部', value: null }].concat(difficultyOptions)
+              "
+              placeholder="请选择难度"
+              style="min-width: 150px"
+            />
           </n-form-item>
           <n-form-item>
             <n-button type="primary" @click="loadData">搜索</n-button>

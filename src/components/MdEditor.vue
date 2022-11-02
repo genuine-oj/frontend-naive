@@ -57,29 +57,36 @@ watch(_content, val => emit('update:content', val));
 watch(toRef(props, 'content'), val => (_content.value = val));
 </script>
 
-<style>
+<style lang="scss" scoped>
 #md-editor-v3 {
   background-color: var(--n-color);
   color: var(--n-text-color);
+  border-radius: var(--n-border-radius);
   transition: color 0.3s var(--n-bezier), background-color 0.3s var(--n-bezier),
     box-shadow 0.3s var(--n-bezier), border-color 0.3s var(--n-bezier);
 }
-#md-editor-v3-preview > div,
-p,
-a,
-strong {
-  color: var(--n-text-color) !important;
+
+#md-editor-v3 :deep(.md-preview) > {
+  div,
+  p,
+  a,
+  strong {
+    color: var(--n-text-color) !important;
+  }
 }
-#md-editor-v3 img {
+
+#md-editor-v3 :deep(img) {
   max-width: 70% !important;
   margin: 0 auto !important;
 }
+
 @media (max-width: 768px) {
-  #md-editor-v3 img {
+  #md-editor-v3 :deep(img) {
     max-width: 100% !important;
   }
 }
-.n-card.md-editor-card .n-card__content {
+
+.n-card.md-editor-card :deep(.n-card__content) {
   margin: 0 !important;
   padding: 0 !important;
 }

@@ -159,7 +159,6 @@ const loadZip = async event => {
 
 const clacSubcheckAverageScore = () => {
   const keys = Object.keys(data.value.subcheck_config);
-  console.log(keys);
   const length = keys.length;
   for (let i = 0; i < length - 1; i++) {
     data.value.subcheck_config[keys[i]].score = parseInt(100 / length);
@@ -215,7 +214,7 @@ const useSubcheck = value => {
   if (value) {
     data.value.subcheck_config = { 0: { score: 0, name: '0', cases: [] } };
     for (const i of data.value.test_case_config) {
-      i.score = 0;
+      i.score = null;
       i.subcheck = 0;
       data.value.subcheck_config[0].cases.push(i.name);
     }
@@ -224,7 +223,7 @@ const useSubcheck = value => {
   } else {
     data.value.subcheck_config = {};
     for (const i of data.value.test_case_config) {
-      i.subcheck = '';
+      i.subcheck = null;
     }
     clacAverageScore();
   }
@@ -274,7 +273,7 @@ const columns = [
     title: '捆绑测试',
     render(row) {
       return h(NInputNumber, {
-        value: (row.subcheck = row.subcheck ?? 0),
+        value: row.subcheck,
         min: 0,
         max: 50,
         style: 'max-width: 150px; text-align: center',

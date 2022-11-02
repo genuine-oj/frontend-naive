@@ -2,8 +2,9 @@
 import { h } from 'vue';
 import router from '@/router';
 import store from '@/store';
-import { NButton, NIcon, NTime } from 'naive-ui';
+import { NButton, NIcon, NTag } from 'naive-ui';
 import { CheckCircleTwotone } from '@vicons/antd';
+import { difficulty, difficultyColor } from '@/plugins/consts';
 
 defineProps({
   data: {
@@ -19,7 +20,6 @@ defineProps({
 const columns = [
   {
     title: '已通过',
-    key: 'solved',
     render(row) {
       return h(
         NIcon,
@@ -43,7 +43,6 @@ const columns = [
   },
   {
     title: 'ID',
-    key: 'id',
     render(row) {
       return h(
         NButton,
@@ -60,7 +59,6 @@ const columns = [
   },
   {
     title: '名称',
-    key: 'title',
     render(row) {
       return h(
         NButton,
@@ -73,6 +71,31 @@ const columns = [
         },
         { default: () => row.title }
       );
+    },
+  },
+  {
+    title: '难度',
+    render(row) {
+      return h(
+        NButton,
+        {
+          size: 'small',
+          color: difficultyColor[row.difficulty],
+          onClick() {
+            router.push({
+              name: 'problem_list',
+              query: { difficulty: row.difficulty },
+            });
+          },
+        },
+        { default: () => difficulty[row.difficulty] }
+      );
+    },
+  },
+  {
+    title: '通过 / 提交人数',
+    render(row) {
+      return `${row.solved_count} / ${row.submission_count}`;
     },
   },
 ];
