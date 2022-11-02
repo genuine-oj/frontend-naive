@@ -28,6 +28,7 @@ const problem = ref({
 
 if (id) {
   Axios.get(`/problem/${id}/`).then(res => {
+    res.tags = res.tags.map(tag => tag.id);
     problem.value = res;
   });
 }
