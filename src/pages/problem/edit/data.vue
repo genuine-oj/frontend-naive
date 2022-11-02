@@ -215,7 +215,7 @@ const useSubcheck = value => {
   if (value) {
     data.value.subcheck_config = { 0: { score: 0, name: '0', cases: [] } };
     for (const i of data.value.test_case_config) {
-      i.score = '';
+      i.score = 0;
       i.subcheck = 0;
       data.value.subcheck_config[0].cases.push(i.name);
     }
