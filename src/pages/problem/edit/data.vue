@@ -182,7 +182,7 @@ const checkSubcheckSumScore = () => {
 
 const submiting = ref(false);
 const submit = async () => {
-  if ((data.value.use_subcheck && !checkSubcheckSumScore()) || !checkSumScore())
+  if (!(data.value.use_subcheck ? checkSubcheckSumScore() : checkSumScore()))
     return;
   submiting.value = true;
   const formData = new FormData();

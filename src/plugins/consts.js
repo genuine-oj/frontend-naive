@@ -53,13 +53,13 @@ const noMemory = [
 const languages = {
   C: 'c',
   CPP: 'cpp',
-  PYTHON38: 'python38',
+  PYTHON3: 'python3',
 };
 
 const languagesDisplay = {
   C: 'C',
   CPP: 'C++',
-  PYTHON38: 'Python 3.8',
+  PYTHON3: 'Python 3',
 };
 
 const initDisplay = (obj, objDisplay) => {
