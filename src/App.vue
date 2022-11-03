@@ -14,6 +14,7 @@ import python from 'highlight.js/lib/languages/python';
 hljs.registerLanguage('c', c);
 hljs.registerLanguage('cpp', cpp);
 hljs.registerLanguage('python', python);
+hljs.registerLanguage('python3', python);
 
 const open = url => {
   window.open(url, '_blank');

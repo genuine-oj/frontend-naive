@@ -36,6 +36,14 @@ const logout = () => {
       </n-button>
       <n-button
         size="large"
+        :tertiary="route.meta.cate === 'contest'"
+        :quaternary="route.meta.cate !== 'contest'"
+        @click="router.push({ name: 'contest_list' })"
+      >
+        比赛
+      </n-button>
+      <n-button
+        size="large"
         :tertiary="route.meta.cate === 'submission'"
         :quaternary="route.meta.cate !== 'submission'"
         @click="router.push({ name: 'submission_list' })"

@@ -1,56 +1,34 @@
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import Axios from '@/plugins/axios';
 
 import router from '@/router';
 import store from '@/store';
-import { judgeStatus, languages, difficultyOptions } from '@/plugins/consts';
-import ProblemTable from '@/components/ProblemTable.vue';
+import ContestTable from '@/components/ContestTable.vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const languageOptions = [],
-  statusOptions = [];
-
-for (const key in languages) {
-  if (typeof languages[key] === 'string') {
-    languageOptions.push({
-      label: languages.getDisplay(languages[key]),
-      value: languages[key],
-    });
-  }
-}
-for (const key in judgeStatus) {
-  if (typeof judgeStatus[key] === 'number') {
-    statusOptions.push({
-      label: judgeStatus.getDisplay(judgeStatus[key]),
-      value: judgeStatus[key],
-    });
-  }
-}
-
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
-  search = ref(route.query.search),
-  difficulty = ref(route.query.difficulty && parseInt(route.query.difficulty)),
+  search = ref(''),
   data = ref([]),
   loading = ref(false);
 
-const getFilterFromPath = () => {
-  search.value = route.query.search;
-  difficulty.value = route.query.difficulty && parseInt(route.query.difficulty);
-  loadData();
-};
-watch(() => route.query, getFilterFromPath);
+watch(
+  () => route.query,
+  () => {
+    if (route.query.search) search.value = route.query.search;
+    loadData();
+  }
+);
 
 const loadData = () => {
   loading.value = true;
-  Axios.get('/problem/', {
+  Axios.get('/contest/', {
     params: {
       limit: pagination.value.pageSize,
       offset: (pagination.value.page - 1) * pagination.value.pageSize,
       search: search.value,
-      difficulty: difficulty.value,
     },
   })
     .then(res => {
@@ -61,27 +39,18 @@ const loadData = () => {
       loading.value = false;
     });
 };
+
 loadData();
 </script>
 
 <template>
   <n-layout>
-    <h1 style="display: inline">题目列表</h1>
+    <h1 style="display: inline">比赛列表</h1>
     <n-layout-content>
       <div style="float: left; display: inline-block">
         <n-form inline>
           <n-form-item>
             <n-input v-model:value="search" />
-          </n-form-item>
-          <n-form-item>
-            <n-select
-              v-model:value="difficulty"
-              :options="
-                [{ label: '全部', value: null }].concat(difficultyOptions)
-              "
-              placeholder="请选择难度"
-              style="min-width: 150px"
-            />
           </n-form-item>
           <n-form-item>
             <n-button type="primary" @click="loadData">搜索</n-button>
@@ -91,14 +60,14 @@ loadData();
       <n-button
         style="float: right; margin-top: 25px"
         type="primary"
-        @click="() => router.push({ name: 'problem_create' })"
+        @click="() => router.push({ name: 'contest_create' })"
         v-if="store.state.user.is_staff"
       >
-        创建题目
+        创建题单
       </n-button>
     </n-layout-content>
     <n-layout-content>
-      <ProblemTable :data="data" :loading="loading" />
+      <ContestTable :data="data" :loading="loading" />
     </n-layout-content>
     <n-layout-content>
       <div style="margin-top: 30px; text-align: center">

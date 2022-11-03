@@ -65,6 +65,48 @@ const routes = [
     },
   },
   {
+    path: '/contest/',
+    name: 'contest_list',
+    component: () => import('@/pages/contest/index.vue'),
+    meta: {
+      title: '比赛列表',
+      cate: 'contest',
+    },
+  },
+  {
+    path: '/contest/:id/',
+    name: 'contest_detail',
+    component: () => import('@/pages/contest/_id.vue'),
+    meta: {
+      title: '比赛详情 #{id}',
+      cate: 'contest',
+      requiredLogin: true,
+    },
+  },
+  {
+    path: '/contest/create/',
+    name: 'contest_create',
+    component: () => import('@/pages/contest/edit.vue'),
+    meta: {
+      title: '创建比赛',
+      cate: 'contest',
+      requiredLogin: true,
+      requiredAdmin: true,
+    },
+  },
+  {
+    path: '/contest/:id/edit/',
+    name: 'contest_edit',
+    component: () => import('@/pages/contest/edit.vue'),
+    meta: {
+      title: '编辑比赛 #{id}',
+      cate: 'contest',
+      requiredLogin: true,
+      requiredAdmin: true,
+    },
+  },
+
+  {
     path: '/submission/',
     name: 'submission_list',
     component: () => import('@/pages/submission/index.vue'),

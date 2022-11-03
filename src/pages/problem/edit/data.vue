@@ -6,6 +6,7 @@ import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 import { NButton, NDropdown, NInputNumber, NSpace } from 'naive-ui';
+import { da } from 'date-fns/locale';
 
 const route = useRoute(),
   message = useMessage();
@@ -38,6 +39,27 @@ const handleCaseDelete = item => {
     newCases = newCases.filter(i => i.name !== item.name);
   } else {
     data.value.delete_cases.push(item.name);
+  }
+  if (data.value.use_subcheck) {
+    data.value.subcheck_config[item.subcheck].cases =
+      data.value.subcheck_config[item.subcheck].cases.filter(
+        i => i !== item.name
+      );
+    console.log(data.value.subcheck_config);
+    if (!data.value.subcheck_config[item.subcheck].cases.length) {
+      delete data.value.subcheck_config[item.subcheck];
+      const keys = Object.keys(data.value.subcheck_config);
+      for (const key of keys) {
+        if (Number(key) < Number(item.subcheck)) continue;
+        data.value.subcheck_config[key - 1] = data.value.subcheck_config[key];
+        data.value.subcheck_config[key - 1].name = key - 1;
+        delete data.value.subcheck_config[key];
+        for (const name of data.value.subcheck_config[key - 1].cases) {
+          data.value.test_case_config.find(i => i.name === name).subcheck =
+            key - 1;
+        }
+      }
+    }
   }
   data.value.test_case_config = data.value.test_case_config.filter(
     i => i.name !== item.name
