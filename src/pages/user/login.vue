@@ -25,7 +25,7 @@ const login = () => {
     if (route.query.next) {
       router.push(route.query.next);
     } else {
-      router.push({ name: 'index' });
+      router.push({ name: 'home' });
     }
   });
 };
