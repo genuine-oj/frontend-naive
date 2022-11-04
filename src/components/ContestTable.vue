@@ -72,7 +72,7 @@ const columns = [
         NTag,
         {
           bordered: false,
-          type: row.problem_list_mode ? 'info' : 'error',
+          type: row.problem_list_mode ? '' : 'info',
         },
         { default: () => (row.problem_list_mode ? '题单' : '比赛') }
       );
@@ -81,16 +81,45 @@ const columns = [
   {
     title: '开始 / 结束时间',
     render(row) {
+      const start_time = new Date(row.start_time),
+        end_time = new Date(row.end_time),
+        current_time = new Date();
+      const start = Number(start_time),
+        end = Number(end_time),
+        current = Number(current_time);
+      const startYear = start_time.getFullYear(),
+        endYear = end_time.getFullYear(),
+        currentYear = current_time.getFullYear();
+      const racing = start < current && current < end,
+        sameStartYear = startYear === currentYear,
+        sameEndYear = endYear === currentYear;
       return [
         h(NTime, {
-          format: 'yyyy-MM-dd HH:mm',
-          time: Number(new Date(row.start_time)),
+          format: sameStartYear ? 'MM-dd HH:mm' : 'yyyy-MM-dd HH:mm',
+          time: start,
         }),
-        h('span', { style: 'margin: 0 5px' }, ' / '),
+        h('span', { style: 'margin: 0 5px' }, '~'),
         h(NTime, {
-          format: 'yyyy-MM-dd HH:mm',
-          time: Number(new Date(row.end_time)),
+          format: sameEndYear ? 'MM-dd HH:mm' : 'yyyy-MM-dd HH:mm',
+          time: end,
         }),
+        racing
+          ? h(
+              NTag,
+              { type: 'success', bordered: false, style: 'margin-left: 5px' },
+              { default: () => '进行中' }
+            )
+          : start > current
+          ? h(
+              NTag,
+              { type: 'warning', bordered: false, style: 'margin-left: 5px' },
+              { default: () => '未开始' }
+            )
+          : h(
+              NTag,
+              { type: 'error', bordered: false, style: 'margin-left: 5px' },
+              { default: () => '已结束' }
+            ),
       ];
     },
   },

@@ -43,6 +43,17 @@ const routes = [
     },
   },
   {
+    path: '/problem/tag/',
+    name: 'tag_edit',
+    component: () => import('@/pages/problem/tag.vue'),
+    meta: {
+      title: '标签管理',
+      cate: 'problem',
+      requiredLogin: true,
+      requiredAdmin: true,
+    },
+  },
+  {
     path: '/problem/create/',
     name: 'problem_create',
     component: () => import('@/pages/problem/edit.vue'),

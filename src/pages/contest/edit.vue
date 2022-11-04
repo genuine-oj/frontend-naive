@@ -35,7 +35,7 @@ const searchProblem = search => {
     .then(res => {
       res = res.results;
       problemOptions.value = res.map(item => ({
-        label: item.title,
+        label: `#${item.id} | ${item.title}`,
         value: item.id,
       }));
     })
@@ -127,7 +127,18 @@ const submit = () => {
 </script>
 
 <template>
-  <h1>{{ id ? '编辑' : '创建' }}比赛 {{ id ? ` #${id}` : '' }}</h1>
+  <h1>
+    <n-space style="align-items: center" size="large">
+      {{ id ? '编辑' : '创建' }}比赛 {{ id ? ` #${id}` : '' }}
+      <n-button
+        v-if="id"
+        @click="router.push({ name: 'contest_detail', params: { id } })"
+        style="display: flex; align-items: center"
+      >
+        返回
+      </n-button>
+    </n-space>
+  </h1>
 
   <n-divider />
 
@@ -143,6 +154,10 @@ const submit = () => {
           <n-radio :value="true">题单模式</n-radio>
         </n-space>
       </n-radio-group>
+      <n-space style="margin-top: 20px">
+        <span>在列表中隐藏</span>
+        <n-switch v-model:value="contest.is_hidden" />
+      </n-space>
     </div>
     <div>
       <h2>比赛名称</h2>
@@ -192,14 +207,6 @@ const submit = () => {
     <div v-show="!contest.problem_list_mode">
       <h2>时间设置</h2>
       <n-space>
-        <!-- <n-date-picker
-          v-model:value="contest.start_time"
-          placeholder="开始时间"
-        />
-        <n-date-picker
-          v-model:value="contest.end_time"
-          placeholder="结束时间"
-        /> -->
         <n-date-picker
           type="datetimerange"
           v-model:value="contest_time_range"

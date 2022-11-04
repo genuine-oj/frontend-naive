@@ -7,6 +7,7 @@ import store from '@/store';
 import { useRoute } from 'vue-router';
 import MdEditor from '@/components/MdEditor.vue';
 import ProblemTable from '@/components/ProblemTable.vue';
+import RankingTable from '@/components/RankingTable.vue';
 
 const route = useRoute(),
   message = useMessage();
@@ -14,11 +15,27 @@ const id = route.params.id,
   contestData = ref({}),
   mode = ref('比赛');
 
+const rankingData = ref({}),
+  loadingRanking = ref(false);
+const getRankingData = (force_update = false) => {
+  loadingRanking.value = true;
+  Axios.get(`/contest/${id}/ranking/`, {
+    params: { force_update },
+  })
+    .then(res => {
+      rankingData.value = res;
+    })
+    .finally(() => {
+      loadingRanking.value = false;
+    });
+};
+
 const loadData = () => {
   Axios.get(`/contest/${id}/`).then(res => {
     res.start_time = (res.start_time && Number(new Date(res.start_time))) || 0;
     res.end_time = (res.end_time && Number(new Date(res.end_time))) || 0;
     contestData.value = res;
+    if (!res.problem_list_mode) getRankingData();
     mode.value = res.problem_list_mode ? '题单' : '比赛';
   });
 };
@@ -36,22 +53,11 @@ const beforeLeave = tabName => {
   return true;
 };
 
-const submitData = ref({ source: '', language: 'cpp' }),
-  submiting = ref(false);
-
-const submit = () => {
-  if (!submitData.value.source) {
-    message.warning('代码不能为空');
-    return;
-  }
-  submiting.value = true;
-  Axios.post('/submission/', { problem_id: id, ...submitData.value })
-    .then(res => {
-      router.push({ name: 'submission_detail', params: { id: res.id } });
-    })
-    .finally(() => {
-      submiting.value = false;
-    });
+const signUp = () => {
+  Axios.post(`/contest/${id}/sign_up/`).then(res => {
+    message.success('报名成功');
+    loadData();
+  });
 };
 </script>
 
@@ -97,6 +103,17 @@ const submit = () => {
               <span style="font-size: medium">{{ mode }}</span>
             </div>
 
+            <div v-if="contestData.joined || contestData.allow_sign_up">
+              <h2>操作</h2>
+              <n-button
+                type="primary"
+                @click="signUp"
+                :disabled="contestData.joined"
+              >
+                {{ contestData.joined ? '已加入' : '报名' }}
+              </n-button>
+            </div>
+
             <div v-if="!contestData.problem_list_mode">
               <h2>比赛时间</h2>
               <span
@@ -106,13 +123,13 @@ const submit = () => {
                 <n-time
                   :time="contestData.start_time"
                   format="yyyy-MM-dd HH:mm:ss"
-                  style="margin-right: 10px"
+                  style="margin-right: 5px"
                 />
                 ~
                 <n-time
                   :time="contestData.end_time"
                   format="yyyy-MM-dd HH:mm:ss"
-                  style="margin-left: 10px"
+                  style="margin-left: 5px"
                 />
               </span>
             </div>
@@ -135,7 +152,49 @@ const submit = () => {
           name="ranking"
           tab="排行榜"
           v-if="!contestData.problem_list_mode"
-        />
+          :disabled="contestData.start_time > Date.now()"
+        >
+          <p
+            style="font-size: medium"
+            v-if="
+              contestData.start_time <= Date.now() &&
+              Date.now() <= contestData.end_time
+            "
+          >
+            说明：比赛排行榜仅统计比赛持续时间中的提交，每分钟更新一次。上次更新时间：<n-time
+              :time="Number(new Date(rankingData.time))"
+            />。
+            <n-popover>
+              <template #trigger>
+                <n-button
+                  @click="getRankingData(true)"
+                  v-if="store.state.user.is_staff"
+                  :disabled="loadingRanking"
+                >
+                  强制更新
+                </n-button>
+              </template>
+              仅管理员可用，将会立即刷新排行榜缓存，该缓存对所有用户生效。
+            </n-popover>
+          </p>
+          <n-popover v-else-if="store.state.user.is_staff">
+            <template #trigger>
+              <n-button
+                @click="getRankingData(true)"
+                :disabled="loadingRanking"
+                style="margin-left: 1px"
+              >
+                强制更新
+              </n-button>
+            </template>
+            仅管理员可用，将会立即刷新排行榜缓存，该缓存对所有用户生效。
+          </n-popover>
+          <RankingTable
+            :data="rankingData"
+            :loading="loadingRanking"
+            style="margin-top: 15px"
+          />
+        </n-tab-pane>
         <n-tab-pane
           name="edit"
           :tab="'修改' + mode"
