@@ -20,9 +20,9 @@ const logout = () => {
     <n-space size="small">
       <n-button
         size="large"
-        :tertiary="route.meta.cate === 'index'"
-        :quaternary="route.meta.cate !== 'index'"
-        @click="router.push({ name: 'index' })"
+        :tertiary="route.meta.cate === 'home'"
+        :quaternary="route.meta.cate !== 'home'"
+        @click="router.push({ name: 'home' })"
       >
         首页
       </n-button>

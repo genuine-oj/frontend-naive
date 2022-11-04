@@ -37,12 +37,14 @@ Axios.interceptors.response.use(
       return Promise.reject(error.response);
     } else if (error.response.status === 403) {
       if (!store.getters.loggedIn) {
-        window.$message.warning('请先登录');
-        store.commit('logout');
-        router.push({
-          name: 'login',
-          query: { next: router.options.history.location },
-        });
+        if (router.currentRoute.value.name !== 'login') {
+          window.$message.warning('请先登录');
+          store.commit('logout');
+          router.push({
+            name: 'login',
+            query: { next: router.options.history.location },
+          });
+        }
         return;
       }
       if (error.response.data.message) {

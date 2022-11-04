@@ -7,11 +7,11 @@ import 'nprogress/nprogress.css';
 const routes = [
   {
     path: '/',
-    name: 'index',
-    component: () => import('@/pages/index.vue'),
+    name: 'home',
+    component: () => import('@/pages/home.vue'),
     meta: {
       title: '首页',
-      cate: 'index',
+      cate: 'home',
     },
   },
   {
@@ -82,6 +82,7 @@ const routes = [
     meta: {
       title: '比赛列表',
       cate: 'contest',
+      requiredLogin: true,
     },
   },
   {
@@ -154,7 +155,10 @@ NProgress.configure({
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  if (to.meta.requiredLogin && !store.getters.loggedIn) {
+  if (
+    !['home', 'login', 'register'].includes(to.name) &&
+    !store.getters.loggedIn
+  ) {
     window.$message.warning('请先登录');
     next({ name: 'login', query: { next: to.path } });
   } else if (to.meta.requiredAdmin && !store.state.user.is_staff) {
