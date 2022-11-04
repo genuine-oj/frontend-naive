@@ -12,7 +12,7 @@ const route = useRoute();
 
 const languageOptions = [],
   statusOptions = [],
-  tagsOptions = [];
+  tagsOptions = ref([]);
 
 for (const key in languages) {
   if (typeof languages[key] === 'string') {
@@ -31,9 +31,12 @@ for (const key in judgeStatus) {
   }
 }
 
-Axios.get('/problem/tag/').then(res =>
-  tagsOptions.push(...res.map(item => ({ label: item.name, value: item.id })))
-);
+Axios.get('/problem/tag/').then(res => {
+  tagsOptions.value = res.map(item => ({
+    label: item.name,
+    value: item.id,
+  }));
+});
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref(route.query.search),
@@ -91,6 +94,7 @@ loadData();
               placeholder="请选择标签"
               style="min-width: 150px"
               :max-tag-count="1"
+              :disabled="!tagsOptions.length"
             />
           </n-form-item>
           <n-form-item>

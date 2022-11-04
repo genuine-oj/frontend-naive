@@ -72,7 +72,7 @@ const searchUser = search => {
 if (id) {
   Axios.get(`/contest/${id}/`).then(res => {
     problemOptions.value = res.problems.map(item => ({
-      label: item.title,
+      label: `#${item.id} | ${item.title}`,
       value: item.id,
     }));
     res.problems = res.problems.map(item => item.id);

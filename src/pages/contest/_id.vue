@@ -108,7 +108,9 @@ const signUp = () => {
               <n-button
                 type="primary"
                 @click="signUp"
-                :disabled="contestData.joined"
+                :disabled="
+                  contestData.joined || Date.now() > contestData.end_time
+                "
               >
                 {{ contestData.joined ? '已加入' : '报名' }}
               </n-button>
@@ -164,11 +166,10 @@ const signUp = () => {
             说明：比赛排行榜仅统计比赛持续时间中的提交，每分钟更新一次。上次更新时间：<n-time
               :time="Number(new Date(rankingData.time))"
             />。
-            <n-popover>
+            <n-popover v-if="store.state.user.is_staff">
               <template #trigger>
                 <n-button
                   @click="getRankingData(true)"
-                  v-if="store.state.user.is_staff"
                   :disabled="loadingRanking"
                 >
                   强制更新

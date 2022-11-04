@@ -79,7 +79,7 @@ const columns = [
     },
   },
   {
-    title: '开始 / 结束时间',
+    title: '时间',
     render(row) {
       const start_time = new Date(row.start_time),
         end_time = new Date(row.end_time),

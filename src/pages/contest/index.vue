@@ -45,7 +45,7 @@ loadData();
 
 <template>
   <n-layout>
-    <h1 style="display: inline">比赛列表</h1>
+    <h1 style="display: inline">比赛&题单列表</h1>
     <n-layout-content>
       <div style="float: left; display: inline-block">
         <n-form inline>
@@ -63,7 +63,7 @@ loadData();
         @click="() => router.push({ name: 'contest_create' })"
         v-if="store.state.user.is_staff"
       >
-        创建题单
+        创建比赛/题单
       </n-button>
     </n-layout-content>
     <n-layout-content>

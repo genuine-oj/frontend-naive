@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Codemirror } from 'vue-codemirror';
+import 'codemirror/theme/panda-syntax.css';
 import { cpp } from '@codemirror/lang-cpp';
 import { python } from '@codemirror/lang-python';
 const extensions = { python3: [python()], cpp: [cpp()], c: [cpp()] };

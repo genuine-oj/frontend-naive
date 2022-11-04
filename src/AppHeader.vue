@@ -59,20 +59,20 @@ const logout = () => {
     <n-space size="small" v-if="!store.getters.loggedIn">
       <n-button
         size="large"
+        :tertiary="route.meta.cate === 'register'"
+        :quaternary="route.meta.cate !== 'register'"
+        @click="router.push('/user/register/')"
+      >
+        注册
+      </n-button>
+      <n-button
+        size="large"
         :tertiary="route.meta.cate === 'login'"
         :quaternary="route.meta.cate !== 'login'"
         @click="router.push({ name: 'login' })"
       >
         登录
       </n-button>
-      <!-- <n-button
-        size="large"
-        :tertiary="route.meta.cate === 'register'"
-        :quaternary="route.meta.cate !== 'register'"
-        @click="router.push('/user/register/')"
-      >
-        注册
-      </n-button> -->
     </n-space>
     <n-space size="small" v-else>
       <n-popconfirm @positive-click="logout">

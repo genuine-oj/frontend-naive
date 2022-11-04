@@ -24,6 +24,15 @@ const routes = [
     },
   },
   {
+    path: '/user/register/',
+    name: 'register',
+    component: () => import('@/pages/user/register.vue'),
+    meta: {
+      title: '注册',
+      cate: 'register',
+    },
+  },
+  {
     path: '/problem/',
     name: 'problem_list',
     component: () => import('@/pages/problem/index.vue'),
