@@ -33,10 +33,12 @@ const init = () => {
   Axios.get(`/problem/data/${id}/`).then(res => {
     Object.assign(data.value, res);
     subcheck_cases.value = [];
-    for (let i = 0; i < data.value.subcheck_config.length; i++)
-      subcheck_cases.value.push([]);
-    for (const item of data.value.test_case_config)
-      subcheck_cases.value[item.subcheck].push(item.name);
+    if (data.value.use_subcheck) {
+      for (let i = 0; i < data.value.subcheck_config.length; i++)
+        subcheck_cases.value.push([]);
+      for (const item of data.value.test_case_config)
+        subcheck_cases.value[item.subcheck].push(item.name);
+    }
   });
 };
 init();
@@ -261,11 +263,23 @@ const columns = [
       return h(ShowOrEdit, {
         value: row.name,
         onUpdateValue(v) {
+          for (const i of data.value.test_case_config) {
+            if (i.name === v) {
+              message.error('测试点名称不能重复');
+              return;
+            }
+          }
           if (data.value.use_subcheck) {
             subcheck_cases.value[row.subcheck][
               subcheck_cases.value[row.subcheck].indexOf(row.name)
             ] = v;
             subcheck_cases.value[row.subcheck].sort();
+          }
+          for (const item of newCases) {
+            if (item.name === row.name) {
+              item.name = v;
+              break;
+            }
           }
           row.name = v;
         },

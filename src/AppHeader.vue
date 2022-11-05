@@ -1,17 +1,48 @@
 <script setup>
+import { h } from 'vue';
 import store from './store';
 import router from './router';
 import { useRoute } from 'vue-router';
 import Axios from '@/plugins/axios';
-
-import { useThemeVars } from 'naive-ui';
+import { NIcon } from 'naive-ui';
+import { UserOutlined, SettingOutlined, LogoutOutlined } from '@vicons/antd';
 
 const route = useRoute();
 
-const logout = () => {
-  Axios.get('/user/logout/').then(() => {
-    store.commit('logout');
-  });
+const renderIcon = icon => {
+  return () =>
+    h(NIcon, null, {
+      default: () => h(icon),
+    });
+};
+
+const userOptions = [
+  {
+    label: '个人主页',
+    key: 'user_page',
+    icon: renderIcon(UserOutlined),
+    disabled: true,
+  },
+  {
+    label: '设置',
+    key: 'user_settings',
+    icon: renderIcon(SettingOutlined),
+  },
+  {
+    label: '退出登录',
+    key: 'logout',
+    icon: renderIcon(LogoutOutlined),
+  },
+];
+const handleUserOptionSelect = key => {
+  if (key === 'logout') {
+    Axios.get('/user/logout/').then(() => {
+      store.commit('logout');
+      router.push({ name: 'login' });
+    });
+  } else {
+    router.push({ name: key });
+  }
 };
 </script>
 
@@ -75,14 +106,19 @@ const logout = () => {
       </n-button>
     </n-space>
     <n-space size="small" v-else>
-      <n-popconfirm @positive-click="logout">
-        <template #trigger>
-          <n-button size="large" quaternary>
-            欢迎回来，{{ store.state.user.username }}
-          </n-button>
-        </template>
-        确认要退出登录吗？
-      </n-popconfirm>
+      <n-dropdown
+        trigger="hover"
+        :options="userOptions"
+        @select="handleUserOptionSelect"
+      >
+        <n-button
+          size="large"
+          :tertiary="route.meta.cate === 'user'"
+          :quaternary="route.meta.cate !== 'user'"
+        >
+          欢迎回来，{{ store.state.user.username }}
+        </n-button>
+      </n-dropdown>
     </n-space>
   </div>
 </template>

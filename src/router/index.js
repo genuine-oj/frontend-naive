@@ -33,6 +33,16 @@ const routes = [
     },
   },
   {
+    path: '/user/settings/',
+    name: 'user_settings',
+    component: () => import('@/pages/user/settings.vue'),
+    meta: {
+      title: '个人设置',
+      cate: 'user',
+      requiredLogin: true,
+    },
+  },
+  {
     path: '/problem/',
     name: 'problem_list',
     component: () => import('@/pages/problem/index.vue'),
