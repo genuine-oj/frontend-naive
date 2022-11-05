@@ -95,7 +95,7 @@ const columns = [
   {
     title: '通过 / 提交人数',
     render(row) {
-      return `${row.solved_count} / ${row.submission_count}`;
+      return `${row.accepted_count} / ${row.submission_count}`;
     },
   },
 ];
