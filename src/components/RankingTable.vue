@@ -59,7 +59,7 @@ const columns = [
         {
           default: () => {
             const res = [];
-            for (const key in row.problems) {
+            for (const item of row.problems) {
               res.push(
                 h(
                   NPopover,
@@ -72,28 +72,24 @@ const columns = [
                         NButton,
                         {
                           size: 'small',
-                          color: judgeStatus.getColorClass(
-                            row.problems[key].status
-                          ),
+                          color: judgeStatus.getColorClass(item.status),
                           onClick() {
                             router.push({
                               name: 'submission_detail',
-                              params: { id: row.problems[key].submission_id },
+                              params: { id: item.submission_id },
                             });
                           },
                         },
-                        { default: () => props.data.problems[key] }
+                        { default: () => props.data.problems[item.id] }
                       ),
                     default: () => [
-                      `分数：${row.problems[key].score}`,
+                      `分数：${item.score}`,
                       h('br'),
-                      `状态：${judgeStatus.getDisplay(
-                        row.problems[key].status
-                      )}`,
+                      `状态：${judgeStatus.getDisplay(item.status)}`,
                       h('br'),
                       '时间：',
                       h(NTime, {
-                        time: Number(new Date(row.problems[key].time)),
+                        time: Number(new Date(item.time)),
                       }),
                     ],
                   }

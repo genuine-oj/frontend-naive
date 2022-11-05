@@ -21,7 +21,7 @@ const loadData = () => {
   Axios.get(`/submission/${id}/`).then(res => {
     subchecks.value = [];
     for (const i of res.detail) {
-      if (i.subcheck !== null) {
+      if (typeof i.subcheck === 'number') {
         useSubcheck.value = true;
       }
       if (useSubcheck.value && !subchecks.value.includes(i.subcheck)) {

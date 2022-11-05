@@ -5,62 +5,68 @@ import Axios from '@/plugins/axios';
 import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
-import { NButton, NDropdown, NInputNumber, NSpace } from 'naive-ui';
-import { da } from 'date-fns/locale';
+import { NButton, NDropdown, NInput, NInputNumber, NSpace } from 'naive-ui';
+import ShowOrEdit from '@/components/ShowOrEdit';
 
 const route = useRoute(),
   message = useMessage();
 const id = route.params.id;
 
 const data = ref({
-  test_case_config: [],
-  subcheck_config: [],
-  spj_source: null,
-  delete_cases: [],
-  use_subcheck: false,
-});
+    test_case_config: [],
+    subcheck_config: [],
+    spj_source: null,
+    delete_cases: [],
+    use_subcheck: false,
+  }),
+  subcheck_cases = ref([]);
 let newCases = [];
 
 const init = () => {
   data.value = {
     test_case_config: [],
+    subcheck_config: [],
     spj_source: null,
     delete_cases: [],
   };
   newCases = [];
   Axios.get(`/problem/data/${id}/`).then(res => {
     Object.assign(data.value, res);
+    subcheck_cases.value = [];
+    for (let i = 0; i < data.value.subcheck_config.length; i++)
+      subcheck_cases.value.push([]);
+    for (const item of data.value.test_case_config)
+      subcheck_cases.value[item.subcheck].push(item.name);
   });
 };
 init();
 
 const handleCaseDelete = item => {
   if (newCases.filter(i => i.name === item.name).length) {
+    // 从新建测试点中删除
     newCases = newCases.filter(i => i.name !== item.name);
   } else {
+    // 添加到待删除列表
     data.value.delete_cases.push(item.name);
   }
   if (data.value.use_subcheck) {
-    data.value.subcheck_config[item.subcheck].cases =
-      data.value.subcheck_config[item.subcheck].cases.filter(
-        i => i !== item.name
-      );
-    console.log(data.value.subcheck_config);
-    if (!data.value.subcheck_config[item.subcheck].cases.length) {
-      delete data.value.subcheck_config[item.subcheck];
-      const keys = Object.keys(data.value.subcheck_config);
-      for (const key of keys) {
-        if (Number(key) < Number(item.subcheck)) continue;
-        data.value.subcheck_config[key - 1] = data.value.subcheck_config[key];
-        data.value.subcheck_config[key - 1].name = key - 1;
-        delete data.value.subcheck_config[key];
-        for (const name of data.value.subcheck_config[key - 1].cases) {
-          data.value.test_case_config.find(i => i.name === name).subcheck =
-            key - 1;
+    // 从所处的捆绑测试的测试点列表中删除
+    subcheck_cases.value[item.subcheck] = subcheck_cases.value[
+      item.subcheck
+    ].filter(i => i !== item.name);
+    if (!subcheck_cases.value[item.subcheck].length) {
+      // 如果该捆绑测试点删除当前点后为空，则删除捆绑测试点
+      delete subcheck_cases.value[item.subcheck];
+      for (let i = item.subcheck + 1; i < subcheck_cases.value.length; i++) {
+        subcheck_cases.value[i - 1] = subcheck_cases.value[i];
+        for (const j of subcheck_cases.value[i - 1]) {
+          data.value.test_case_config.find(i => i.name === j).subcheck = i - 1;
         }
       }
+      subcheck_cases.value.pop();
     }
   }
+  // 从测试点列表中删除
   data.value.test_case_config = data.value.test_case_config.filter(
     i => i.name !== item.name
   );
@@ -71,12 +77,7 @@ const fetching = ref(false),
   modalData = ref({ file: '', content: '' });
 const handleDownloadFile = file => {
   fetching.value = true;
-  Axios.get(`/problem/data/${id}/`, {
-    params: {
-      mode: 'fetch',
-      file,
-    },
-  })
+  Axios.get(`/problem/data/${id}/file/${file}/`)
     .then(res => {
       const blob = new Blob([res], { type: 'text/plain' });
       const link = document.createElement('a');
@@ -91,11 +92,9 @@ const handleDownloadFile = file => {
 };
 const handleShowFile = file => {
   fetching.value = true;
-  Axios.get(`/problem/data/${id}/`, {
+  Axios.get(`/problem/data/${id}/file/${file}/`, {
     params: {
-      mode: 'fetch',
       partly: true,
-      file,
     },
   })
     .then(res => {
@@ -112,8 +111,9 @@ const clacAverageScore = () => {
   for (let i = 0; i < length - 1; i++) {
     data.value.test_case_config[i].score = parseInt(100 / length);
   }
-  data.value.test_case_config[length - 1].score =
-    100 - parseInt(100 / length) * (length - 1);
+  if (length)
+    data.value.test_case_config[length - 1].score =
+      100 - parseInt(100 / length) * (length - 1);
 };
 const checkSumScore = () => {
   let sum = 0;
@@ -168,7 +168,9 @@ const loadZip = async event => {
     data.value.test_case_config.push({
       name: inputNames[i],
       score: 0,
+      subcheck: data.value.use_subcheck ? 0 : null,
     });
+    if (data.value.use_subcheck) subcheck_cases.value[0].push(inputNames[i]);
     const input = await inputFiles[i].async('string'),
       ans = await outputFiles[i].async('string');
     newCases.push({
@@ -177,22 +179,21 @@ const loadZip = async event => {
       ans,
     });
   }
+  if (data.value.use_subcheck) subcheck_cases.value[0].sort();
 };
 
 const clacSubcheckAverageScore = () => {
-  const keys = Object.keys(data.value.subcheck_config);
-  const length = keys.length;
+  const length = data.value.subcheck_config.length;
   for (let i = 0; i < length - 1; i++) {
-    data.value.subcheck_config[keys[i]].score = parseInt(100 / length);
+    data.value.subcheck_config[i].score = parseInt(100 / length);
   }
-  data.value.subcheck_config[keys[length - 1]].score =
+  data.value.subcheck_config[length - 1].score =
     100 - parseInt(100 / length) * (length - 1);
 };
 const checkSubcheckSumScore = () => {
   let sum = 0;
-  const keys = Object.keys(data.value.subcheck_config);
-  keys.forEach(key => {
-    sum += data.value.subcheck_config[key].score;
+  data.value.subcheck_config.forEach(item => {
+    sum += item.score;
   });
   if (sum !== 100) {
     message.warning('总分不为100');
@@ -217,7 +218,7 @@ const submit = async () => {
   }
   Object.keys(data.value).forEach(key => {
     const value = data.value[key];
-    if (typeof value === 'object' && value !== null)
+    if (['object', 'array'].includes(typeof value) && value !== null)
       formData.append(key, JSON.stringify(value));
     else formData.append(key, value);
   });
@@ -234,16 +235,18 @@ const submit = async () => {
 
 const useSubcheck = value => {
   if (value) {
-    data.value.subcheck_config = { 0: { score: 0, name: '0', cases: [] } };
+    data.value.subcheck_config = [{ score: 0 }];
+    subcheck_cases.value = [[]];
     for (const i of data.value.test_case_config) {
       i.score = null;
       i.subcheck = 0;
-      data.value.subcheck_config[0].cases.push(i.name);
+      subcheck_cases.value[0].push(i.name);
     }
-    data.value.subcheck_config[0].cases.sort();
+    subcheck_cases.value[0].sort();
     clacSubcheckAverageScore();
   } else {
-    data.value.subcheck_config = {};
+    data.value.subcheck_config = [];
+    subcheck_cases.value = [];
     for (const i of data.value.test_case_config) {
       i.subcheck = null;
     }
@@ -254,7 +257,20 @@ const useSubcheck = value => {
 const columns = [
   {
     title: '测试点名称',
-    key: 'name',
+    render(row) {
+      return h(ShowOrEdit, {
+        value: row.name,
+        onUpdateValue(v) {
+          if (data.value.use_subcheck) {
+            subcheck_cases.value[row.subcheck][
+              subcheck_cases.value[row.subcheck].indexOf(row.name)
+            ] = v;
+            subcheck_cases.value[row.subcheck].sort();
+          }
+          row.name = v;
+        },
+      });
+    },
   },
   {
     title() {
@@ -302,40 +318,27 @@ const columns = [
         disabled: !data.value.use_subcheck,
         buttonPlacement: 'both',
         onUpdateValue: value => {
-          const toDelete = [];
-          for (const i in data.value.subcheck_config) {
-            if (data.value.subcheck_config[i].cases.includes(row.name)) {
-              data.value.subcheck_config[i].cases.splice(
-                data.value.subcheck_config[i].cases.indexOf(row.name),
-                1
-              );
-            }
-            if (data.value.subcheck_config[i].cases.length === 0) {
-              toDelete.push(i);
-            }
-          }
-          for (let i = 0; i < value; i++) {
-            if (
-              !data.value.subcheck_config[i] ||
-              toDelete.includes(String(i))
-            ) {
-              value = i;
-              break;
+          const old = row.subcheck;
+          subcheck_cases.value[old].splice(
+            subcheck_cases.value[old].indexOf(row.name),
+            1
+          );
+          if (subcheck_cases.value[old].length === 0) {
+            subcheck_cases.value.splice(old, 1);
+            data.value.subcheck_config.splice(old, 1);
+            for (const i of data.value.test_case_config) {
+              if (i.subcheck > old) i.subcheck--;
             }
           }
-          for (const i of toDelete) {
-            if (i !== String(value)) delete data.value.subcheck_config[i];
+          if (value >= subcheck_cases.value.length) {
+            value = subcheck_cases.value.length;
+            subcheck_cases.value.push([row.name]);
+            data.value.subcheck_config.push({ score: 0 });
+          } else {
+            subcheck_cases.value[value].push(row.name);
+            subcheck_cases.value[value].sort();
           }
           row.subcheck = value;
-          if (data.value.subcheck_config[row.subcheck] === undefined) {
-            data.value.subcheck_config[row.subcheck] = {
-              name: row.subcheck,
-              cases: [],
-              score: 0,
-            };
-          }
-          data.value.subcheck_config[row.subcheck].cases.push(row.name);
-          data.value.subcheck_config[row.subcheck].cases.sort();
         },
       });
     },
@@ -405,7 +408,10 @@ const columns = [
 <template>
   <n-space vertical size="large">
     <n-space>
-      <n-checkbox v-model:checked="data.use_subcheck" @change="useSubcheck">
+      <n-checkbox
+        v-model:checked="data.use_subcheck"
+        @update:checked="useSubcheck"
+      >
         捆绑测试
       </n-checkbox>
     </n-space>
@@ -435,14 +441,14 @@ const columns = [
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in data.subcheck_config" :key="item.name">
-        <td>{{ item.name }}</td>
+      <tr v-for="(item, index) in data.subcheck_config" :key="index">
+        <td>{{ index }}</td>
         <td>
           <n-tooltip trigger="hover">
             <template #trigger>
-              {{ item.cases.length }}
+              {{ subcheck_cases[index].length }}
             </template>
-            {{ item.cases.join(', ') }}
+            {{ subcheck_cases[index].join(', ') }}
           </n-tooltip>
         </td>
         <td>
