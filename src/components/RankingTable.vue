@@ -80,7 +80,7 @@ const columns = [
                             });
                           },
                         },
-                        { default: () => props.data.problems[item.id] }
+                        { default: () => item.name }
                       ),
                     default: () => [
                       `分数：${item.score}`,
