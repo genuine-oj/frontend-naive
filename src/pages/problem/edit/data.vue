@@ -174,7 +174,11 @@ const loadZip = async event => {
     });
     if (data.value.use_subcheck) subcheck_cases.value[0].push(inputNames[i]);
     const input = await inputFiles[i].async('string'),
-      ans = await outputFiles[i].async('string');
+      ans = await outputFiles
+        .find(v =>
+          [`${inputNames[i]}.ans`, `${inputNames[i]}.out`].includes(v.name)
+        )
+        .async('string');
     newCases.push({
       name: inputNames[i],
       input,
