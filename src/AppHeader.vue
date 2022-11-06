@@ -70,9 +70,7 @@ const handleUserOptionSelect = key => {
         @click="router.push({ name: 'home' })"
       >
         <template #icon>
-          <n-icon>
-            <HomeOutlined />
-          </n-icon>
+          <n-icon :component="HomeOutlined" />
         </template>
         首页
       </n-button>
@@ -83,9 +81,7 @@ const handleUserOptionSelect = key => {
         @click="router.push({ name: 'problem_list' })"
       >
         <template #icon>
-          <n-icon>
-            <BookOutline />
-          </n-icon>
+          <n-icon :component="BookOutline" />
         </template>
         题目
       </n-button>
@@ -96,9 +92,7 @@ const handleUserOptionSelect = key => {
         @click="router.push({ name: 'contest_list' })"
       >
         <template #icon>
-          <n-icon>
-            <TrophyOutline />
-          </n-icon>
+          <n-icon :component="TrophyOutline" />
         </template>
         比赛
       </n-button>
@@ -109,18 +103,17 @@ const handleUserOptionSelect = key => {
         @click="router.push({ name: 'submission_list' })"
       >
         <template #icon>
-          <n-icon>
-            <HourglassOutlined />
-          </n-icon>
+          <n-icon :component="HourglassOutlined" />
         </template>
         提交
       </n-button>
       <n-button size="large" quaternary @click="store.commit('changeTheme')">
         <template #icon>
-          <n-icon>
-            <SunnyOutline v-if="store.state.theme === 'dark'" />
-            <MoonOutline v-else />
-          </n-icon>
+          <n-icon
+            :component="
+              store.state.theme === 'dark' ? SunnyOutline : MoonOutline
+            "
+          />
         </template>
         {{ store.state.theme === 'dark' ? '浅色' : '深色' }}
       </n-button>
@@ -135,9 +128,7 @@ const handleUserOptionSelect = key => {
         @click="router.push('/user/register/')"
       >
         <template #icon>
-          <n-icon>
-            <UserAddOutlined />
-          </n-icon>
+          <n-icon :component="UserAddOutlined" />
         </template>
         注册
       </n-button>
@@ -148,9 +139,7 @@ const handleUserOptionSelect = key => {
         @click="router.push({ name: 'login' })"
       >
         <template #icon>
-          <n-icon>
-            <LogInOutline />
-          </n-icon>
+          <n-icon :component="LogInOutline" />
         </template>
         登录
       </n-button>

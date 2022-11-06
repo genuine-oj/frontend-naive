@@ -120,9 +120,7 @@ loadData();
         v-if="store.state.user.is_staff"
       >
         <template #icon>
-          <n-icon>
-            <BookmarksOutline />
-          </n-icon>
+          <n-icon :component="BookmarksOutline" />
         </template>
         标签管理
       </n-button>
@@ -133,9 +131,7 @@ loadData();
         v-if="store.state.user.is_staff"
       >
         <template #icon>
-          <n-icon>
-            <AddOutline />
-          </n-icon>
+          <n-icon :component="AddOutline" />
         </template>
         创建题目
       </n-button>

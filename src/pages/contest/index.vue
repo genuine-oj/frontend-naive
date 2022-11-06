@@ -65,9 +65,7 @@ loadData();
         v-if="store.state.user.is_staff"
       >
         <template #icon>
-          <n-icon>
-            <AddOutline />
-          </n-icon>
+          <n-icon :component="AddOutline" />
         </template>
         创建比赛/题单
       </n-button>
