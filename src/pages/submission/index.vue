@@ -60,10 +60,17 @@ loadData();
     <n-layout-content>
       <n-form inline>
         <n-form-item label="用户名称">
-          <n-input v-model:value="search.user__username" />
+          <n-input
+            v-model:value="search.user__username"
+            @keydown.enter="loadData"
+          />
         </n-form-item>
         <n-form-item label="题目ID">
-          <n-input v-model:value="search.problem__id" />
+          <n-input
+            v-model:value="search.problem__id"
+            type="number"
+            @keydown.enter="loadData"
+          />
         </n-form-item>
         <n-form-item label="语言">
           <n-select

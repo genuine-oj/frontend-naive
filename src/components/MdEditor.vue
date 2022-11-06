@@ -1,6 +1,8 @@
 <template>
   <n-card :bordered="false" class="md-editor-card">
     <MdEditor
+      :editorId="`md-editor-${id}`"
+      class="md-editor-v3"
       v-model="_content"
       katexJs="https://cdn.staticfile.org/KaTeX/0.15.1/katex.min.js"
       katexCss="https://cdn.staticfile.org/KaTeX/0.15.1/katex.min.css"
@@ -21,6 +23,9 @@
         '-',
         'link',
         'image',
+        'katex',
+        'codeRow',
+        'code',
         '-',
         'preview',
       ]"
@@ -28,7 +33,7 @@
       :previewOnly="previewOnly"
       :historyLength="20"
       showCodeRowNumber
-      previewTheme="vuepress"
+      :previewTheme="store.state.displaySettings.markdownTheme"
       :theme="store.state.theme"
     />
   </n-card>
@@ -39,6 +44,10 @@ import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { computed, ref, toRef, watch } from 'vue';
 import store from '@/store';
+
+const theme = ref('vuepress');
+
+const id = Math.random().toString().substr(2);
 
 const emit = defineEmits(['update:content']);
 const props = defineProps({
@@ -58,7 +67,7 @@ watch(toRef(props, 'content'), val => (_content.value = val));
 </script>
 
 <style lang="scss" scoped>
-#md-editor-v3 {
+.md-editor-v3 {
   background-color: var(--n-color);
   color: var(--n-text-color);
   border-radius: var(--n-border-radius);
@@ -66,8 +75,14 @@ watch(toRef(props, 'content'), val => (_content.value = val));
     box-shadow 0.3s var(--n-bezier), border-color 0.3s var(--n-bezier);
 }
 
-#md-editor-v3 :deep(.md-preview) > {
+:deep(.md-editor-v3 .md-preview) {
   div,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
   p,
   a,
   strong {
@@ -75,13 +90,13 @@ watch(toRef(props, 'content'), val => (_content.value = val));
   }
 }
 
-#md-editor-v3 :deep(img) {
+.md-editor-v3 :deep(img) {
   max-width: 70% !important;
   margin: 0 auto !important;
 }
 
 @media (max-width: 768px) {
-  #md-editor-v3 :deep(img) {
+  .md-editor-v3 :deep(img) {
     max-width: 100% !important;
   }
 }

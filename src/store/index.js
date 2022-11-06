@@ -1,12 +1,12 @@
 import { createStore } from 'vuex';
 import VuexPersistence from 'vuex-persist';
-import { useThemeVars } from 'naive-ui';
 
 const vuexPersistState = new VuexPersistence({
   storage: window.localStorage,
   reducer: state => ({
     user: state.user,
     theme: state.theme,
+    displaySettings: state.displaySettings,
   }),
 });
 
@@ -15,6 +15,7 @@ const store = createStore({
     return {
       user: {},
       theme: 'dark',
+      displaySettings: { markdownTheme: 'vuepress' },
     };
   },
   mutations: {
@@ -26,6 +27,9 @@ const store = createStore({
     },
     changeTheme(state) {
       state.theme = state.theme === 'light' ? 'dark' : 'light';
+    },
+    setDisplaySettings(state, data) {
+      state.displaySettings = data;
     },
   },
   getters: {

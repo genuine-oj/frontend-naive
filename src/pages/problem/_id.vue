@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router';
 import MdEditor from '@/components/MdEditor.vue';
 import { languageOptions } from '@/plugins/consts';
 import CodeMirror from '@/components/CodeMirror.vue';
+import { MemoryOutlined, AccessTimeOutlined } from '@vicons/material';
 
 const route = useRoute(),
   message = useMessage();
@@ -70,15 +71,21 @@ const submit = () => {
       >
         <n-tab-pane name="description" tab="题目描述">
           <n-space vertical size="large">
-            <div></div>
+            <div />
 
             <div>
               <n-space size="small">
                 <n-tag :bordered="false">
                   {{ problemData.time_limit }} ms
+                  <template #icon>
+                    <n-icon :component="AccessTimeOutlined" />
+                  </template>
                 </n-tag>
                 <n-tag :bordered="false">
                   {{ problemData.memory_limit }} MB
+                  <template #icon>
+                    <n-icon :component="MemoryOutlined" />
+                  </template>
                 </n-tag>
                 <n-tag v-for="item in problemData.tags" :key="item.id">
                   {{ item.name }}

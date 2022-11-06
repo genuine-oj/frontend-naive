@@ -7,6 +7,7 @@ import store from '@/store';
 import { judgeStatus, languages, difficultyOptions } from '@/plugins/consts';
 import ProblemTable from '@/components/ProblemTable.vue';
 import { useRoute } from 'vue-router';
+import { BookmarksOutline, AddOutline } from '@vicons/ionicons5';
 
 const route = useRoute();
 
@@ -82,7 +83,7 @@ loadData();
       <div style="float: left; display: inline-block">
         <n-form inline>
           <n-form-item>
-            <n-input v-model:value="search" />
+            <n-input v-model:value="search" @keydown.enter="loadData" />
           </n-form-item>
           <n-form-item>
             <n-select
@@ -118,6 +119,11 @@ loadData();
         @click="() => router.push({ name: 'tag_edit' })"
         v-if="store.state.user.is_staff"
       >
+        <template #icon>
+          <n-icon>
+            <BookmarksOutline />
+          </n-icon>
+        </template>
         标签管理
       </n-button>
       <n-button
@@ -126,6 +132,11 @@ loadData();
         @click="() => router.push({ name: 'problem_create' })"
         v-if="store.state.user.is_staff"
       >
+        <template #icon>
+          <n-icon>
+            <AddOutline />
+          </n-icon>
+        </template>
         创建题目
       </n-button>
     </n-layout-content>

@@ -5,7 +5,21 @@ import router from './router';
 import { useRoute } from 'vue-router';
 import Axios from '@/plugins/axios';
 import { NIcon } from 'naive-ui';
-import { UserOutlined, SettingOutlined, LogoutOutlined } from '@vicons/antd';
+import {
+  UserOutlined,
+  UserAddOutlined,
+  HomeOutlined,
+  HourglassOutlined,
+} from '@vicons/antd';
+import {
+  LogOutOutline,
+  SettingsOutline,
+  LogInOutline,
+  BookOutline,
+  TrophyOutline,
+  SunnyOutline,
+  MoonOutline,
+} from '@vicons/ionicons5';
 
 const route = useRoute();
 
@@ -26,12 +40,12 @@ const userOptions = [
   {
     label: '设置',
     key: 'user_settings',
-    icon: renderIcon(SettingOutlined),
+    icon: renderIcon(SettingsOutline),
   },
   {
     label: '退出登录',
     key: 'logout',
-    icon: renderIcon(LogoutOutlined),
+    icon: renderIcon(LogOutOutline),
   },
 ];
 const handleUserOptionSelect = key => {
@@ -55,6 +69,11 @@ const handleUserOptionSelect = key => {
         :quaternary="route.meta.cate !== 'home'"
         @click="router.push({ name: 'home' })"
       >
+        <template #icon>
+          <n-icon>
+            <HomeOutlined />
+          </n-icon>
+        </template>
         首页
       </n-button>
       <n-button
@@ -63,7 +82,12 @@ const handleUserOptionSelect = key => {
         :quaternary="route.meta.cate !== 'problem'"
         @click="router.push({ name: 'problem_list' })"
       >
-        题库
+        <template #icon>
+          <n-icon>
+            <BookOutline />
+          </n-icon>
+        </template>
+        题目
       </n-button>
       <n-button
         size="large"
@@ -71,6 +95,11 @@ const handleUserOptionSelect = key => {
         :quaternary="route.meta.cate !== 'contest'"
         @click="router.push({ name: 'contest_list' })"
       >
+        <template #icon>
+          <n-icon>
+            <TrophyOutline />
+          </n-icon>
+        </template>
         比赛
       </n-button>
       <n-button
@@ -79,9 +108,20 @@ const handleUserOptionSelect = key => {
         :quaternary="route.meta.cate !== 'submission'"
         @click="router.push({ name: 'submission_list' })"
       >
+        <template #icon>
+          <n-icon>
+            <HourglassOutlined />
+          </n-icon>
+        </template>
         提交
       </n-button>
       <n-button size="large" quaternary @click="store.commit('changeTheme')">
+        <template #icon>
+          <n-icon>
+            <SunnyOutline v-if="store.state.theme === 'dark'" />
+            <MoonOutline v-else />
+          </n-icon>
+        </template>
         {{ store.state.theme === 'dark' ? '浅色' : '深色' }}
       </n-button>
     </n-space>
@@ -94,6 +134,11 @@ const handleUserOptionSelect = key => {
         :quaternary="route.meta.cate !== 'register'"
         @click="router.push('/user/register/')"
       >
+        <template #icon>
+          <n-icon>
+            <UserAddOutlined />
+          </n-icon>
+        </template>
         注册
       </n-button>
       <n-button
@@ -102,6 +147,11 @@ const handleUserOptionSelect = key => {
         :quaternary="route.meta.cate !== 'login'"
         @click="router.push({ name: 'login' })"
       >
+        <template #icon>
+          <n-icon>
+            <LogInOutline />
+          </n-icon>
+        </template>
         登录
       </n-button>
     </n-space>
@@ -109,6 +159,7 @@ const handleUserOptionSelect = key => {
       <n-dropdown
         trigger="hover"
         :options="userOptions"
+        size="large"
         @select="handleUserOptionSelect"
       >
         <n-button

@@ -6,6 +6,7 @@ import router from '@/router';
 import store from '@/store';
 import ContestTable from '@/components/ContestTable.vue';
 import { useRoute } from 'vue-router';
+import { AddOutline } from '@vicons/ionicons5';
 
 const route = useRoute();
 
@@ -50,7 +51,7 @@ loadData();
       <div style="float: left; display: inline-block">
         <n-form inline>
           <n-form-item>
-            <n-input v-model:value="search" />
+            <n-input v-model:value="search" @keydown.enter="loadData" />
           </n-form-item>
           <n-form-item>
             <n-button type="primary" @click="loadData">搜索</n-button>
@@ -63,6 +64,11 @@ loadData();
         @click="() => router.push({ name: 'contest_create' })"
         v-if="store.state.user.is_staff"
       >
+        <template #icon>
+          <n-icon>
+            <AddOutline />
+          </n-icon>
+        </template>
         创建比赛/题单
       </n-button>
     </n-layout-content>

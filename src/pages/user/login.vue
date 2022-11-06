@@ -37,13 +37,18 @@ const login = () => {
     <n-divider></n-divider>
     <n-form>
       <n-form-item label="用户名">
-        <n-input v-model:value="form.username" placeholder="请输入用户名" />
+        <n-input
+          v-model:value="form.username"
+          placeholder="请输入用户名"
+          @keydown.enter="login"
+        />
       </n-form-item>
       <n-form-item label="密码">
         <n-input
           v-model:value="form.password"
           type="password"
           placeholder="请输入密码"
+          @keydown.enter="login"
         />
       </n-form-item>
       <n-form-item>
