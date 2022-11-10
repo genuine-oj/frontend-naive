@@ -28,11 +28,16 @@ const register = () => {
     username: form.value.username,
     password: form.value.password,
   }).then(res => {
-    store.commit('setUser', res);
-    if (route.query.next) {
-      router.push(route.query.next);
+    message.success('注册成功');
+    if (store.getters.loggedIn) {
+      router.push({ name: 'user_edit', params: { id: res.id } });
     } else {
-      router.push({ name: 'home' });
+      store.commit('setUser', res);
+      if (route.query.next) {
+        router.push(route.query.next);
+      } else {
+        router.push({ name: 'home' });
+      }
     }
   });
 };

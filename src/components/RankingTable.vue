@@ -5,6 +5,7 @@ import store from '@/store';
 import { NButton, NTime, NPopover, NSpace } from 'naive-ui';
 import { CheckCircleTwotone } from '@vicons/antd';
 import { judgeStatus } from '@/plugins/consts';
+import { RouterLink } from 'vue-router';
 
 const props = defineProps({
   data: {
@@ -29,20 +30,19 @@ const columns = [
     title: '用户',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'user_detail', params: { id: row.id } } },
         {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            // TODO
-            return;
-            router.push({
-              name: 'submission_list',
-              query: { user__username: row.user.username },
-            });
-          },
-        },
-        { default: () => row.username }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+              },
+              { default: () => row.username }
+            ),
+        }
       );
     },
   },

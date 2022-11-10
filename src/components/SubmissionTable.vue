@@ -103,18 +103,19 @@ const columns = [
     title: '用户',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'user_detail', params: { id: row.user.id } } },
         {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push({
-              name: 'user_detail',
-              params: { id: row.user.id },
-            });
-          },
-        },
-        { default: () => row.user.username }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+              },
+              { default: () => row.user.username }
+            ),
+        }
       );
     },
   },

@@ -4,13 +4,14 @@ import Axios from '@/plugins/axios';
 import { difficultyColor } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 import { useRoute } from 'vue-router';
+import store from '@/store';
 
 const route = useRoute();
 
-const id = route.params.id,
+const id = ref(route.params.id),
   data = ref({});
 
-Axios.get(`/user/${id}/`).then(res => {
+Axios.get(`/user/${id.value}/`).then(res => {
   console.log(res.solved_problems.sort((a, b) => a.problem.id - b.problem.id));
   data.value = res;
 });
@@ -24,7 +25,10 @@ Axios.get(`/user/${id}/`).then(res => {
           style="width: 70%; margin: auto; display: block; border-radius: 50%"
           src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
         />
-        <h1>{{ data.username }}</h1>
+        <div style="margin-bottom: 18px">
+          <h1 style="margin-bottom: 0">{{ data.username }}</h1>
+          <p v-if="data.real_name">{{ data.real_name }}</p>
+        </div>
         <n-statistic label="通过题目数">
           {{ data.solved_problems && data.solved_problems.length }}
         </n-statistic>
@@ -37,6 +41,9 @@ Axios.get(`/user/${id}/`).then(res => {
             {{ data.submission_count }}
           </template>
         </n-statistic>
+        <router-link :to="{ name: 'user_edit', params: { id } }">
+          <n-button type="primary" style="margin-top: 10px">管理</n-button>
+        </router-link>
       </n-space>
     </n-layout-sider>
     <n-layout-content content-style="padding: 24px 35px;">

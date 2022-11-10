@@ -45,15 +45,15 @@ const route = useRoute();
           <!-- Footer -->
           <n-layout-footer style="text-align: center" v-if="config.useFooter">
             {{ config.name }} Powered By
-            <router-link
-              to="https://github.com/genuine-oj/"
+            <a
+              href="https://github.com/genuine-oj/"
               target="_blank"
               style="text-decoration: none; color: var(--n-text-color)"
             >
-              <n-button text>Genuine-OJ</n-button></router-link
+              <n-button text>Genuine-OJ</n-button></a
             >. &nbsp;
-            <router-link
-              to="https://beian.miit.gov.cn/"
+            <a
+              href="https://beian.miit.gov.cn/"
               target="_blank"
               style="text-decoration: none"
               v-if="config.footer.icp"
@@ -61,7 +61,7 @@ const route = useRoute();
               <n-button text>
                 {{ config.footer.icp }}
               </n-button>
-            </router-link>
+            </a>
           </n-layout-footer>
         </n-layout>
       </n-notification-provider>

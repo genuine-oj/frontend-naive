@@ -58,17 +58,14 @@ loadData();
           </n-form-item>
         </n-form>
       </div>
-      <!-- <router-link
-        :to="{ name: 'contest_create' }"
-        v-if="store.state.user.is_staff"
-      >
+      <router-link :to="{ name: 'register' }" v-if="store.state.user.is_staff">
         <n-button style="float: right; margin-top: 25px" type="primary">
           <template #icon>
             <n-icon :component="AddOutline" />
           </template>
-          创建比赛/题单
+          创建用户
         </n-button>
-      </router-link> -->
+      </router-link>
     </n-layout-content>
     <n-layout-content>
       <UserTable :data="data" :loading="loading" />

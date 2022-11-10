@@ -30,6 +30,7 @@ const routes = [
     meta: {
       title: '注册',
       cate: 'register',
+      requiredAdmin: !config.allowRegister,
     },
   },
   {
@@ -60,6 +61,17 @@ const routes = [
       title: '个人设置',
       cate: 'user',
       requiredLogin: true,
+    },
+  },
+  {
+    path: '/user/:id/edit/',
+    name: 'user_edit',
+    component: () => import('@/pages/user/settings.vue'),
+    meta: {
+      title: '编辑用户 #{id}',
+      cate: 'user',
+      requiredLogin: true,
+      requiredAdmin: true,
     },
   },
   {

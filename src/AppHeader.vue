@@ -21,6 +21,7 @@ import {
   SunnyOutline,
   MoonOutline,
 } from '@vicons/ionicons5';
+import config from '../config';
 
 const route = useRoute();
 
@@ -134,7 +135,7 @@ const handleUserOptionSelect = key => {
   </div>
   <div style="display: inline; float: right">
     <n-space size="small" v-if="!store.getters.loggedIn">
-      <router-link :to="{ name: 'register' }">
+      <router-link :to="{ name: 'register' }" v-if="config.allowRegister">
         <n-button
           :tertiary="route.meta.cate === 'register'"
           :quaternary="route.meta.cate !== 'register'"

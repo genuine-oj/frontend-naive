@@ -4,5 +4,6 @@
   "useFooter": true,
   "footer": {
     "icp": "ICP-XXXXXXXXXX"
-  }
+  },
+  "allowRegister": true
 }

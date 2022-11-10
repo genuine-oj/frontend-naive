@@ -17,21 +17,6 @@ defineProps({
 });
 
 const columns = [
-  // {
-  //   title: '',
-  //   render(row) {
-  //     return h(
-  //       NIcon,
-  //       {
-  //         style: 'margin-top: 5px; margin-left: 5px',
-  //         size: '20',
-  //         color: '#27AE60',
-  //       },
-  //       { default: () => (row.joined ? h(CheckCircleTwotone) : '') }
-  //     );
-  //   },
-  //   width: 100,
-  // },
   {
     title: 'ID',
     render(row) {
