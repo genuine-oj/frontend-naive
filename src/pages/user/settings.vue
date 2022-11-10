@@ -1,4 +1,22 @@
 <template>
+  <h1>用户信息</h1>
+  <n-form :model="userInfoForm" style="max-width: min(100%, 500px)">
+    <n-form-item label="真实姓名" prop="real_name">
+      <n-input v-model:value="userInfoForm.real_name" />
+    </n-form-item>
+    <n-form-item label="邮箱" prop="email">
+      <n-input v-model:value="userInfoForm.email" />
+    </n-form-item>
+    <n-form-item label="头像" prop="avatar">
+      <n-input v-model:value="userInfoForm.avatar" />
+    </n-form-item>
+    <n-form-item>
+      <n-button type="primary" @click="submitUserInfo">保存</n-button>
+    </n-form-item>
+  </n-form>
+
+  <n-divider />
+
   <h1>修改密码</h1>
   <n-form
     :model="passwordForm"
@@ -51,6 +69,19 @@ import { ref } from 'vue';
 import store from '@/store';
 
 const message = useMessage();
+
+const userInfoForm = ref({
+  email: store.state.user.email,
+  avatar: store.state.user.avatar,
+  real_name: store.state.user.real_name,
+});
+
+const submitUserInfo = () => {
+  Axios.put('/user/info/', userInfoForm.value).then(res => {
+    message.success('保存成功');
+    store.commit('setUser', res);
+  });
+};
 
 const passwordForm = ref({
   old_password: '',

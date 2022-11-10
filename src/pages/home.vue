@@ -16,12 +16,15 @@ Axios.get('https://api.yixiangzhilv.com/yiyan/sentence/get/').then(res => {
 <template>
   <n-layout-content>
     <div
-      style="
-        height: calc(100vh - 250px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
+      :style="{
+        height: 'calc(100vh - 250px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        userSelect: 'none',
+        transition: 'all 0.5s',
+        opacity: yiyan.content ? 1 : 0,
+      }"
     >
       <h1 style="text-align: center">
         <n-gradient-text

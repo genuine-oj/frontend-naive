@@ -5,6 +5,7 @@ import store from '@/store';
 import { NButton, NIcon, NTag, NTime } from 'naive-ui';
 import { CheckCircleTwotone } from '@vicons/antd';
 import { difficulty, difficultyColor } from '@/plugins/consts';
+import { RouterLink } from 'vue-router';
 
 defineProps({
   data: {
@@ -37,15 +38,19 @@ const columns = [
     title: 'ID',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'contest_detail', params: { id: row.id } } },
         {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push({ name: 'contest_detail', params: { id: row.id } });
-          },
-        },
-        { default: () => row.id }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+              },
+              { default: () => row.id }
+            ),
+        }
       );
     },
   },
@@ -53,15 +58,19 @@ const columns = [
     title: '标题',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'contest_detail', params: { id: row.id } } },
         {
-          size: 'small',
-          text: true,
-          onClick() {
-            router.push({ name: 'contest_detail', params: { id: row.id } });
-          },
-        },
-        { default: () => row.title }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+              },
+              { default: () => row.title }
+            ),
+        }
       );
     },
   },
@@ -81,6 +90,7 @@ const columns = [
   {
     title: '时间',
     render(row) {
+      if (row.problem_list_mode) return '-';
       const start_time = new Date(row.start_time),
         end_time = new Date(row.end_time),
         current_time = new Date();
@@ -125,8 +135,15 @@ const columns = [
   },
 ];
 </script>
+
 <template>
   <n-spin :show="loading">
     <n-data-table :columns="columns" :data="data" :bordered="false" />
   </n-spin>
 </template>
+
+<style lang="scss" scoped>
+:deep(a) {
+  text-decoration: none;
+}
+</style>

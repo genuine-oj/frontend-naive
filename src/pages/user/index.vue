@@ -4,7 +4,7 @@ import Axios from '@/plugins/axios';
 
 import router from '@/router';
 import store from '@/store';
-import ContestTable from '@/components/ContestTable.vue';
+import UserTable from '@/components/UserTable.vue';
 import { useRoute } from 'vue-router';
 import { AddOutline } from '@vicons/ionicons5';
 
@@ -25,7 +25,7 @@ watch(
 
 const loadData = () => {
   loading.value = true;
-  Axios.get('/contest/', {
+  Axios.get('/user/', {
     params: {
       limit: pagination.value.pageSize,
       offset: (pagination.value.page - 1) * pagination.value.pageSize,
@@ -46,7 +46,7 @@ loadData();
 
 <template>
   <n-layout>
-    <h1 style="display: inline">比赛&题单列表</h1>
+    <h1 style="display: inline">用户列表</h1>
     <n-layout-content>
       <div style="float: left; display: inline-block">
         <n-form inline>
@@ -58,7 +58,7 @@ loadData();
           </n-form-item>
         </n-form>
       </div>
-      <router-link
+      <!-- <router-link
         :to="{ name: 'contest_create' }"
         v-if="store.state.user.is_staff"
       >
@@ -68,10 +68,10 @@ loadData();
           </template>
           创建比赛/题单
         </n-button>
-      </router-link>
+      </router-link> -->
     </n-layout-content>
     <n-layout-content>
-      <ContestTable :data="data" :loading="loading" />
+      <UserTable :data="data" :loading="loading" />
     </n-layout-content>
     <n-layout-content>
       <div style="margin-top: 30px; text-align: center">

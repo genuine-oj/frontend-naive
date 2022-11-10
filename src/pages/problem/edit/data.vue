@@ -5,7 +5,7 @@ import Axios from '@/plugins/axios';
 import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
-import { NButton, NDropdown, NInput, NInputNumber, NSpace } from 'naive-ui';
+import { NButton, NDropdown, NInputNumber, NSpace } from 'naive-ui';
 import ShowOrEdit from '@/components/ShowOrEdit';
 
 const route = useRoute(),
@@ -57,6 +57,15 @@ const handleCaseDelete = item => {
       item.subcheck
     ].filter(i => i !== item.name);
     if (!subcheck_cases.value[item.subcheck].length) {
+      delete data.value.subcheck_config[item.subcheck];
+      for (
+        let i = item.subcheck + 1;
+        i < data.value.subcheck_config.length;
+        i++
+      ) {
+        data.value.subcheck_config[i - 1] = data.value.subcheck_config[i];
+      }
+      data.value.subcheck_config.pop();
       // 如果该捆绑测试点删除当前点后为空，则删除捆绑测试点
       delete subcheck_cases.value[item.subcheck];
       for (let i = item.subcheck + 1; i < subcheck_cases.value.length; i++) {
@@ -78,6 +87,15 @@ const fetching = ref(false),
   showModal = ref(false),
   modalData = ref({ file: '', content: '' });
 const handleDownloadFile = file => {
+  let fileName = file.split('.');
+  let type = fileName.pop();
+  fileName = fileName.join('.');
+  for (const item of newCases) {
+    if (item.name === fileName) {
+      message.error('新导入的未上传的测试点无法下载');
+      return;
+    }
+  }
   fetching.value = true;
   Axios.get(`/problem/data/${id}/file/${file}/`)
     .then(res => {
@@ -93,6 +111,16 @@ const handleDownloadFile = file => {
     });
 };
 const handleShowFile = file => {
+  let fileName = file.split('.');
+  let type = fileName.pop();
+  fileName = fileName.join('.');
+  for (const item of newCases) {
+    if (item.name === fileName) {
+      modalData.value = { file, content: item[type] };
+      showModal.value = true;
+      return;
+    }
+  }
   fetching.value = true;
   Axios.get(`/problem/data/${id}/file/${file}/`, {
     params: {
@@ -131,7 +159,7 @@ const checkSumScore = () => {
 
 const uploadElement = ref(null),
   loadingZip = ref(false);
-const fileCmp = (a, b) => a.name - b.name;
+const fileCmp = (a, b) => a.name < b.name;
 const loadZip = async event => {
   loadingZip.value = true;
   const file = event.file.file;
@@ -148,9 +176,6 @@ const loadZip = async event => {
       v => v.name.match(/^(?<n>[^/]+)\.(out|ans)$/i).groups.n
     ),
     currentNames = data.value.test_case_config.map(v => v.name);
-  setTimeout(() => {
-    loadingZip.value = false;
-  }, 200);
   for (const v of inputNames) {
     if (currentNames.includes(v)) {
       message.error(`测试点'${v}'已存在`);
@@ -165,6 +190,10 @@ const loadZip = async event => {
       message.error(`测试点'${v}'缺少输入文件`);
       return;
     }
+  }
+  if (data.value.use_subcheck && !data.value.subcheck_config.length) {
+    data.value.subcheck_config = [{ score: 0 }];
+    subcheck_cases.value = [[]];
   }
   for (let i = 0; i < inputFiles.length; i++) {
     data.value.test_case_config.push({
@@ -181,11 +210,14 @@ const loadZip = async event => {
         .async('string');
     newCases.push({
       name: inputNames[i],
-      input,
+      in: input,
       ans,
     });
   }
   if (data.value.use_subcheck) subcheck_cases.value[0].sort();
+  setTimeout(() => {
+    loadingZip.value = false;
+  }, 200);
 };
 
 const clacSubcheckAverageScore = () => {
@@ -217,7 +249,7 @@ const submit = async () => {
   if (newCases.length) {
     const zip = new JSZip();
     newCases.forEach(item => {
-      zip.file(`${item.name}.in`, item.input);
+      zip.file(`${item.name}.in`, item.in);
       zip.file(`${item.name}.ans`, item.ans);
     });
     formData.append('test_cases', await zip.generateAsync({ type: 'blob' }));
@@ -260,18 +292,105 @@ const useSubcheck = value => {
   }
 };
 
+const handleCaseSort = key => {
+  try {
+    if (key === 'name') {
+      data.value.test_case_config.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (key === 'firstNumber') {
+      data.value.test_case_config.sort((a, b) => {
+        const aNumber = parseInt(a.name.match(/\d+/)[0]),
+          bNumber = parseInt(b.name.match(/\d+/)[0]);
+        return aNumber - bNumber;
+      });
+    } else if (key === 'allNumber') {
+      data.value.test_case_config.sort((a, b) => {
+        const aNumber = parseInt(a.name.match(/\d+/g).join('')),
+          bNumber = parseInt(b.name.match(/\d+/g).join(''));
+        return aNumber - bNumber;
+      });
+    } else if (key === 'allLetter_allNumber') {
+      data.value.test_case_config.sort((a, b) => {
+        const aNumber = a.name.match(/\d+/g),
+          bNumber = b.name.match(/\d+/g),
+          aLetter = a.name.match(/[a-zA-Z]+/g),
+          bLetter = b.name.match(/[a-zA-Z]+/g);
+        if (aLetter === null && bLetter === null) {
+          return parseInt(aNumber.join('')) - parseInt(bNumber.join(''));
+        } else if (aLetter === null) {
+          return 1;
+        } else if (bLetter === null) {
+          return -1;
+        } else {
+          const aLetterNumber = aLetter
+            .join('')
+            .localeCompare(bLetter.join(''));
+          if (aLetterNumber === 0) {
+            return parseInt(aNumber.join('')) - parseInt(bNumber.join(''));
+          } else {
+            return aLetterNumber;
+          }
+        }
+      });
+    }
+  } catch (e) {
+    message.error('测试点名称不符合所选排序方式要求的规范');
+  }
+};
+
 const columns = [
   {
-    title: '测试点名称',
+    title() {
+      return h(
+        NSpace,
+        {},
+        {
+          default: () => [
+            '测试点名称',
+            h(
+              NDropdown,
+              {
+                trigger: 'hover',
+                options: [
+                  {
+                    label: '字典序',
+                    key: 'name',
+                  },
+                  {
+                    label: '第一处连续数字',
+                    key: 'firstNumber',
+                  },
+                  {
+                    label: '连接所有数字',
+                    key: 'allNumber',
+                  },
+                  {
+                    label: '连接所有字母 + 连接所有数字',
+                    key: 'allLetter_allNumber',
+                  },
+                ],
+                onSelect: handleCaseSort,
+              },
+              {
+                default: () =>
+                  h(NButton, { size: 'small' }, { default: () => '排序' }),
+              }
+            ),
+          ],
+        }
+      );
+    },
     render(row) {
       return h(ShowOrEdit, {
         value: row.name,
         onUpdateValue(v) {
-          for (const i of data.value.test_case_config) {
-            if (i.name === v) {
-              message.error('测试点名称不能重复');
-              return;
-            }
+          if (v === row.name) {
+            return;
+          } else if (!v) {
+            message.error('测试点名称不能为空');
+            return;
+          } else if (data.value.test_case_config.some(i => i.name === v)) {
+            message.error('测试点名称不能重复');
+            return;
           }
           if (data.value.use_subcheck) {
             subcheck_cases.value[row.subcheck][
@@ -411,7 +530,6 @@ const columns = [
               NButton,
               {
                 onClick: () => handleCaseDelete(row),
-                disabled: data.value.test_case_config.length <= 1,
               },
               { default: () => '删除' }
             ),
@@ -438,6 +556,7 @@ const columns = [
       :single-line="false"
       :columns="columns"
       :data="data.test_case_config"
+      :loading="loadingZip"
     />
   </n-space>
 
@@ -462,7 +581,7 @@ const columns = [
       <tr v-for="(item, index) in data.subcheck_config" :key="index">
         <td>{{ index }}</td>
         <td>
-          <n-tooltip trigger="hover">
+          <n-tooltip trigger="hover" v-if="subcheck_cases[index]">
             <template #trigger>
               {{ subcheck_cases[index].length }}
             </template>
@@ -499,7 +618,7 @@ const columns = [
           :disbled="loadingZip"
           :loading="loadingZip"
         >
-          选择文件
+          选择 ZIP 文件
         </n-button>
       </n-upload-trigger>
       <n-upload-file-list />

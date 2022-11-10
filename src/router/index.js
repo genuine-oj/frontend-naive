@@ -33,6 +33,26 @@ const routes = [
     },
   },
   {
+    path: '/user/',
+    name: 'user_list',
+    component: () => import('@/pages/user/index.vue'),
+    meta: {
+      title: '用户列表',
+      cate: 'user',
+      requiredLogin: true,
+    },
+  },
+  {
+    path: '/user/:id/',
+    name: 'user_detail',
+    component: () => import('@/pages/user/_id.vue'),
+    meta: {
+      title: '用户详情 #{id}',
+      cate: 'user',
+      requiredLogin: true,
+    },
+  },
+  {
     path: '/user/settings/',
     name: 'user_settings',
     component: () => import('@/pages/user/settings.vue'),

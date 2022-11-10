@@ -113,28 +113,28 @@ loadData();
           </n-form-item>
         </n-form>
       </div>
-      <n-button
-        style="float: right; margin-top: 25px"
-        type="primary"
-        @click="() => router.push({ name: 'tag_edit' })"
+      <router-link :to="{ name: 'tag_edit' }" v-if="store.state.user.is_staff">
+        <n-button style="float: right; margin-top: 25px" type="primary">
+          <template #icon>
+            <n-icon :component="BookmarksOutline" />
+          </template>
+          标签管理
+        </n-button>
+      </router-link>
+      <router-link
+        :to="{ name: 'problem_create' }"
         v-if="store.state.user.is_staff"
       >
-        <template #icon>
-          <n-icon :component="BookmarksOutline" />
-        </template>
-        标签管理
-      </n-button>
-      <n-button
-        style="float: right; margin-top: 25px; margin-right: 10px"
-        type="primary"
-        @click="() => router.push({ name: 'problem_create' })"
-        v-if="store.state.user.is_staff"
-      >
-        <template #icon>
-          <n-icon :component="AddOutline" />
-        </template>
-        创建题目
-      </n-button>
+        <n-button
+          style="float: right; margin-top: 25px; margin-right: 10px"
+          type="primary"
+        >
+          <template #icon>
+            <n-icon :component="AddOutline" />
+          </template>
+          创建题目
+        </n-button>
+      </router-link>
     </n-layout-content>
     <n-layout-content>
       <ProblemTable :data="data" :loading="loading" />

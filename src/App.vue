@@ -16,9 +16,6 @@ hljs.registerLanguage('cpp', cpp);
 hljs.registerLanguage('python', python);
 hljs.registerLanguage('python3', python);
 
-const open = url => {
-  window.open(url, '_blank');
-};
 const route = useRoute();
 </script>
 
@@ -47,14 +44,24 @@ const route = useRoute();
 
           <!-- Footer -->
           <n-layout-footer style="text-align: center" v-if="config.useFooter">
-            {{ config.name }} Powered By Genuine-OJ. &nbsp;
-            <n-button
-              text
-              v-if="config.footer.icp"
-              @click="open('https://beian.miit.gov.cn/')"
+            {{ config.name }} Powered By
+            <router-link
+              to="https://github.com/genuine-oj/"
+              target="_blank"
+              style="text-decoration: none; color: var(--n-text-color)"
             >
-              {{ config.footer.icp }}
-            </n-button>
+              <n-button text>Genuine-OJ</n-button></router-link
+            >. &nbsp;
+            <router-link
+              to="https://beian.miit.gov.cn/"
+              target="_blank"
+              style="text-decoration: none"
+              v-if="config.footer.icp"
+            >
+              <n-button text>
+                {{ config.footer.icp }}
+              </n-button>
+            </router-link>
           </n-layout-footer>
         </n-layout>
       </n-notification-provider>

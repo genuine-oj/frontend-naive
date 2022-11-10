@@ -14,3 +14,11 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
   margin: 0;
 }
+
+.n-data-table-thead,
+.n-base-selection-placeholder__inner,
+.n-base-selection-input__content,
+.n-form-item-label__text,
+.n-tag__content {
+  user-select: none;
+}

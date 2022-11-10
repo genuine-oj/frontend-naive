@@ -17,6 +17,16 @@ const id = route.params.id,
   subchecks = ref([]),
   showingSubchecks = ref([]);
 
+const getStatus = () => {
+  Axios.get(`/submission/${id}/status/`).then(res => {
+    if (res.status <= -3) {
+      setTimeout(getStatus, 1000);
+    } else {
+      loadData();
+    }
+  });
+};
+
 const loadData = () => {
   Axios.get(`/submission/${id}/`).then(res => {
     subchecks.value = [];
@@ -39,7 +49,7 @@ const loadData = () => {
     }
     data.value = res;
     if (res.status <= -3) {
-      setTimeout(loadData, 1000);
+      setTimeout(getStatus, 1000);
     }
   });
 };
@@ -53,6 +63,19 @@ const loadDetail = ({ name, expanded }) => {
       detailData.value[name] = res;
     });
   }
+};
+
+const downloadCase = (name, type) => {
+  Axios.get(`/submission/${id}/test-point/${name}/`, {
+    params: { mode: 'fetch', file: type },
+  }).then(res => {
+    const url = window.URL.createObjectURL(new Blob([res]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${name}.${type}`);
+    document.body.appendChild(link);
+    link.click();
+  });
 };
 </script>
 
@@ -146,7 +169,18 @@ const loadDetail = ({ name, expanded }) => {
           <n-collapse :default-expanded-names="['in', 'out', 'ans']">
             <n-collapse-item title="输入" name="in">
               <n-card>
-                <n-scrollbar x-scrollable style="margin-bottom: -10px">
+                <n-button
+                  size="small"
+                  class="case-download-button"
+                  @click="downloadCase(item.case_name, 'in')"
+                >
+                  下载
+                </n-button>
+                <n-scrollbar
+                  x-scrollable
+                  style="margin-bottom: -10px"
+                  class="case-data"
+                >
                   <div style="padding-bottom: 15px">
                     <n-code :code="detailData[item.case_name].in" />
                   </div>
@@ -159,7 +193,18 @@ const loadDetail = ({ name, expanded }) => {
               v-if="item.status !== judgeStatus.ACCEPTED"
             >
               <n-card>
-                <n-scrollbar x-scrollable style="margin-bottom: -10px">
+                <n-button
+                  size="small"
+                  class="case-download-button"
+                  @click="downloadCase(item.case_name, 'out')"
+                >
+                  下载
+                </n-button>
+                <n-scrollbar
+                  x-scrollable
+                  style="margin-bottom: -10px"
+                  class="case-data"
+                >
                   <div style="padding-bottom: 15px">
                     <n-code :code="detailData[item.case_name].out" />
                   </div>
@@ -175,7 +220,18 @@ const loadDetail = ({ name, expanded }) => {
               name="ans"
             >
               <n-card>
-                <n-scrollbar x-scrollable style="margin-bottom: -10px">
+                <n-button
+                  size="small"
+                  class="case-download-button"
+                  @click="downloadCase(item.case_name, 'ans')"
+                >
+                  下载
+                </n-button>
+                <n-scrollbar
+                  x-scrollable
+                  style="margin-bottom: -10px"
+                  class="case-data"
+                >
                   <div style="padding-bottom: 15px">
                     <n-code :code="detailData[item.case_name].ans" />
                   </div>
@@ -188,3 +244,17 @@ const loadDetail = ({ name, expanded }) => {
     </n-collapse-item>
   </n-collapse>
 </template>
+
+<style lang="scss" scoped>
+:deep(.case-data.n-scrollbar) {
+  display: inline !important;
+  .n-scrollbar-container {
+    display: inline !important;
+  }
+}
+
+.case-download-button {
+  float: right;
+  z-index: 1;
+}
+</style>

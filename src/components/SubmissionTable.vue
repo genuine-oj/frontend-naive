@@ -4,6 +4,7 @@ import router from '@/router';
 import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus, languages, noTime, noMemory } from '@/plugins/consts';
 import { NButton, NTime } from 'naive-ui';
+import { RouterLink } from 'vue-router';
 
 defineProps({
   data: {
@@ -21,15 +22,19 @@ const columns = [
     title: 'ID',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'submission_detail', params: { id: row.id } } },
         {
-          text: true,
-          size: 'small',
-          onClick: () => {
-            router.push({ name: 'submission_detail', params: { id: row.id } });
-          },
-        },
-        { default: () => row.id }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+              },
+              { default: () => row.id }
+            ),
+        }
       );
     },
   },
@@ -37,16 +42,20 @@ const columns = [
     title: '分数',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'submission_detail', params: { id: row.id } } },
         {
-          text: true,
-          size: 'small',
-          color: judgeStatus.getColorClass(row.status),
-          onClick() {
-            router.push({ name: 'submission_detail', params: { id: row.id } });
-          },
-        },
-        { default: () => row.score }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+                color: judgeStatus.getColorClass(row.status),
+              },
+              { default: () => row.score }
+            ),
+        }
       );
     },
   },
@@ -54,15 +63,19 @@ const columns = [
     title: '状态',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'submission_detail', params: { id: row.id } } },
         {
-          size: 'small',
-          color: judgeStatus.getColorClass(row.status),
-          onClick() {
-            router.push({ name: 'submission_detail', params: { id: row.id } });
-          },
-        },
-        { default: () => judgeStatus.getDisplay(row.status) }
+          default: () =>
+            h(
+              NButton,
+              {
+                size: 'small',
+                color: judgeStatus.getColorClass(row.status),
+              },
+              { default: () => judgeStatus.getDisplay(row.status) }
+            ),
+        }
       );
     },
   },
@@ -70,18 +83,19 @@ const columns = [
     title: '题目',
     render(row) {
       return h(
-        NButton,
+        RouterLink,
+        { to: { name: 'problem_detail', params: { id: row.problem.id } } },
         {
-          text: true,
-          size: 'small',
-          onClick() {
-            router.push({
-              name: 'problem_detail',
-              params: { id: row.problem.id },
-            });
-          },
-        },
-        { default: () => row.problem.title }
+          default: () =>
+            h(
+              NButton,
+              {
+                text: true,
+                size: 'small',
+              },
+              { default: () => row.problem.title }
+            ),
+        }
       );
     },
   },
@@ -95,8 +109,8 @@ const columns = [
           size: 'small',
           onClick: () => {
             router.push({
-              name: 'submission_list',
-              query: { user__username: row.user.username },
+              name: 'user_detail',
+              params: { id: row.user.id },
             });
           },
         },
@@ -134,8 +148,15 @@ const columns = [
   },
 ];
 </script>
+
 <template>
   <n-spin :show="loading">
     <n-data-table :columns="columns" :data="data" :bordered="false" />
   </n-spin>
 </template>
+
+<style lang="scss" scoped>
+:deep(a) {
+  text-decoration: none;
+}
+</style>
