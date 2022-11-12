@@ -8,7 +8,8 @@ import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 
-const route = useRoute();
+const route = useRoute(),
+  message = useMessage();
 
 const id = route.params.id,
   data = ref({}),
@@ -65,17 +66,25 @@ const loadDetail = ({ name, expanded }) => {
   }
 };
 
-const downloadCase = (name, type) => {
-  Axios.get(`/submission/${id}/test-point/${name}/`, {
-    params: { mode: 'fetch', file: type },
-  }).then(res => {
-    const url = window.URL.createObjectURL(new Blob([res]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${name}.${type}`);
-    document.body.appendChild(link);
-    link.click();
-  });
+const downloadCase = (name, type, event) => {
+  event.stopPropagation();
+  const url = `/api/submission/${id}/test-point/${name}/?mode=fetch&file=${type}`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', `${name}.${type}`);
+  document.body.appendChild(link);
+  link.click();
+};
+
+const copy = (text, event = undefined) => {
+  if (event) event.stopPropagation();
+  const input = document.createElement('textarea');
+  input.value = text;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  message.success('复制成功');
 };
 </script>
 
@@ -89,7 +98,17 @@ const downloadCase = (name, type) => {
     :default-expanded-names="['code', 'log']"
     display-directive="show"
   >
-    <n-collapse-item title="源代码" name="code">
+    <n-collapse-item name="code">
+      <template #header>
+        源代码
+        <n-button
+          size="small"
+          class="case-download-button"
+          @click="event => copy(data.source, event)"
+        >
+          下载
+        </n-button>
+      </template>
       <n-card>
         <n-scrollbar x-scrollable style="margin-bottom: -10px">
           <div style="padding-bottom: 15px">
@@ -137,6 +156,7 @@ const downloadCase = (name, type) => {
           v-for="(item, index) in data.detail"
           :key="index"
           v-show="!useSubcheck || showingSubchecks.includes(item.subcheck)"
+          :disabled="!data.allow_download"
         >
           <template #header>
             <n-space>
@@ -168,14 +188,17 @@ const downloadCase = (name, type) => {
           </template>
           <n-collapse :default-expanded-names="['in', 'out', 'ans']">
             <n-collapse-item title="输入" name="in">
-              <n-card>
+              <template #header>
+                输入
                 <n-button
                   size="small"
                   class="case-download-button"
-                  @click="downloadCase(item.case_name, 'in')"
+                  @click="event => downloadCase(item.case_name, 'in', event)"
                 >
                   下载
                 </n-button>
+              </template>
+              <n-card>
                 <n-scrollbar
                   x-scrollable
                   style="margin-bottom: -10px"
@@ -188,18 +211,20 @@ const downloadCase = (name, type) => {
               </n-card>
             </n-collapse-item>
             <n-collapse-item
-              title="输出"
               name="out"
               v-if="item.status !== judgeStatus.ACCEPTED"
             >
-              <n-card>
+              <template #header>
+                输出
                 <n-button
                   size="small"
                   class="case-download-button"
-                  @click="downloadCase(item.case_name, 'out')"
+                  @click="event => downloadCase(item.case_name, 'out', event)"
                 >
                   下载
                 </n-button>
+              </template>
+              <n-card>
                 <n-scrollbar
                   x-scrollable
                   style="margin-bottom: -10px"
@@ -211,22 +236,22 @@ const downloadCase = (name, type) => {
                 </n-scrollbar>
               </n-card>
             </n-collapse-item>
-            <n-collapse-item
-              :title="
-                item.status === judgeStatus.ACCEPTED
-                  ? '输出 / 预期输出'
-                  : ' 预期输出'
-              "
-              name="ans"
-            >
-              <n-card>
+            <n-collapse-item name="ans">
+              <template #header>
+                {{
+                  item.status === judgeStatus.ACCEPTED
+                    ? '输出 / 预期输出'
+                    : ' 预期输出'
+                }}
                 <n-button
                   size="small"
                   class="case-download-button"
-                  @click="downloadCase(item.case_name, 'ans')"
+                  @click="event => downloadCase(item.case_name, 'ans', event)"
                 >
                   下载
                 </n-button>
+              </template>
+              <n-card>
                 <n-scrollbar
                   x-scrollable
                   style="margin-bottom: -10px"
@@ -246,15 +271,8 @@ const downloadCase = (name, type) => {
 </template>
 
 <style lang="scss" scoped>
-:deep(.case-data.n-scrollbar) {
-  display: inline !important;
-  .n-scrollbar-container {
-    display: inline !important;
-  }
-}
-
 .case-download-button {
-  float: right;
-  z-index: 1;
+  margin-left: 10px;
+  float: left;
 }
 </style>

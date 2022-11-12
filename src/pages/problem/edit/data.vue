@@ -5,7 +5,7 @@ import Axios from '@/plugins/axios';
 import MdEditor from '@/components/MdEditor.vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
-import { NButton, NDropdown, NInputNumber, NSpace } from 'naive-ui';
+import { NButton, NDropdown, NInputNumber, NSpace, NPopover } from 'naive-ui';
 import ShowOrEdit from '@/components/ShowOrEdit';
 
 const route = useRoute(),
@@ -96,19 +96,12 @@ const handleDownloadFile = file => {
       return;
     }
   }
-  fetching.value = true;
-  Axios.get(`/problem/data/${id}/file/${file}/`)
-    .then(res => {
-      const blob = new Blob([res], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = file;
-      link.click();
-      link.remove();
-    })
-    .finally(() => {
-      fetching.value = false;
-    });
+  const url = `/api/problem/data/${id}/file/${file}/`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', file);
+  document.body.appendChild(link);
+  link.click();
 };
 const handleShowFile = file => {
   let fileName = file.split('.');
@@ -337,6 +330,21 @@ const handleCaseSort = key => {
   }
 };
 
+const autoSubcheckCnt = ref(1);
+const autoSubcheck = () => {
+  data.value.subcheck_config = [];
+  subcheck_cases.value = [];
+  const length = data.value.test_case_config.length;
+  for (let i = 0, j = 0; i < length; i += autoSubcheckCnt.value, j++) {
+    data.value.subcheck_config.push({ score: 0 });
+    subcheck_cases.value.push([]);
+    for (let k = i; k < i + autoSubcheckCnt.value && k < length; k++) {
+      data.value.test_case_config[k].subcheck = j;
+      subcheck_cases.value[j].push(data.value.test_case_config[k].name);
+    }
+  }
+  clacSubcheckAverageScore();
+};
 const columns = [
   {
     title() {
@@ -445,7 +453,58 @@ const columns = [
     },
   },
   {
-    title: '捆绑测试',
+    title() {
+      return h(
+        NSpace,
+        {},
+        {
+          default: () => [
+            '捆绑测试',
+            h(
+              NPopover,
+              {
+                trigger: 'hover',
+              },
+              {
+                default: () => [
+                  h(NInputNumber, {
+                    value: autoSubcheckCnt.value,
+                    min: 1,
+                    max: data.value.test_case_config.length,
+                    style: 'width: 120px; text-align: center',
+                    buttonPlacement: 'both',
+                    onUpdateValue: value => {
+                      autoSubcheckCnt.value = value;
+                    },
+                  }),
+                  h(
+                    NButton,
+                    {
+                      size: 'small',
+                      type: 'primary',
+                      style: {
+                        marginTop: '10px',
+                        width: '120px',
+                      },
+                      onClick: autoSubcheck,
+                    },
+                    {
+                      default: () => `每 ${autoSubcheckCnt.value} 个点一组`,
+                    }
+                  ),
+                ],
+                trigger: () =>
+                  h(
+                    NButton,
+                    { size: 'small', disabled: !data.value.use_subcheck },
+                    { default: () => '自动编排' }
+                  ),
+              }
+            ),
+          ],
+        }
+      );
+    },
     render(row) {
       return h(NInputNumber, {
         value: row.subcheck,
@@ -539,6 +598,10 @@ const columns = [
     },
   },
 ];
+
+const uploadDirectory = directory => {
+  console.log(directory);
+};
 </script>
 
 <template>
@@ -608,7 +671,6 @@ const columns = [
     @change="loadZip"
     abstract
     accept="application/zip"
-    :max="1"
     ref="uploadElement"
   >
     <n-space style="height: 45px; align-items: center">

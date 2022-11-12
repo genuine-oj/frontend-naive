@@ -104,8 +104,15 @@ const columns = [
   },
 ];
 </script>
+
 <template>
   <n-spin :show="loading">
     <n-data-table :columns="columns" :data="data.users" :bordered="false" />
   </n-spin>
 </template>
+
+<style lang="scss" scoped>
+:deep(a) {
+  text-decoration: none;
+}
+</style>

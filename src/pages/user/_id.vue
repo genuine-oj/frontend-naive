@@ -41,7 +41,10 @@ Axios.get(`/user/${id.value}/`).then(res => {
             {{ data.submission_count }}
           </template>
         </n-statistic>
-        <router-link :to="{ name: 'user_edit', params: { id } }">
+        <router-link
+          :to="{ name: 'user_edit', params: { id } }"
+          v-if="store.state.user.is_staff"
+        >
           <n-button type="primary" style="margin-top: 10px">管理</n-button>
         </router-link>
       </n-space>
