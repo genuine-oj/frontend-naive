@@ -106,7 +106,7 @@ const copy = (text, event = undefined) => {
           class="case-download-button"
           @click="event => copy(data.source, event)"
         >
-          下载
+          复制
         </n-button>
       </template>
       <n-card>
