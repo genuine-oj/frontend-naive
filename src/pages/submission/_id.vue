@@ -186,84 +186,90 @@ const copy = (text, event = undefined) => {
               </span>
             </n-space>
           </template>
-          <n-collapse :default-expanded-names="['in', 'out', 'ans']">
-            <n-collapse-item title="输入" name="in">
-              <template #header>
-                输入
-                <n-button
-                  size="small"
-                  class="case-download-button"
-                  @click="event => downloadCase(item.case_name, 'in', event)"
-                >
-                  下载
-                </n-button>
-              </template>
-              <n-card>
-                <n-scrollbar
-                  x-scrollable
-                  style="margin-bottom: -10px"
-                  class="case-data"
-                >
-                  <div style="padding-bottom: 15px">
-                    <n-code :code="detailData[item.case_name].in" />
-                  </div>
-                </n-scrollbar>
-              </n-card>
-            </n-collapse-item>
-            <n-collapse-item
-              name="out"
-              v-if="item.status !== judgeStatus.ACCEPTED"
-            >
-              <template #header>
-                输出
-                <n-button
-                  size="small"
-                  class="case-download-button"
-                  @click="event => downloadCase(item.case_name, 'out', event)"
-                >
-                  下载
-                </n-button>
-              </template>
-              <n-card>
-                <n-scrollbar
-                  x-scrollable
-                  style="margin-bottom: -10px"
-                  class="case-data"
-                >
-                  <div style="padding-bottom: 15px">
-                    <n-code :code="detailData[item.case_name].out" />
-                  </div>
-                </n-scrollbar>
-              </n-card>
-            </n-collapse-item>
-            <n-collapse-item name="ans">
-              <template #header>
-                {{
-                  item.status === judgeStatus.ACCEPTED
-                    ? '输出 / 预期输出'
-                    : ' 预期输出'
-                }}
-                <n-button
-                  size="small"
-                  class="case-download-button"
-                  @click="event => downloadCase(item.case_name, 'ans', event)"
-                >
-                  下载
-                </n-button>
-              </template>
-              <n-card>
-                <n-scrollbar
-                  x-scrollable
-                  style="margin-bottom: -10px"
-                  class="case-data"
-                >
-                  <div style="padding-bottom: 15px">
-                    <n-code :code="detailData[item.case_name].ans" />
-                  </div>
-                </n-scrollbar>
-              </n-card>
-            </n-collapse-item>
-          </n-collapse>
+          <n-spin
+            :show="
+              !(detailData[item.case_name] && detailData[item.case_name].in)
+            "
+          >
+            <n-collapse :default-expanded-names="['in', 'out', 'ans']">
+              <n-collapse-item title="输入" name="in">
+                <template #header>
+                  输入
+                  <n-button
+                    size="small"
+                    class="case-download-button"
+                    @click="event => downloadCase(item.case_name, 'in', event)"
+                  >
+                    下载
+                  </n-button>
+                </template>
+                <n-card>
+                  <n-scrollbar
+                    x-scrollable
+                    style="margin-bottom: -10px"
+                    class="case-data"
+                  >
+                    <div style="padding-bottom: 15px">
+                      <n-code :code="detailData[item.case_name].in" />
+                    </div>
+                  </n-scrollbar>
+                </n-card>
+              </n-collapse-item>
+              <n-collapse-item
+                name="out"
+                v-if="item.status !== judgeStatus.ACCEPTED"
+              >
+                <template #header>
+                  输出
+                  <n-button
+                    size="small"
+                    class="case-download-button"
+                    @click="event => downloadCase(item.case_name, 'out', event)"
+                  >
+                    下载
+                  </n-button>
+                </template>
+                <n-card>
+                  <n-scrollbar
+                    x-scrollable
+                    style="margin-bottom: -10px"
+                    class="case-data"
+                  >
+                    <div style="padding-bottom: 15px">
+                      <n-code :code="detailData[item.case_name].out" />
+                    </div>
+                  </n-scrollbar>
+                </n-card>
+              </n-collapse-item>
+              <n-collapse-item name="ans">
+                <template #header>
+                  {{
+                    item.status === judgeStatus.ACCEPTED
+                      ? '输出 / 预期输出'
+                      : ' 预期输出'
+                  }}
+                  <n-button
+                    size="small"
+                    class="case-download-button"
+                    @click="event => downloadCase(item.case_name, 'ans', event)"
+                  >
+                    下载
+                  </n-button>
+                </template>
+                <n-card>
+                  <n-scrollbar
+                    x-scrollable
+                    style="margin-bottom: -10px"
+                    class="case-data"
+                  >
+                    <div style="padding-bottom: 15px">
+                      <n-code :code="detailData[item.case_name].ans" />
+                    </div>
+                  </n-scrollbar>
+                </n-card>
+              </n-collapse-item>
+            </n-collapse>
+          </n-spin>
         </n-collapse-item>
       </n-collapse>
     </n-collapse-item>

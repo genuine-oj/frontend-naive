@@ -15,7 +15,7 @@ const store = createStore({
     return {
       user: {},
       theme: 'dark',
-      displaySettings: { markdownTheme: 'vuepress' },
+      displaySettings: { markdownTheme: 'vuepress', sentenceApi: 'yxzl' },
     };
   },
   mutations: {

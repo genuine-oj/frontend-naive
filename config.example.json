@@ -5,5 +5,6 @@
   "footer": {
     "icp": "ICP-XXXXXXXXXX"
   },
-  "allowRegister": true
+  "allowRegister": true,
+  "sentenceApi": "yxzl"
 }

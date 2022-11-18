@@ -24,10 +24,10 @@ const id = ref(route.params.id);
     </n-space>
   </h1>
   <n-tabs type="line" animated>
-    <n-tab-pane name="detail" tab="详情">
+    <n-tab-pane name="detail" tab="详情" display-directive="show">
       <EditDetail />
     </n-tab-pane>
-    <n-tab-pane name="data" tab="数据" display-directive="show:lazy" v-if="id">
+    <n-tab-pane name="data" tab="数据" display-directive="show" v-if="id">
       <EditData />
     </n-tab-pane>
   </n-tabs>

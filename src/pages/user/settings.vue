@@ -2,7 +2,11 @@
   <div>
     <h1>用户信息</h1>
     <n-form :model="userInfoForm" style="max-width: min(100%, 500px)">
-      <n-form-item label="密码" prop="password">
+      <n-form-item
+        label="密码"
+        prop="password"
+        v-if="store.state.user.is_staff"
+      >
         <n-input
           v-model:value="userInfoForm.password"
           type="password"
@@ -47,9 +51,7 @@
         />
       </n-form-item>
       <n-form-item>
-        <n-button type="error" @click="changePassword" size="large">
-          修改
-        </n-button>
+        <n-button type="error" @click="changePassword"> 修改 </n-button>
       </n-form-item>
     </n-form>
   </div>
@@ -58,6 +60,7 @@
 
   <div v-if="!id">
     <h1>页面设置</h1>
+    <p>以下设置保存在本地缓存中，不会同步到云端。</p>
     <n-form
       :model="displayForm"
       :label-width="80"
@@ -70,8 +73,15 @@
           style="min-width: 125px"
         />
       </n-form-item>
+      <n-form-item label="句子API接口" name="sentenceApi">
+        <n-select
+          v-model:value="displayForm.sentenceApi"
+          :options="sentenceApiOptions"
+          style="min-width: 125px"
+        />
+      </n-form-item>
       <n-form-item>
-        <n-button type="primary" @click="changeDisplaySettings" size="large">
+        <n-button type="primary" @click="changeDisplaySettings">
           保存
         </n-button>
       </n-form-item>
@@ -171,9 +181,13 @@ const markdownThemeOptions = [
   { label: 'cyanosis', value: 'cyanosis' },
   { label: 'arknights', value: 'arknights' },
 ];
+const sentenceApiOptions = [
+  { label: '异想之旅亿言', value: 'yxzl' },
+  { label: 'Hitokoto - 一言', value: 'hitokoto' },
+];
 
 const displayForm = ref({
-  markdownTheme: store.state.displaySettings.markdownTheme,
+  ...store.state.displaySettings,
 });
 
 const changeDisplaySettings = () => {

@@ -344,6 +344,7 @@ const autoSubcheck = () => {
     }
   }
   clacSubcheckAverageScore();
+  message.success('捆绑测试自动编排成功');
 };
 const columns = [
   {
@@ -612,6 +613,9 @@ const uploadDirectory = directory => {
         @update:checked="useSubcheck"
       >
         捆绑测试
+      </n-checkbox>
+      <n-checkbox v-model:checked="data.allow_download">
+        允许下载测试点
       </n-checkbox>
     </n-space>
     <n-data-table
