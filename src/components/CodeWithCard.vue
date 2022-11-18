@@ -1,8 +1,8 @@
 <template>
   <n-card>
     <n-scrollbar x-scrollable style="margin-bottom: -10px">
-      <div style="padding-bottom: 15px">
-        <n-code :code="code" :language="language" show-line-numbers />
+      <div style="padding-bottom: 10px">
+        <n-code :code="code" />
       </div>
     </n-scrollbar>
   </n-card>
@@ -13,14 +13,6 @@ import { defineProps } from 'vue';
 defineProps({
   code: {
     type: String,
-    required: true,
-  },
-  language: {
-    type: String,
-    required: true,
-  },
-  showLineNumbers: {
-    type: Boolean,
     required: true,
   },
 });

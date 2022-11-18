@@ -599,10 +599,6 @@ const columns = [
     },
   },
 ];
-
-const uploadDirectory = directory => {
-  console.log(directory);
-};
 </script>
 
 <template>

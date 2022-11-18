@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router';
 import MdEditor from '@/components/MdEditor.vue';
 import { languageOptions } from '@/plugins/consts';
 import CodeMirror from '@/components/CodeMirror.vue';
+import CodeWithCard from '@/components/CodeWithCard.vue';
 import { MemoryOutlined, AccessTimeOutlined } from '@vicons/material';
 
 const route = useRoute(),
@@ -124,24 +125,12 @@ const submit = () => {
                 <n-row v-if="item.input || item.output" :gutter="12">
                   <n-col :span="11">
                     <h3>样例输入 #{{ item.index }}</h3>
-                    <n-card class="sample-card">
-                      <n-scrollbar x-scrollable>
-                        <div class="sample">
-                          <n-code :code="item.input" />
-                        </div>
-                      </n-scrollbar>
-                    </n-card>
+                    <CodeWithCard :code="item.input" />
                   </n-col>
                   <n-col :span="2"></n-col>
                   <n-col :span="11">
                     <h3>样例输出 #{{ item.index }}</h3>
-                    <n-card class="sample-card">
-                      <n-scrollbar x-scrollable>
-                        <div class="sample">
-                          <n-code :code="item.output" />
-                        </div>
-                      </n-scrollbar>
-                    </n-card>
+                    <CodeWithCard :code="item.output" />
                   </n-col>
                 </n-row>
               </div>
@@ -195,25 +184,16 @@ const submit = () => {
   </n-layout>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .n-layout-content,
 .n-layout-sider {
   margin: 20px !important;
 }
 
 .description {
-  .n-card__content {
+  :deep(.n-card__content) {
     padding: 0 20px !important;
     margin: 0 10px !important;
-  }
-}
-.sample-card {
-  .n-card__content {
-    padding: 0 !important;
-    margin: 0;
-  }
-  .sample {
-    padding: 20px;
   }
 }
 </style>

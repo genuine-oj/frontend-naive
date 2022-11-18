@@ -6,6 +6,7 @@ import store from '@/store';
 import { useRoute } from 'vue-router';
 import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
+import CodeWithCard from '@/components/CodeWithCard.vue';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 
 const route = useRoute(),
@@ -203,17 +204,7 @@ const copy = (text, event = undefined) => {
                     下载
                   </n-button>
                 </template>
-                <n-card>
-                  <n-scrollbar
-                    x-scrollable
-                    style="margin-bottom: -10px"
-                    class="case-data"
-                  >
-                    <div style="padding-bottom: 15px">
-                      <n-code :code="detailData[item.case_name].in" />
-                    </div>
-                  </n-scrollbar>
-                </n-card>
+                <CodeWithCard :code="detailData[item.case_name].in" />
               </n-collapse-item>
               <n-collapse-item
                 name="out"
@@ -229,17 +220,7 @@ const copy = (text, event = undefined) => {
                     下载
                   </n-button>
                 </template>
-                <n-card>
-                  <n-scrollbar
-                    x-scrollable
-                    style="margin-bottom: -10px"
-                    class="case-data"
-                  >
-                    <div style="padding-bottom: 15px">
-                      <n-code :code="detailData[item.case_name].out" />
-                    </div>
-                  </n-scrollbar>
-                </n-card>
+                <CodeWithCard :code="detailData[item.case_name].out" />
               </n-collapse-item>
               <n-collapse-item name="ans">
                 <template #header>
@@ -256,17 +237,7 @@ const copy = (text, event = undefined) => {
                     下载
                   </n-button>
                 </template>
-                <n-card>
-                  <n-scrollbar
-                    x-scrollable
-                    style="margin-bottom: -10px"
-                    class="case-data"
-                  >
-                    <div style="padding-bottom: 15px">
-                      <n-code :code="detailData[item.case_name].ans" />
-                    </div>
-                  </n-scrollbar>
-                </n-card>
+                <CodeWithCard :code="detailData[item.case_name].ans" />
               </n-collapse-item>
             </n-collapse>
           </n-spin>
