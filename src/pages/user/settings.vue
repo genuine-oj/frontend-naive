@@ -119,7 +119,7 @@ if (id.value) {
 const submitUserInfo = () => {
   console.log(userInfoForm.value);
   let req;
-  if (!id) {
+  if (!id.value) {
     req = Axios.put('/user/info/', userInfoForm.value);
   } else {
     req = Axios.put(`/user/${id.value}/`, userInfoForm.value);
