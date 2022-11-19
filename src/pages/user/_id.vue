@@ -23,7 +23,10 @@ Axios.get(`/user/${id.value}/`).then(res => {
       <n-space vertical>
         <img
           style="width: 70%; margin: auto; display: block; border-radius: 50%"
-          src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+          :src="
+            data.avatar ||
+            'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+          "
         />
         <div style="margin-bottom: 18px">
           <h1 style="margin-bottom: 0">{{ data.username }}</h1>
