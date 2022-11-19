@@ -52,7 +52,12 @@ const getFilterFromPath = () => {
   tags.value = (route.query.tag && route.query.tag.split(',')) || [];
   loadData();
 };
-watch(() => route.query, getFilterFromPath);
+watch(
+  () => route.query,
+  () => {
+    if (route.name === 'problem_list') getFilterFromPath();
+  }
+);
 
 const loadData = () => {
   loading.value = true;

@@ -103,7 +103,7 @@ const columns = [
     },
   },
   {
-    title: '通过 / 提交人数',
+    title: '通过 / 提交次数',
     render(row) {
       return `${row.accepted_count} / ${row.submission_count}`;
     },

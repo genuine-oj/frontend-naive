@@ -25,11 +25,16 @@ const problem = ref({
   memory_limit: 128,
   time_limit: 1000,
 });
+const fileList = ref([]);
 
 if (id) {
   Axios.get(`/problem/${id}/`).then(res => {
     res.tags = res.tags.map(tag => tag.id);
     problem.value = res;
+    fileList.value = res.files.map(file => ({
+      name: file,
+      status: 'finished',
+    }));
   });
 }
 
@@ -39,22 +44,18 @@ Axios.get('/problem/tag/').then(res => {
 });
 
 const submiting = ref(false);
-const notNull = [
-  { key: 'title', name: '标题' },
-  { key: 'description', name: '描述' },
-  { key: 'tags', name: '标签' },
-];
 const submit = () => {
-  for (const item of notNull) {
-    if (!problem.value[item.key]) {
-      message.warning(`题目${item.name}不能为空`);
-      return;
-    }
+  if (!problem.value['title']) {
+    message.warning(`题目标题不能为空`);
+    return;
   }
   submiting.value = true;
+  const files = fileList.value
+    .filter(file => file.status === 'finished')
+    .map(file => file.name);
   let req;
-  if (id) req = Axios.put(`/problem/${id}/`, problem.value);
-  else req = Axios.post('/problem/', problem.value);
+  if (id) req = Axios.put(`/problem/${id}/`, { ...problem.value, files });
+  else req = Axios.post('/problem/', { ...problem.value, files });
   req
     .then(res => {
       if (!id) router.push({ name: 'problem_detail', params: { id: res.id } });
@@ -63,6 +64,11 @@ const submit = () => {
     .finally(() => {
       submiting.value = false;
     });
+};
+
+const removeFile = ({ file }) => {
+  if (file.status === 'error') return true;
+  return Axios.delete(`/problem/${id}/file/${file.name}/`);
 };
 </script>
 
@@ -125,6 +131,18 @@ const submit = () => {
     <div>
       <h2>提示</h2>
       <MdEditor v-model:content="problem.hint" />
+    </div>
+    <div>
+      <h2>附件</h2>
+      <n-upload
+        v-if="id"
+        :action="`/api/problem/${id}/file/`"
+        @remove="removeFile"
+        v-model:file-list="fileList"
+      >
+        <n-button>上传文件</n-button>
+      </n-upload>
+      <p v-else style="font-size: medium">题目创建后才可上传。</p>
     </div>
     <div>
       <h2>运行限制</h2>

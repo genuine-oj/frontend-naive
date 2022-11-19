@@ -1,8 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
 import Axios from '@/plugins/axios';
-
-import router from '@/router';
 import store from '@/store';
 import ContestTable from '@/components/ContestTable.vue';
 import { useRoute } from 'vue-router';
@@ -18,6 +16,7 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
 watch(
   () => route.query,
   () => {
+    if (route.name !== 'contest_list') return;
     if (route.query.search) search.value = route.query.search;
     loadData();
   }

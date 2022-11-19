@@ -26,6 +26,7 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
 watch(
   () => route.query,
   () => {
+    if (route.name !== 'submission_list') return;
     for (const key in search.value) {
       search.value[key] = route.query[key] ?? '';
     }

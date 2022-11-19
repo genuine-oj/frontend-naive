@@ -18,6 +18,10 @@ const id = route.params.id,
 
 const loadData = () => {
   Axios.get(`/problem/${id}/`).then(res => {
+    res.files = res.files.map(file => ({
+      name: file,
+      status: 'finished',
+    }));
     problemData.value = res;
   });
 };
@@ -25,7 +29,12 @@ const loadData = () => {
 loadData();
 
 const beforeLeave = tabName => {
-  if (tabName === 'submission') {
+  if (tabName === 'submit') {
+    if (!problemData.value.allow_submit) {
+      message.warning('当前题目没有测试数据');
+      return false;
+    }
+  } else if (tabName === 'submission') {
     router.push({
       name: 'submission_list',
       query: { problem__id: id },
@@ -57,6 +66,26 @@ const submit = () => {
     .finally(() => {
       submiting.value = false;
     });
+};
+
+const copy = (text, event = undefined) => {
+  if (event) event.stopPropagation();
+  const input = document.createElement('textarea');
+  input.value = text;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  message.success('复制成功');
+};
+
+const downloadProblemFile = file => {
+  const url = `/api/problem/${id}/file/${file.name}/`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', file.name);
+  document.body.appendChild(link);
+  link.click();
 };
 </script>
 
@@ -115,7 +144,12 @@ const submit = () => {
               </n-card>
             </div>
 
-            <div v-if="problemData.samples">
+            <div
+              v-if="
+                problemData.samples &&
+                problemData.samples.some(item => item.input || item.output)
+              "
+            >
               <h2>样例</h2>
               <div
                 v-for="item in problemData.samples"
@@ -124,12 +158,30 @@ const submit = () => {
               >
                 <n-row v-if="item.input || item.output" :gutter="12">
                   <n-col :span="11">
-                    <h3>样例输入 #{{ item.index }}</h3>
+                    <h3>
+                      样例输入 #{{ item.index }}
+                      <n-button
+                        size="small"
+                        class="copy-button"
+                        @click="event => copy(item.input)"
+                      >
+                        复制
+                      </n-button>
+                    </h3>
                     <CodeWithCard :code="item.input" />
                   </n-col>
                   <n-col :span="2"></n-col>
                   <n-col :span="11">
-                    <h3>样例输出 #{{ item.index }}</h3>
+                    <h3>
+                      样例输出 #{{ item.index }}
+                      <n-button
+                        size="small"
+                        class="copy-button"
+                        @click="event => copy(item.output)"
+                      >
+                        复制
+                      </n-button>
+                    </h3>
                     <CodeWithCard :code="item.output" />
                   </n-col>
                 </n-row>
@@ -141,6 +193,20 @@ const submit = () => {
               <n-card class="description">
                 <MdEditor :content="problemData.hint" previewOnly />
               </n-card>
+            </div>
+            <div v-if="problemData.files && problemData.files.length">
+              <h2>文件</h2>
+              <n-upload
+                abstract
+                :default-file-list="problemData.files"
+                :show-remove-button="false"
+                show-download-button
+                @download="downloadProblemFile"
+              >
+                <n-card>
+                  <n-upload-file-list />
+                </n-card>
+              </n-upload>
             </div>
           </n-space>
         </n-tab-pane>
@@ -195,5 +261,9 @@ const submit = () => {
     padding: 0 20px !important;
     margin: 0 10px !important;
   }
+}
+
+.copy-button {
+  margin-left: 10px;
 }
 </style>
