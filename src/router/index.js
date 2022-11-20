@@ -81,6 +81,8 @@ const routes = [
     meta: {
       title: '题目列表',
       cate: 'problem',
+      requiredLogin: true,
+      keepAlive: true,
     },
   },
   {
@@ -134,6 +136,7 @@ const routes = [
       title: '比赛列表',
       cate: 'contest',
       requiredLogin: true,
+      keepAlive: true,
     },
   },
   {
@@ -177,6 +180,7 @@ const routes = [
       title: '提交列表',
       cate: 'submission',
       requiredLogin: true,
+      keepAlive: true,
     },
   },
   {

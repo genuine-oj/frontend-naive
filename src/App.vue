@@ -17,6 +17,11 @@ hljs.registerLanguage('python', python);
 hljs.registerLanguage('python3', python);
 
 const route = useRoute();
+
+const test = a => {
+  console.log(a);
+  return a;
+};
 </script>
 
 <template>
@@ -39,7 +44,12 @@ const route = useRoute();
 
           <!-- Body -->
           <div style="padding: 30px 7%">
-            <RouterView />
+            <router-view v-slot="{ Component }">
+              <keep-alive>
+                <component :is="Component" v-if="route.meta.keepAlive" />
+              </keep-alive>
+              <component :is="Component" v-if="!route.meta.keepAlive" />
+            </router-view>
           </div>
 
           <!-- Footer -->

@@ -12,13 +12,17 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref(''),
   data = ref([]),
   loading = ref(false);
+let lastQuery = {};
 
 watch(
   () => route.query,
   () => {
     if (route.name !== 'contest_list') return;
     if (route.query.search) search.value = route.query.search;
-    loadData();
+    if (lastQuery.search !== search.value) {
+      pagination.value.page = 1;
+      loadData();
+    }
   }
 );
 
@@ -34,6 +38,9 @@ const loadData = () => {
     .then(res => {
       pagination.value.count = res.count;
       data.value = res.results;
+      lastQuery = {
+        search: search.value,
+      };
     })
     .finally(() => {
       loading.value = false;

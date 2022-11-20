@@ -45,17 +45,27 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   tags = ref((route.query.tag && route.query.tag.split(',')) || []),
   data = ref([]),
   loading = ref(false);
+let lastQuery = {};
 
 const getFilterFromPath = () => {
   search.value = route.query.search;
   difficulty.value = route.query.difficulty && parseInt(route.query.difficulty);
   tags.value = (route.query.tag && route.query.tag.split(',')) || [];
-  loadData();
+  if (
+    lastQuery.search !== search.value ||
+    lastQuery.difficulty !== difficulty.value ||
+    lastQuery.tags !== tags.value.join(',')
+  ) {
+    pagination.value.page = 1;
+    loadData();
+  }
 };
 watch(
   () => route.query,
   () => {
-    if (route.name === 'problem_list') getFilterFromPath();
+    if (route.name === 'problem_list') {
+      getFilterFromPath();
+    }
   }
 );
 
@@ -73,6 +83,11 @@ const loadData = () => {
     .then(res => {
       pagination.value.count = res.count;
       data.value = res.results;
+      lastQuery = {
+        search: search.value,
+        difficulty: difficulty.value,
+        tags: tags.value.join(','),
+      };
     })
     .finally(() => {
       loading.value = false;

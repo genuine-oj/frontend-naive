@@ -16,21 +16,31 @@ const route = useRoute();
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref({
-    user__username: route.query.user__username ?? '',
-    problem__id: route.query.problem__id ?? '',
+    user__username: route.query.user__username ?? null,
+    problem__id: route.query.problem__id ?? null,
     language: route.query.language ?? null,
     status: route.query.status ?? null,
   }),
   data = ref([]),
   loading = ref(false);
+let lastQuery = {};
 watch(
   () => route.query,
   () => {
     if (route.name !== 'submission_list') return;
     for (const key in search.value) {
-      search.value[key] = route.query[key] ?? '';
+      search.value[key] = route.query[key] ?? null;
     }
-    loadData();
+    console.log(search.value, lastQuery);
+    if (
+      lastQuery.user__username !== search.value.user__username ||
+      lastQuery.problem__id !== search.value.problem__id ||
+      lastQuery.language !== search.value.language ||
+      lastQuery.status !== search.value.status
+    ) {
+      pagination.value.page = 1;
+      loadData();
+    }
   }
 );
 
@@ -46,6 +56,12 @@ const loadData = () => {
     .then(res => {
       pagination.value.count = res.count;
       data.value = res.results;
+      lastQuery = {
+        user__username: search.value.user__username,
+        problem__id: search.value.problem__id,
+        language: search.value.language,
+        status: search.value.status,
+      };
     })
     .finally(() => {
       loading.value = false;
