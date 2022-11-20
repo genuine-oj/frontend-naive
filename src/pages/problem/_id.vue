@@ -29,12 +29,7 @@ const loadData = () => {
 loadData();
 
 const beforeLeave = tabName => {
-  if (tabName === 'submit') {
-    if (!problemData.value.allow_submit) {
-      message.warning('当前题目没有测试数据');
-      return false;
-    }
-  } else if (tabName === 'submission') {
+  if (tabName === 'submission') {
     router.push({
       name: 'submission_list',
       query: { problem__id: id },
@@ -210,7 +205,11 @@ const downloadProblemFile = file => {
             </div>
           </n-space>
         </n-tab-pane>
-        <n-tab-pane name="submit" tab="提交">
+        <n-tab-pane
+          name="submit"
+          tab="提交"
+          :disabled="!problemData.value.allow_submit"
+        >
           <n-row>
             <n-col :span="16" style="padding: 0 25px">
               <CodeMirror

@@ -114,6 +114,11 @@ if (id.value) {
   Axios.get(`/user/${id.value}/`).then(res => {
     userInfoForm.value = res;
   });
+} else {
+  Axios.get('/user/info/').then(res => {
+    userInfoForm.value = res;
+    store.commit('setUser', res);
+  });
 }
 
 const submitUserInfo = () => {
