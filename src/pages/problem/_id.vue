@@ -208,7 +208,7 @@ const downloadProblemFile = file => {
         <n-tab-pane
           name="submit"
           tab="提交"
-          :disabled="!problemData.value.allow_submit"
+          :disabled="!problemData.allow_submit"
         >
           <n-row>
             <n-col :span="16" style="padding: 0 25px">
