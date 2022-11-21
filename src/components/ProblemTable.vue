@@ -56,7 +56,7 @@ const columns = [
                 text: true,
                 size: 'small',
               },
-              { default: () => row.id }
+              { default: () => String(row.id) + (row.is_hidden ? '*' : '') }
             ),
         }
       );

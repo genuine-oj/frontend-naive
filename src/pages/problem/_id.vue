@@ -45,7 +45,7 @@ const beforeLeave = tabName => {
   return true;
 };
 
-const submitData = ref({ source: '', language: 'cpp' }),
+const submitData = ref({ source: '', language: 'cpp', is_hidden: false }),
   submiting = ref(false);
 
 const submit = () => {
@@ -218,16 +218,23 @@ const downloadProblemFile = file => {
               />
             </n-col>
             <n-col :span="8" style="padding: 0 25px">
-              <n-space vertical :size="30">
-                <n-select
-                  v-model:value="submitData.language"
-                  size="large"
-                  :options="languageOptions"
-                />
+              <n-space vertical size="large" class="submit-setting">
+                <div>
+                  <h3>语言</h3>
+                  <n-select
+                    v-model:value="submitData.language"
+                    size="large"
+                    :options="languageOptions"
+                  />
+                </div>
+                <div>
+                  <h3>是否隐藏</h3>
+                  <n-switch v-model:value="submitData.is_hidden" size="large" />
+                </div>
                 <n-button
                   type="primary"
                   size="large"
-                  style="width: 100%"
+                  style="width: 100%; margin-top: 10px"
                   @click="submit"
                   :loading="submiting"
                   :disabled="submiting"
@@ -264,5 +271,11 @@ const downloadProblemFile = file => {
 
 .copy-button {
   margin-left: 10px;
+}
+
+.submit-setting {
+  h3 {
+    margin: 10px 0;
+  }
 }
 </style>

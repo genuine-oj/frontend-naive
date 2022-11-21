@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 defineProps({
   code: {
     type: String,

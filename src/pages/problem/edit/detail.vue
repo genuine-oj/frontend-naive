@@ -24,6 +24,8 @@ const problem = ref({
   hint: '',
   memory_limit: 128,
   time_limit: 1000,
+  is_hidden: false,
+  _allow_submit: true,
 });
 const fileList = ref([]);
 
@@ -179,17 +181,22 @@ const removeFile = ({ file }) => {
       <h2>其它设置</h2>
       <n-row style="padding: 0 1px">
         <n-col :span="6">
-          <h3>是否隐藏</h3>
-          <n-switch v-model:value="problem.is_hidden" />
-        </n-col>
-        <n-col :span="1"></n-col>
-        <n-col :span="6">
           <h3>难度设置</h3>
           <n-select
             v-model:value="problem.difficulty"
             :options="difficultyOptions"
             placeholder="请选择难度"
           />
+        </n-col>
+        <n-col :span="1"></n-col>
+        <n-col :span="6">
+          <h3>是否隐藏</h3>
+          <n-switch v-model:value="problem.is_hidden" />
+        </n-col>
+        <n-col :span="1"></n-col>
+        <n-col :span="6">
+          <h3>是否允许提交</h3>
+          <n-switch v-model:value="problem._allow_submit" />
         </n-col>
       </n-row>
     </div>

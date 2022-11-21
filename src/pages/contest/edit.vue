@@ -16,6 +16,7 @@ const contest = ref({
     description: '',
     is_hidden: false,
     allow_sign_up: true,
+    allow_submit: true,
   }),
   contest_time_range = ref([Date.now(), Date.now() + 86400000]);
 
@@ -111,6 +112,10 @@ const submit = () => {
     (data.start_time && new Date(data.start_time).toISOString()) || null;
   data.end_time =
     (data.end_time && new Date(data.end_time).toISOString()) || null;
+  if (data.problem_list_mode) {
+    data.allow_submit = true;
+    data.is_hidden = false;
+  }
   submiting.value = true;
   let req;
   if (id) req = Axios.put(`/contest/${id}/`, data);
@@ -154,10 +159,6 @@ const submit = () => {
           <n-radio :value="true">题单模式</n-radio>
         </n-space>
       </n-radio-group>
-      <n-space style="margin-top: 20px">
-        <span>在列表中隐藏</span>
-        <n-switch v-model:value="contest.is_hidden" />
-      </n-space>
     </div>
     <div>
       <h2>比赛名称</h2>
@@ -212,6 +213,20 @@ const submit = () => {
           v-model:value="contest_time_range"
         />
       </n-space>
+    </div>
+    <div v-show="!contest.problem_list_mode">
+      <h2>其它设置</h2>
+      <n-row style="padding: 0 1px">
+        <n-col :span="6">
+          <h3>允许评测比赛的题目</h3>
+          <n-switch v-model:value="contest.allow_submit" />
+        </n-col>
+        <n-col :span="1"></n-col>
+        <n-col :span="6">
+          <h3>是否隐藏</h3>
+          <n-switch v-model:value="contest.is_hidden" />
+        </n-col>
+      </n-row>
     </div>
   </n-space>
 
