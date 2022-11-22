@@ -35,7 +35,9 @@ const loadData = () => {
     res.start_time = (res.start_time && Number(new Date(res.start_time))) || 0;
     res.end_time = (res.end_time && Number(new Date(res.end_time))) || 0;
     contestData.value = res;
-    if (!res.problem_list_mode) getRankingData();
+    if (!res.problem_list_mode && res.start_time <= Date.now())
+      getRankingData();
+    else setTimeout(getRankingData, res.start_time - Date.now());
     mode.value = res.problem_list_mode ? '题单' : '比赛';
   });
 };
@@ -80,16 +82,18 @@ const signUp = () => {
                 contestData.start_time && contestData.start_time > Date.now()
               "
             >
-              距离比赛开始还有：
-              <n-countdown :duration="contestData.start_time - Date.now()" />
+              距离比赛开始还有：<n-countdown
+                :duration="contestData.start_time - Date.now()"
+              />
             </span>
             <span
               v-else-if="
                 contestData.end_time && contestData.end_time > Date.now()
               "
             >
-              距离比赛结束还有：
-              <n-countdown :duration="contestData.end_time - Date.now()" />
+              距离比赛结束还有：<n-countdown
+                :duration="contestData.end_time - Date.now()"
+              />
             </span>
             <span v-else>比赛已结束</span>
           </div>
@@ -147,7 +151,15 @@ const signUp = () => {
             </div>
           </n-space>
         </n-tab-pane>
-        <n-tab-pane name="problem" tab="题目列表">
+        <n-tab-pane
+          name="problem"
+          tab="题目列表"
+          :disabled="
+            !store.state.user.is_staff &&
+            !contestData.problem_list_mode &&
+            contestData.start_time > Date.now()
+          "
+        >
           <ProblemTable :data="contestData.problems" />
         </n-tab-pane>
         <n-tab-pane
