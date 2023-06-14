@@ -69,18 +69,21 @@ const columns = [
                   {
                     trigger: () =>
                       h(
-                        NButton,
+                        RouterLink,
                         {
-                          size: 'small',
-                          color: judgeStatus.getColorClass(item.status),
-                          onClick() {
-                            router.push({
-                              name: 'submission_detail',
-                              params: { id: item.submission_id },
-                            });
+                          to: {
+                            name: 'submission_detail',
+                            params: { id: item.submission_id },
                           },
                         },
-                        { default: () => item.name }
+                        h(
+                          NButton,
+                          {
+                            size: 'small',
+                            color: judgeStatus.getColorClass(item.status),
+                          },
+                          { default: () => item.title }
+                        )
                       ),
                     default: () => [
                       `分数：${item.score}`,
