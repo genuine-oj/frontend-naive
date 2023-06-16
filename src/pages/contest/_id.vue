@@ -12,7 +12,7 @@ import RankingTable from '@/components/RankingTable.vue';
 const route = useRoute(),
   message = useMessage();
 const id = route.params.id,
-  contestData = ref({}),
+  contestData = ref({ problems: [] }),
   mode = ref('比赛');
 
 const rankingData = ref({}),
@@ -95,7 +95,7 @@ const signUp = () => {
                 :duration="contestData.end_time - Date.now()"
               />
             </span>
-            <span v-else>比赛已结束</span>
+            <!-- <span v-else>比赛已结束</span> -->
           </div>
         </template>
         <n-tab-pane name="description" :tab="mode + '信息'">
@@ -154,11 +154,7 @@ const signUp = () => {
         <n-tab-pane
           name="problem"
           tab="题目列表"
-          :disabled="
-            !store.state.user.is_staff &&
-            !contestData.problem_list_mode &&
-            contestData.start_time > Date.now()
-          "
+          :disabled="!contestData.problems.length"
         >
           <ProblemTable :data="contestData.problems" />
         </n-tab-pane>

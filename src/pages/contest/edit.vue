@@ -12,13 +12,17 @@ const id = route.params.id;
 const contest = ref({
     problem_list_mode: false,
     problems: [],
+    users: [],
     title: '',
     description: '',
     is_hidden: false,
     allow_sign_up: true,
-    allow_submit: true,
+    hide_problems_before_end: false,
   }),
-  contest_time_range = ref([Date.now(), Date.now() + 86400000]);
+  contest_time_range = ref([
+    Math.floor(Date.now() / 60000),
+    Math.floor(Date.now() / 60000) + 86400000,
+  ]);
 
 const problemOptions = ref([]),
   loadingProblem = ref(false);
@@ -113,7 +117,7 @@ const submit = () => {
   data.end_time =
     (data.end_time && new Date(data.end_time).toISOString()) || null;
   if (data.problem_list_mode) {
-    data.allow_submit = true;
+    data.hide_problems_before_end = false;
     data.is_hidden = false;
   }
   submiting.value = true;
@@ -211,6 +215,7 @@ const submit = () => {
         <n-date-picker
           type="datetimerange"
           v-model:value="contest_time_range"
+          format="yyyy-MM-dd HH:mm"
         />
       </n-space>
     </div>
@@ -218,8 +223,8 @@ const submit = () => {
       <h2>其它设置</h2>
       <n-row style="padding: 0 1px">
         <n-col :span="6">
-          <h3>允许评测比赛的题目</h3>
-          <n-switch v-model:value="contest.allow_submit" />
+          <h3>比赛结束前隐藏题目</h3>
+          <n-switch v-model:value="contest.hide_problems_before_end" />
         </n-col>
         <n-col :span="1"></n-col>
         <n-col :span="6">
