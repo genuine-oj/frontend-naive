@@ -25,6 +25,7 @@ const problem = ref({
   memory_limit: 128,
   time_limit: 1000,
   is_hidden: false,
+  hide_submissions: false,
   _allow_submit: true,
 });
 const fileList = ref([]);
@@ -149,7 +150,7 @@ const removeFile = ({ file }) => {
     <div>
       <h2>运行限制</h2>
       <n-row style="padding: 0 1px">
-        <n-col :span="6">
+        <n-col :span="4">
           <h3>运行内存</h3>
           <n-input-number
             v-model:value="problem.memory_limit"
@@ -162,7 +163,7 @@ const removeFile = ({ file }) => {
           </n-input-number>
         </n-col>
         <n-col :span="1"></n-col>
-        <n-col :span="6">
+        <n-col :span="4">
           <h3>运行时间</h3>
           <n-input-number
             v-model:value="problem.time_limit"
@@ -180,7 +181,7 @@ const removeFile = ({ file }) => {
     <div>
       <h2>其它设置</h2>
       <n-row style="padding: 0 1px">
-        <n-col :span="6">
+        <n-col :span="4">
           <h3>难度设置</h3>
           <n-select
             v-model:value="problem.difficulty"
@@ -189,14 +190,19 @@ const removeFile = ({ file }) => {
           />
         </n-col>
         <n-col :span="1"></n-col>
-        <n-col :span="6">
+        <n-col :span="4">
           <h3>是否隐藏</h3>
           <n-switch v-model:value="problem.is_hidden" />
         </n-col>
         <n-col :span="1"></n-col>
-        <n-col :span="6">
+        <n-col :span="4">
           <h3>是否允许提交</h3>
           <n-switch v-model:value="problem._allow_submit" />
+        </n-col>
+        <n-col :span="1"></n-col>
+        <n-col :span="4">
+          <h3>是否隐藏提交</h3>
+          <n-switch v-model:value="problem.hide_submissions" />
         </n-col>
       </n-row>
     </div>

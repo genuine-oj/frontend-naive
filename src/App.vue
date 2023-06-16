@@ -4,7 +4,6 @@ import NaiveMessage from './plugins/naiveMessage.vue';
 import config from '../config';
 import { darkTheme, zhCN, dateZhCN } from 'naive-ui';
 import store from './store';
-import router from './router';
 import { useRoute } from 'vue-router';
 import hljs from 'highlight.js/lib/core';
 import c from 'highlight.js/lib/languages/c';

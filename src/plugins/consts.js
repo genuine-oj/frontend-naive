@@ -1,3 +1,5 @@
+import config from '../../config';
+
 const judgeStatus = {
   PENDING: -4,
   JUDGING: -3,
@@ -50,18 +52,6 @@ const noMemory = [
   judgeStatus.SYSTEM_ERROR,
 ];
 
-const languages = {
-  C: 'c',
-  CPP: 'cpp',
-  PYTHON3: 'python3',
-};
-
-const languagesDisplay = {
-  C: 'C',
-  CPP: 'C++',
-  PYTHON3: 'Python 3',
-};
-
 const initDisplay = (obj, objDisplay) => {
   const displays = {};
   for (const key in obj) {
@@ -79,20 +69,19 @@ const initColor = (obj, objColor) => {
 };
 
 initDisplay(judgeStatus, judgeStatusDisplay);
-initDisplay(languages, languagesDisplay);
+// initDisplay(languages, languagesDisplay);
 
 initColor(judgeStatus, judgeStatusColor);
 
-const languageOptions = [],
-  statusOptions = [];
-for (const key in languages) {
-  if (typeof languages[key] === 'string') {
-    languageOptions.push({
-      label: languages.getDisplay(languages[key]),
-      value: languages[key],
-    });
-  }
+const languageOptions = [];
+for (const key in config.languages) {
+  languageOptions.push({
+    label: config.languages[key],
+    value: key,
+  });
 }
+
+const statusOptions = [];
 for (const key in judgeStatus) {
   if (typeof judgeStatus[key] === 'number') {
     statusOptions.push({
@@ -136,7 +125,6 @@ for (const key in difficulty) {
 
 export {
   judgeStatus,
-  languages,
   languageOptions,
   statusOptions,
   noTime,

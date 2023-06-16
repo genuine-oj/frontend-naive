@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-
+import config from '../../../config';
 import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';
@@ -45,7 +45,11 @@ const beforeLeave = tabName => {
   return true;
 };
 
-const submitData = ref({ source: '', language: 'cpp', is_hidden: false }),
+const submitData = ref({
+    source: '',
+    language: config.defaultSubmitLanguage,
+    is_hidden: config.forceHideSubmissions,
+  }),
   submiting = ref(false);
 
 const submit = () => {
@@ -227,7 +231,7 @@ const downloadProblemFile = file => {
                     :options="languageOptions"
                   />
                 </div>
-                <div>
+                <div v-if="!config.forceHideSubmissions">
                   <h3>是否隐藏</h3>
                   <n-switch v-model:value="submitData.is_hidden" size="large" />
                 </div>

@@ -2,35 +2,15 @@
 import { ref, watch } from 'vue';
 import Axios from '@/plugins/axios';
 
-import router from '@/router';
 import store from '@/store';
-import { judgeStatus, languages, difficultyOptions } from '@/plugins/consts';
+import { difficultyOptions } from '@/plugins/consts';
 import ProblemTable from '@/components/ProblemTable.vue';
 import { useRoute } from 'vue-router';
 import { BookmarksOutline, AddOutline } from '@vicons/ionicons5';
 
 const route = useRoute();
 
-const languageOptions = [],
-  statusOptions = [],
-  tagsOptions = ref([]);
-
-for (const key in languages) {
-  if (typeof languages[key] === 'string') {
-    languageOptions.push({
-      label: languages.getDisplay(languages[key]),
-      value: languages[key],
-    });
-  }
-}
-for (const key in judgeStatus) {
-  if (typeof judgeStatus[key] === 'number') {
-    statusOptions.push({
-      label: judgeStatus.getDisplay(judgeStatus[key]),
-      value: judgeStatus[key],
-    });
-  }
-}
+const tagsOptions = ref([]);
 
 Axios.get('/problem/tag/').then(res => {
   tagsOptions.value = res.map(item => ({

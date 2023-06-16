@@ -2,13 +2,7 @@
 import { ref, watch } from 'vue';
 import Axios from '@/plugins/axios';
 
-import router from '@/router';
-import {
-  judgeStatus,
-  languages,
-  languageOptions,
-  statusOptions,
-} from '@/plugins/consts';
+import { languageOptions, statusOptions } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 import { useRoute } from 'vue-router';
 

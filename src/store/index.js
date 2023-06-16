@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import VuexPersistence from 'vuex-persist';
+import config from '../../config';
 
 const vuexPersistState = new VuexPersistence({
   storage: window.localStorage,
@@ -14,8 +15,11 @@ const store = createStore({
   state() {
     return {
       user: {},
-      theme: 'dark',
-      displaySettings: { markdownTheme: 'vuepress', sentenceApi: 'yxzl' },
+      theme: config.defaultTheme,
+      displaySettings: {
+        markdownTheme: config.defaultMarkdownTheme,
+        sentenceApi: config.defaultSentenceApi,
+      },
     };
   },
   mutations: {

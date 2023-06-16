@@ -1,8 +1,8 @@
 <script setup>
 import { h } from 'vue';
-import router from '@/router';
+import config from '../../config';
 import { formatTime, formatSize } from '@/plugins/utils';
-import { judgeStatus, languages, noTime, noMemory } from '@/plugins/consts';
+import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
 import { NButton, NTime } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 
@@ -136,7 +136,7 @@ const columns = [
   {
     title: '语言',
     render(row) {
-      return languages.getDisplay(row.language);
+      return config.languages[row.language];
     },
   },
   {
