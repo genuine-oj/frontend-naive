@@ -223,9 +223,9 @@ router.afterEach(to => {
     const title = to.meta.title.replace(/\{(.+?)\}/g, (match, p1) => {
       return to.params[p1];
     });
-    document.title = `${title} - ${config.title}`;
+    document.title = `${title} - ${config.name}`;
   } else {
-    document.title = config.title;
+    document.title = config.name;
   }
   NProgress.done();
 });
