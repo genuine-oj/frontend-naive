@@ -4,18 +4,24 @@ import NaiveMessage from './plugins/naiveMessage.vue';
 import config from '../config';
 import { darkTheme, zhCN, dateZhCN } from 'naive-ui';
 import store from './store';
-import { useRoute } from 'vue-router';
 import hljs from 'highlight.js/lib/core';
 import c from 'highlight.js/lib/languages/c';
 import cpp from 'highlight.js/lib/languages/cpp';
 import python from 'highlight.js/lib/languages/python';
+import Axios from '@/plugins/axios';
 
 hljs.registerLanguage('c', c);
 hljs.registerLanguage('cpp', cpp);
 hljs.registerLanguage('python', python);
 hljs.registerLanguage('python3', python);
 
-const route = useRoute();
+Axios.get('/user/info/')
+  .then(res => {
+    store.commit('setUser', res);
+  })
+  .catch(() => {
+    store.commit('logout');
+  });
 </script>
 
 <template>

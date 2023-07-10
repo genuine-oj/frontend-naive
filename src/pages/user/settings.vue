@@ -1,12 +1,12 @@
 <template>
   <div>
     <h1>用户信息</h1>
+
     <n-form :model="userInfoForm" style="max-width: min(100%, 500px)">
-      <n-form-item
-        label="密码"
-        prop="password"
-        v-if="store.state.user.is_staff"
-      >
+      <n-form-item label="用户名" prop="username" v-if="id">
+        <n-input :value="userInfoForm.username" disabled />
+      </n-form-item>
+      <n-form-item label="密码" prop="password" v-if="id">
         <n-input
           v-model:value="userInfoForm.password"
           type="password"
@@ -22,13 +22,28 @@
       <n-form-item label="头像" prop="avatar">
         <n-input v-model:value="userInfoForm.avatar" />
       </n-form-item>
+      <n-form-item label="管理员权限" name="is_staff" v-if="id">
+        <n-switch v-model:value="userInfoForm.is_staff" />
+      </n-form-item>
       <n-form-item>
-        <n-button type="primary" @click="submitUserInfo">保存</n-button>
+        <n-button
+          type="primary"
+          @click="submitUserInfo"
+          style="margin-right: 10px"
+        >
+          保存
+        </n-button>
+        <n-popconfirm @positive-click="deleteUser" v-if="id">
+          <template #trigger>
+            <n-button type="error"> 删除用户 </n-button>
+          </template>
+          您确认要删除用户 {{ userInfoForm.username }} 吗？该操作不可撤销。
+        </n-popconfirm>
       </n-form-item>
     </n-form>
   </div>
 
-  <n-divider />
+  <n-divider v-if="!id" />
 
   <div v-if="!id">
     <h1>修改密码</h1>
@@ -49,8 +64,6 @@
           v-model:value="passwordForm.confirm_password"
           type="password"
         />
-      </n-form-item>
-      <n-form-item>
         <n-button type="error" @click="changePassword"> 修改 </n-button>
       </n-form-item>
     </n-form>
@@ -93,6 +106,7 @@
 import Axios from '@/plugins/axios';
 import { ref } from 'vue';
 import store from '@/store';
+import router from './../../router';
 import { useRoute } from 'vue-router';
 
 const route = useRoute(),
@@ -132,6 +146,13 @@ const submitUserInfo = () => {
   req.then(res => {
     message.success('保存成功');
     if (!id) store.commit('setUser', res);
+  });
+};
+
+const deleteUser = () => {
+  Axios.delete(`/user/${id.value}/`).then(() => {
+    message.success('删除成功！');
+    router.push({ name: 'user_list' });
   });
 };
 
