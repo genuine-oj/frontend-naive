@@ -64,6 +64,8 @@
           v-model:value="passwordForm.confirm_password"
           type="password"
         />
+      </n-form-item>
+      <n-form-item>
         <n-button type="error" @click="changePassword"> 修改 </n-button>
       </n-form-item>
     </n-form>
