@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';
 import { formatTime, formatSize } from '@/plugins/utils';
@@ -92,7 +91,10 @@ const copy = (text, event = undefined) => {
 <template>
   <h1>提交详情</h1>
   <n-layout-content v-if="data.id">
-    <SubmissionTable :data="[data]" />
+    <n-spin :show="data.status <= -3">
+      <template #description>正在评测中...</template>
+      <SubmissionTable :data="[data]" />
+    </n-spin>
   </n-layout-content>
   <n-collapse
     style="margin-top: 20px; height: 100%"

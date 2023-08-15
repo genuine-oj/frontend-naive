@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import config from '../../config';
+import config from '../config';
 import store from '@/store';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -168,7 +168,6 @@ const routes = [
       requiredAdmin: true,
     },
   },
-
   {
     path: '/submission/',
     name: 'submission_list',
@@ -187,6 +186,16 @@ const routes = [
       title: '提交详情 #{id}',
       cate: 'submission',
       requiredLogin: true,
+    },
+  },
+  {
+    path: '/site_settings/',
+    name: 'site_settings',
+    component: () => import('@/pages/settings.vue'),
+    meta: {
+      title: '站点设置',
+      requiredLogin: true,
+      requiredAdmin: true,
     },
   },
   {

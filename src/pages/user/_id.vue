@@ -12,7 +12,6 @@ const id = ref(route.params.id),
   data = ref({});
 
 Axios.get(`/user/${id.value}/`).then(res => {
-  console.log(res.solved_problems.sort((a, b) => a.problem.id - b.problem.id));
   data.value = res;
 });
 </script>

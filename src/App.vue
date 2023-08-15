@@ -1,7 +1,7 @@
 <script setup>
 import AppHeader from './AppHeader.vue';
 import NaiveMessage from './plugins/naiveMessage.vue';
-import config from '../config';
+import { config, setSiteSettings } from './config';
 import { darkTheme, zhCN, dateZhCN } from 'naive-ui';
 import store from './store';
 import hljs from 'highlight.js/lib/core';
@@ -14,6 +14,11 @@ hljs.registerLanguage('c', c);
 hljs.registerLanguage('cpp', cpp);
 hljs.registerLanguage('python', python);
 hljs.registerLanguage('python3', python);
+
+Axios.get('/site_settings/').then(res => {
+  setSiteSettings(res);
+  store.commit('updateDisplaySettings', res.displaySettings);
+});
 
 Axios.get('/user/info/')
   .then(res => {
@@ -28,7 +33,7 @@ Axios.get('/user/info/')
   <n-config-provider
     :locale="zhCN"
     :date-locale="dateZhCN"
-    :theme="store.state.theme === 'dark' ? darkTheme : null"
+    :theme="store.state.displaySettings.theme === 'dark' ? darkTheme : null"
     :hljs="hljs"
   >
     <n-global-style />
@@ -48,7 +53,10 @@ Axios.get('/user/info/')
           </div>
 
           <!-- Footer -->
-          <n-layout-footer style="text-align: center" v-if="config.useFooter">
+          <n-layout-footer
+            style="text-align: center"
+            v-if="config.footer.useFooter"
+          >
             {{ config.name }} Powered By
             <a
               href="https://github.com/genuine-oj/"

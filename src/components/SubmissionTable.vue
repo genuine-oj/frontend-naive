@@ -1,6 +1,6 @@
 <script setup>
 import { h } from 'vue';
-import config from '../../config';
+import config from '../config';
 import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
 import { NButton, NTime } from 'naive-ui';

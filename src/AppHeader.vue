@@ -10,6 +10,7 @@ import {
   UserAddOutlined,
   HomeOutlined,
   HourglassOutlined,
+  ControlOutlined,
 } from '@vicons/antd';
 import {
   LogOutOutline,
@@ -21,7 +22,7 @@ import {
   SunnyOutline,
   MoonOutline,
 } from '@vicons/ionicons5';
-import config from '../config';
+import config from './config';
 
 const route = useRoute();
 
@@ -39,7 +40,7 @@ const userOptions = [
     icon: renderIcon(UserOutlined),
   },
   {
-    label: '设置',
+    label: '个人设置',
     key: 'user_settings',
     icon: renderIcon(SettingsOutline),
   },
@@ -49,6 +50,13 @@ const userOptions = [
     icon: renderIcon(LogOutOutline),
   },
 ];
+if (store.state.user.is_staff) {
+  userOptions.splice(2, 0, {
+    label: '站点设置',
+    key: 'site_settings',
+    icon: renderIcon(ControlOutlined),
+  });
+}
 const handleUserOptionSelect = key => {
   if (key === 'logout') {
     Axios.get('/user/logout/').then(() => {

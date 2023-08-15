@@ -1,6 +1,5 @@
 import { createStore } from 'vuex';
 import VuexPersistence from 'vuex-persist';
-import config from '../../config';
 
 const vuexPersistState = new VuexPersistence({
   storage: window.localStorage,
@@ -15,10 +14,11 @@ const store = createStore({
   state() {
     return {
       user: {},
-      theme: config.defaultTheme,
       displaySettings: {
-        markdownTheme: config.defaultMarkdownTheme,
-        sentenceApi: config.defaultSentenceApi,
+        theme: 'dark',
+        markdownTheme: 'vuepress',
+        sentenceApi: 'hitokoto',
+        lock: false,
       },
     };
   },
@@ -30,10 +30,19 @@ const store = createStore({
       state.user = {};
     },
     changeTheme(state) {
-      state.theme = state.theme === 'light' ? 'dark' : 'light';
+      state.displaySettings.theme =
+        state.displaySettings.theme === 'light' ? 'dark' : 'light';
+      state.displaySettings.lock = true;
     },
     setDisplaySettings(state, data) {
-      state.displaySettings = data;
+      Object.assign(state.displaySettings, data);
+      state.displaySettings.lock = true;
+    },
+    updateDisplaySettings(state, data) {
+      if (!state.displaySettings.lock) {
+        state.displaySettings = data;
+      }
+      state.displaySettings.lock = true;
     },
   },
   getters: {

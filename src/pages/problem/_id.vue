@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-import config from '../../../config';
+import config from '../../config';
 import router from '@/router';
 import store from '@/store';
 import { useRoute } from 'vue-router';

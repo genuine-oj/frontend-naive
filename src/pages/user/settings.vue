@@ -26,19 +26,15 @@
         <n-switch v-model:value="userInfoForm.is_staff" />
       </n-form-item>
       <n-form-item>
-        <n-button
-          type="primary"
-          @click="submitUserInfo"
-          style="margin-right: 10px"
-        >
-          保存
-        </n-button>
-        <n-popconfirm @positive-click="deleteUser" v-if="id">
-          <template #trigger>
-            <n-button type="error"> 删除用户 </n-button>
-          </template>
-          您确认要删除用户 {{ userInfoForm.username }} 吗？该操作不可撤销。
-        </n-popconfirm>
+        <n-space>
+          <n-button type="primary" @click="submitUserInfo"> 保存 </n-button>
+          <n-popconfirm @positive-click="deleteUser" v-if="id">
+            <template #trigger>
+              <n-button type="error"> 删除用户 </n-button>
+            </template>
+            您确认要删除用户 {{ userInfoForm.username }} 吗？该操作不可撤销。
+          </n-popconfirm>
+        </n-space>
       </n-form-item>
     </n-form>
   </div>
@@ -96,9 +92,17 @@
         />
       </n-form-item>
       <n-form-item>
-        <n-button type="primary" @click="changeDisplaySettings">
-          保存
-        </n-button>
+        <n-space>
+          <n-button type="primary" @click="changeDisplaySettings">
+            保存
+          </n-button>
+          <n-popconfirm @positive-click="resetDisplaySettings">
+            <template #trigger>
+              <n-button type="warning"> 重置 </n-button>
+            </template>
+            您确认要重置页面设置为站点默认值吗？
+          </n-popconfirm>
+        </n-space>
       </n-form-item>
     </n-form>
   </div>
@@ -109,6 +113,7 @@ import Axios from '@/plugins/axios';
 import { ref } from 'vue';
 import store from '@/store';
 import router from './../../router';
+import config from '../../config';
 import { useRoute } from 'vue-router';
 
 const route = useRoute(),
@@ -138,7 +143,6 @@ if (id.value) {
 }
 
 const submitUserInfo = () => {
-  console.log(userInfoForm.value);
   let req;
   if (!id.value) {
     req = Axios.put('/user/info/', userInfoForm.value);
@@ -221,5 +225,9 @@ const displayForm = ref({
 const changeDisplaySettings = () => {
   store.commit('setDisplaySettings', displayForm.value);
   message.success('保存成功');
+};
+
+const resetDisplaySettings = () => {
+  store.commit('setDisplaySettings', config.displaySettings);
 };
 </script>
