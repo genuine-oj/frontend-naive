@@ -12,6 +12,7 @@ const id = route.params.id;
 
 const problem = ref({
   title: '',
+  background: '',
   description: '',
   input_format: '',
   output_format: '',
@@ -84,6 +85,10 @@ const removeFile = ({ file }) => {
         placeholder="请输入标题"
         size="large"
       />
+    </div>
+    <div>
+      <h2>题目背景</h2>
+      <MdEditor v-model:content="problem.background" />
     </div>
     <div>
       <h2>题目描述</h2>

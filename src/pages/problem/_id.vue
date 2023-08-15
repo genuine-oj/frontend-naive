@@ -122,6 +122,13 @@ const downloadProblemFile = file => {
               </n-space>
             </div>
 
+            <div v-if="problemData.background">
+              <h2>题目背景</h2>
+              <n-card class="description">
+                <MdEditor :content="problemData.background" previewOnly />
+              </n-card>
+            </div>
+
             <div v-if="problemData.description">
               <h2>题目描述</h2>
               <n-card class="description">
