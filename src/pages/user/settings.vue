@@ -112,7 +112,7 @@
 import Axios from '@/plugins/axios';
 import { ref } from 'vue';
 import store from '@/store';
-import router from './../../router';
+import router from '../../router';
 import config from '../../config';
 import { useRoute } from 'vue-router';
 
@@ -201,6 +201,7 @@ const changePassword = () => {
     new_password: passwordForm.value.new_password,
   }).then(res => {
     message.success('修改成功');
+    router.push({ name: 'login' });
   });
 };
 
@@ -229,5 +230,6 @@ const changeDisplaySettings = () => {
 
 const resetDisplaySettings = () => {
   store.commit('setDisplaySettings', config.displaySettings);
+  window.location.reload();
 };
 </script>

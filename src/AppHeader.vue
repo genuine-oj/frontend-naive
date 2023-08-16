@@ -11,6 +11,7 @@ import {
   HomeOutlined,
   HourglassOutlined,
   ControlOutlined,
+  CommentOutlined,
 } from '@vicons/antd';
 import {
   LogOutOutline,
@@ -133,11 +134,13 @@ const handleUserOptionSelect = key => {
         <template #icon>
           <n-icon
             :component="
-              store.state.theme === 'dark' ? SunnyOutline : MoonOutline
+              store.state.displaySettings.theme === 'dark'
+                ? SunnyOutline
+                : MoonOutline
             "
           />
         </template>
-        {{ store.state.theme === 'dark' ? '浅色' : '深色' }}
+        {{ store.state.displaySettings.theme === 'dark' ? '浅色' : '深色' }}
       </n-button>
     </n-space>
   </div>

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
 import store from '@/store';
-import { useRoute } from 'vue-router';
+import { useRoute, onBeforeRouteLeave } from 'vue-router';
 import { formatTime, formatSize } from '@/plugins/utils';
 import { judgeStatus, noTime, noMemory } from '@/plugins/consts';
 import CodeWithCard from '@/components/CodeWithCard.vue';
@@ -18,14 +18,14 @@ const id = route.params.id,
   subchecks = ref([]),
   showingSubchecks = ref([]);
 
-const getStatus = () => {
-  Axios.get(`/submission/${id}/status/`).then(res => {
-    if (res.status <= -3) {
-      setTimeout(getStatus, 1000);
-    } else {
-      loadData();
-    }
-  });
+let interval;
+
+const getStatus = async () => {
+  const res = await Axios.get(`/submission/${id}/status/`);
+  if (res.status > -3) {
+    clearInterval(interval);
+    loadData();
+  }
 };
 
 const loadData = () => {
@@ -50,12 +50,17 @@ const loadData = () => {
     }
     data.value = res;
     if (res.status <= -3) {
-      setTimeout(getStatus, 1000);
+      interval = setInterval(getStatus, 1000);
     }
   });
 };
 
 loadData();
+
+onBeforeRouteLeave((to, from, next) => {
+  clearInterval(interval);
+  next();
+});
 
 const loadDetail = ({ name, expanded }) => {
   if (!detailData.value[name]) {

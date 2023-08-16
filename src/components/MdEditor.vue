@@ -34,7 +34,7 @@
       :historyLength="20"
       showCodeRowNumber
       :previewTheme="store.state.displaySettings.markdownTheme"
-      :theme="store.state.theme"
+      :theme="store.state.displaySettings.theme"
     />
   </n-card>
 </template>

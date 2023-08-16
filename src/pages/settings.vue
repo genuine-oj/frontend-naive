@@ -23,7 +23,9 @@
 
     <n-divider />
 
-    <p style="font-weight: bold">该分区中的设置需要同时在服务端设置环境变量并重启服务端方可生效。</p>
+    <p style="font-weight: bold">
+      该分区中的设置需要同时在服务端设置环境变量并重启服务端方可生效。
+    </p>
     <n-form-item label="允许注册" prop="allowRegister">
       <n-switch v-model:value="siteSettingsForm.allowRegister" />
     </n-form-item>
@@ -125,14 +127,13 @@ const submit = () => {
     siteSettingsForm.value.languages[item.key] = item.value;
   }
   Axios.put(`/site_settings/`, siteSettingsForm.value).then(res => {
-    message.success('保存成功');
+    message.success('保存成功，请刷新页面');
   });
 };
 
 const reset = () => {
   Axios.delete('/site_settings/').then(() => {
-    message.success('重置成功');
-    init();
+    message.success('重置成功，请刷新页面');
   });
 };
 
