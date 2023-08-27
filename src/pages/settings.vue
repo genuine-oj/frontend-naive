@@ -9,7 +9,7 @@
 
   <n-form :model="siteSettingsForm" style="max-width: min(100%, 500px)" v-else>
     <n-form-item label="站点名称" prop="name">
-      <n-input :value="siteSettingsForm.name" />
+      <n-input v-model:value="siteSettingsForm.name" />
     </n-form-item>
     <n-form-item label="站点标题" prop="title">
       <n-input v-model:value="siteSettingsForm.title" />

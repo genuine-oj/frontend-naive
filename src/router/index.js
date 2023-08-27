@@ -189,6 +189,26 @@ const routes = [
     },
   },
   {
+    path: '/discussion/',
+    name: 'discussion_list',
+    component: () => import('@/pages/discussion/index.vue'),
+    meta: {
+      title: '讨论列表',
+      cate: 'discussion',
+      requiredLogin: true,
+    },
+  },
+  {
+    path: '/discussion/:id/',
+    name: 'discussion_detail',
+    component: () => import('@/pages/discussion/_id.vue'),
+    meta: {
+      title: '讨论详情 #{id}',
+      cate: 'discussion',
+      requiredLogin: true,
+    },
+  },
+  {
     path: '/site_settings/',
     name: 'site_settings',
     component: () => import('@/pages/settings.vue'),
@@ -232,9 +252,9 @@ router.afterEach(to => {
     const title = to.meta.title.replace(/\{(.+?)\}/g, (match, p1) => {
       return to.params[p1];
     });
-    document.title = `${title} - ${config.name}`;
+    document.title = `${title} - ${config.title}`;
   } else {
-    document.title = config.name;
+    document.title = config.title;
   }
   NProgress.done();
 });
