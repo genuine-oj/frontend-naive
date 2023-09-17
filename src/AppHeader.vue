@@ -119,6 +119,20 @@ const handleUserOptionSelect = key => {
           提交
         </n-button>
       </router-link>
+      <router-link
+        :to="{ name: 'discussion_list' }"
+        v-if="config.enableDiscussion"
+      >
+        <n-button
+          :tertiary="route.meta.cate === 'discussion'"
+          :quaternary="route.meta.cate !== 'discussion'"
+        >
+          <template #icon>
+            <n-icon :component="CommentOutlined" />
+          </template>
+          讨论
+        </n-button>
+      </router-link>
       <router-link :to="{ name: 'user_list' }">
         <n-button
           :tertiary="route.meta.cate === 'user'"

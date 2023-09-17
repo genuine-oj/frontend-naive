@@ -17,11 +17,10 @@ const contest = ref({
     description: '',
     is_hidden: false,
     allow_sign_up: true,
-    hide_problems_before_end: false,
   }),
   contest_time_range = ref([
-    Math.floor(Date.now() / 60000),
-    Math.floor(Date.now() / 60000) + 86400000,
+    Math.floor(Date.now() / 3600000) * 3600000,
+    Math.floor(Date.now() / 3600000) * 3600000 + 86400000,
   ]);
 
 const problemOptions = ref([]),
@@ -117,7 +116,6 @@ const submit = () => {
   data.end_time =
     (data.end_time && new Date(data.end_time).toISOString()) || null;
   if (data.problem_list_mode) {
-    data.hide_problems_before_end = false;
     data.is_hidden = false;
   }
   submiting.value = true;
@@ -132,6 +130,13 @@ const submit = () => {
     .finally(() => {
       submiting.value = false;
     });
+};
+
+const deleteContest = () => {
+  Axios.delete(`/contest/${id}/`).then(() => {
+    message.success('删除成功！');
+    router.push({ name: 'contest_list' });
+  });
 };
 </script>
 
@@ -222,12 +227,7 @@ const submit = () => {
     <div v-show="!contest.problem_list_mode">
       <h2>其它设置</h2>
       <n-row style="padding: 0 1px">
-        <n-col :span="6">
-          <h3>比赛结束前隐藏题目</h3>
-          <n-switch v-model:value="contest.hide_problems_before_end" />
-        </n-col>
-        <n-col :span="1"></n-col>
-        <n-col :span="6">
+        <n-col :span="4">
           <h3>是否隐藏</h3>
           <n-switch v-model:value="contest.is_hidden" />
         </n-col>
@@ -237,13 +237,22 @@ const submit = () => {
 
   <n-divider />
 
-  <n-button
-    type="primary"
-    size="large"
-    @click="submit"
-    :loading="submiting"
-    :disabled="submiting"
-  >
-    保存
-  </n-button>
+  <n-space>
+    <n-button
+      type="primary"
+      size="large"
+      @click="submit"
+      :loading="submiting"
+      :disabled="submiting"
+    >
+      保存
+    </n-button>
+    <n-popconfirm @positive-click="deleteContest" v-if="id">
+      <template #trigger>
+        <n-button type="error" size="large"> 删除 </n-button>
+      </template>
+      您确认要删除{{ contest.problem_list_mode ? '题单' : '比赛' }}
+      {{ contest.title }} 吗？该操作不可撤销。
+    </n-popconfirm>
+  </n-space>
 </template>

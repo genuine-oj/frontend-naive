@@ -42,12 +42,10 @@
 <script setup>
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
-import { computed, ref, toRef, watch } from 'vue';
+import { ref, toRef, watch } from 'vue';
 import store from '@/store';
 
-const theme = ref('vuepress');
-
-const id = Math.random().toString().substr(2);
+const id = parseInt(Math.random() * 100000).toString();
 
 const emit = defineEmits(['update:content']);
 const props = defineProps({
@@ -104,5 +102,9 @@ watch(toRef(props, 'content'), val => (_content.value = val));
 .n-card.md-editor-card :deep(.n-card__content) {
   margin: 0 !important;
   padding: 0 !important;
+}
+
+:deep(.github-theme) {
+  margin-top: 10px !important;
 }
 </style>

@@ -27,10 +27,12 @@
       </n-form-item>
       <n-form-item>
         <n-space>
-          <n-button type="primary" @click="submitUserInfo"> 保存 </n-button>
+          <n-button type="primary" @click="submitUserInfo" size="large">
+            保存
+          </n-button>
           <n-popconfirm @positive-click="deleteUser" v-if="id">
             <template #trigger>
-              <n-button type="error"> 删除用户 </n-button>
+              <n-button type="error" size="large"> 删除用户 </n-button>
             </template>
             您确认要删除用户 {{ userInfoForm.username }} 吗？该操作不可撤销。
           </n-popconfirm>

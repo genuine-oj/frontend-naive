@@ -33,7 +33,6 @@ Axios.interceptors.response.use(
       );
       return Promise.reject(error.response);
     } else if (error.response.status === 404) {
-      window.$message.error('资源不存在');
       return Promise.reject(error.response);
     } else if (error.response.status === 403) {
       if (!store.getters.loggedIn) {

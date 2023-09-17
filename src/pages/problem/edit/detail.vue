@@ -26,7 +26,8 @@ const problem = ref({
   memory_limit: 128,
   time_limit: 1000,
   is_hidden: false,
-  hide_submissions: false,
+  _hide_submissions: false,
+  _hide_discussions: false,
   _allow_submit: true,
 });
 const fileList = ref([]);
@@ -73,6 +74,13 @@ const submit = () => {
 const removeFile = ({ file }) => {
   if (file.status === 'error') return true;
   return Axios.delete(`/problem/${id}/file/${file.name}/`);
+};
+
+const deleteProblem = () => {
+  Axios.delete(`/problem/${id}/`).then(() => {
+    message.success('删除成功！');
+    router.push({ name: 'problem_list' });
+  });
 };
 </script>
 
@@ -207,19 +215,33 @@ const removeFile = ({ file }) => {
         <n-col :span="1"></n-col>
         <n-col :span="4">
           <h3>是否隐藏提交</h3>
-          <n-switch v-model:value="problem.hide_submissions" />
+          <n-switch v-model:value="problem._hide_submissions" />
+        </n-col>
+        <n-col :span="1"></n-col>
+        <n-col :span="4">
+          <h3>是否隐藏讨论</h3>
+          <n-switch v-model:value="problem._hide_discussions" />
         </n-col>
       </n-row>
     </div>
   </n-space>
   <n-divider />
-  <n-button
-    type="primary"
-    size="large"
-    @click="submit"
-    :loading="submiting"
-    :disabled="submiting"
-  >
-    保存
-  </n-button>
+
+  <n-space>
+    <n-button
+      type="primary"
+      size="large"
+      @click="submit"
+      :loading="submiting"
+      :disabled="submiting"
+    >
+      保存
+    </n-button>
+    <n-popconfirm @positive-click="deleteProblem" v-if="id">
+      <template #trigger>
+        <n-button type="error" size="large"> 删除 </n-button>
+      </template>
+      您确认要删除题目 {{ problem.title }} 吗？该操作不可撤销。
+    </n-popconfirm>
+  </n-space>
 </template>

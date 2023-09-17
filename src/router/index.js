@@ -209,6 +209,16 @@ const routes = [
     },
   },
   {
+    path: '/discussion/create/',
+    name: 'discussion_create',
+    component: () => import('@/pages/discussion/edit.vue'),
+    meta: {
+      title: '创建讨论',
+      cate: 'discussion',
+      requiredLogin: true,
+    },
+  },
+  {
     path: '/site_settings/',
     name: 'site_settings',
     component: () => import('@/pages/settings.vue'),

@@ -32,6 +32,9 @@
     <n-form-item label="强制隐藏提交" prop="forceHideSubmissions">
       <n-switch v-model:value="siteSettingsForm.forceHideSubmissions" />
     </n-form-item>
+    <n-form-item label="启用讨论" prop="enableDiscussion">
+      <n-switch v-model:value="siteSettingsForm.enableDiscussion" />
+    </n-form-item>
 
     <n-divider />
 

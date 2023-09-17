@@ -162,7 +162,6 @@ const signUp = () => {
           name="ranking"
           tab="排行榜"
           v-if="!contestData.problem_list_mode"
-          :disabled="contestData.start_time > Date.now()"
         >
           <p
             style="font-size: medium"
