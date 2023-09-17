@@ -196,7 +196,7 @@ const copy = (text, event = undefined) => {
           </template>
           <n-spin
             :show="
-              !(detailData[item.case_name] && detailData[item.case_name].in)
+              !(detailData[item.case_name] && detailData[item.case_name].out)
             "
           >
             <n-collapse :default-expanded-names="['in', 'out', 'ans']">
