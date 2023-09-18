@@ -35,6 +35,12 @@ const beforeLeave = tabName => {
       query: { problem__id: id },
     });
     return false;
+  } else if (tabName === 'discussion') {
+    router.push({
+      name: 'discussion_list',
+      query: { related_problem__id: id },
+    });
+    return false;
   } else if (tabName === 'edit') {
     router.push({
       name: 'problem_edit',
@@ -257,6 +263,7 @@ const downloadProblemFile = file => {
           </n-row>
         </n-tab-pane>
         <n-tab-pane name="submission" tab="提交记录" />
+        <n-tab-pane name="discussion" tab="讨论" />
         <n-tab-pane
           name="edit"
           tab="修改题目"

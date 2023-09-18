@@ -4,6 +4,7 @@ import Axios from '@/plugins/axios';
 import { AddOutline } from '@vicons/ionicons5';
 import DiscussionTable from '@/components/DiscussionTable.vue';
 import { useRoute } from 'vue-router';
+import router from '@/router';
 
 const route = useRoute();
 
@@ -46,6 +47,15 @@ const loadData = () => {
 };
 
 loadData();
+
+const createDiscussion = () => {
+  const query = {};
+  if (search.value.related_problem__id)
+    query.related_problem__id = search.value.related_problem__id;
+  else if (search.value.related_contest__id)
+    query.related_contest__id = search.value.related_contest__id;
+  router.push({ name: 'discussion_create', query });
+};
 </script>
 
 <template>
@@ -82,17 +92,16 @@ loadData();
           </n-form-item>
         </n-form>
       </div>
-      <router-link :to="{ name: 'discussion_create' }">
-        <n-button
-          style="float: right; margin-top: 25px; margin-right: 10px"
-          type="primary"
-        >
-          <template #icon>
-            <n-icon :component="AddOutline" />
-          </template>
-          创建讨论
-        </n-button>
-      </router-link>
+      <n-button
+        style="float: right; margin-top: 25px; margin-right: 10px"
+        type="primary"
+        @click="createDiscussion"
+      >
+        <template #icon>
+          <n-icon :component="AddOutline" />
+        </template>
+        创建讨论
+      </n-button>
     </n-layout-content>
     <n-layout-content>
       <DiscussionTable :data="data" :loading="loading" />

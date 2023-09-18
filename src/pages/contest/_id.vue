@@ -45,7 +45,13 @@ const loadData = () => {
 loadData();
 
 const beforeLeave = tabName => {
-  if (tabName === 'edit') {
+  if (tabName === 'discussion') {
+    router.push({
+      name: 'discussion_list',
+      query: { related_contest__id: id },
+    });
+    return false;
+  } else if (tabName === 'edit') {
     router.push({
       name: 'contest_edit',
       params: { id },
@@ -203,6 +209,14 @@ const signUp = () => {
             style="margin-top: 15px"
           />
         </n-tab-pane>
+        <n-tab-pane
+          name="discussion"
+          tab="讨论"
+          :disabled="
+            contestData.start_time <= Date.now() &&
+            Date.now() <= contestData.end_time
+          "
+        />
         <n-tab-pane
           name="edit"
           :tab="'修改' + mode"

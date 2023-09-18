@@ -16,12 +16,12 @@ const discussion = ref({
   content: '',
 });
 
-if (route.params.related_problem) {
+if (route.query.related_problem__id) {
   discussion.value.related_content_type = 'problem';
-  discussion.value.related_content_id = route.params.related_problem;
-} else if (route.params.related_contest) {
+  discussion.value.related_content_id = route.query.related_problem__id;
+} else if (route.query.related_contest__id) {
   discussion.value.related_content_type = 'contest';
-  discussion.value.related_content_id = route.params.related_contest;
+  discussion.value.related_content_id = route.query.related_contest__id;
 }
 
 // if (id) {
