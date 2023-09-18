@@ -76,6 +76,57 @@ const columns = [
     },
   },
   {
+    title: '关联内容',
+    render(row) {
+      if (row.related_problem) {
+        return h(
+          RouterLink,
+          {
+            to: {
+              name: 'problem_detail',
+              params: { id: row.related_problem.id },
+            },
+          },
+          {
+            default: () =>
+              h(
+                NButton,
+                {
+                  text: true,
+                  size: 'small',
+                },
+                {
+                  default: () => row.related_problem.title,
+                }
+              ),
+          }
+        );
+      } else if (row.related_contest) {
+        return h(
+          RouterLink,
+          {
+            to: {
+              name: 'contest_detail',
+              params: { id: row.related_contest.id },
+            },
+          },
+          {
+            default: () =>
+              h(
+                NButton,
+                {
+                  text: true,
+                  size: 'small',
+                },
+                { default: () => row.related_contest.title }
+              ),
+          }
+        );
+      }
+      return '-';
+    },
+  },
+  {
     title: '回复数',
     render(row) {
       return row.reply_count;

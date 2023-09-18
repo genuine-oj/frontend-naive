@@ -79,6 +79,15 @@ const submitReply = () => {
       message.error(err.response.data);
     });
 };
+
+const goto = reply_id => {
+  const element = document.getElementById(`reply-card-${reply_id}`);
+  if (element) {
+    element.scrollIntoView();
+  } else {
+    message.error('找不到原贴');
+  }
+};
 </script>
 
 <template>
@@ -106,10 +115,11 @@ const submitReply = () => {
     class="reply"
     v-for="reply in replies"
     :key="reply.id"
-    :id="`reply${reply.id}`"
+    :id="`reply-card-${reply.id}`"
     embedded
     :segmented="{
       content: 'soft',
+      action: true,
     }"
   >
     <template #header>
@@ -133,11 +143,25 @@ const submitReply = () => {
     </template>
     <MdEditor :content="reply.content" previewOnly />
     <template #footer>
+      <div v-if="reply.reply_to">
+        回复给
+        <router-link
+          :to="{
+            name: 'user_detail',
+            params: { id: reply.reply_to.author.id },
+          }"
+        >
+          <n-button text> @{{ reply.reply_to.author.username }} </n-button>
+        </router-link>
+        ，
+        <n-button text @click="goto(reply.reply_to.id)"> 查看原贴 </n-button>
+      </div>
+    </template>
+    <template #action>
       <n-button-group size="small">
         <n-button @click="replyTo(reply.id)">回复</n-button>
       </n-button-group>
     </template>
-    <!-- <template #action> #action </template> -->
   </n-card>
   <div
     style="display: flex; justify-content: center; margin: 2rem 0"
@@ -181,6 +205,14 @@ const submitReply = () => {
     .n-space {
       display: inline-flex !important;
     }
+  }
+  :deep(.n-card__action) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  :deep(.n-card-header) {
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
 </style>
