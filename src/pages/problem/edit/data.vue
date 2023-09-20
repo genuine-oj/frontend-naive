@@ -2,8 +2,7 @@
 import JSZip from 'jszip';
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-import MdEditor from '@/components/MdEditor.vue';
-import router from '@/router';
+import CodeWithCard from '@/components/CodeWithCard.vue';
 import { useRoute } from 'vue-router';
 import { NButton, NDropdown, NInputNumber, NSpace, NPopover } from 'naive-ui';
 import ShowOrEdit from '@/components/ShowOrEdit';
@@ -711,13 +710,7 @@ const columns = [
       role="dialog"
       aria-modal="true"
     >
-      <n-card class="sample-card">
-        <n-scrollbar x-scrollable>
-          <div class="sample">
-            <n-code :code="modalData.content" />
-          </div>
-        </n-scrollbar>
-      </n-card>
+      <CodeWithCard :code="modalData.content" />
     </n-card>
   </n-modal>
 </template>

@@ -1,11 +1,24 @@
 import axios from 'axios';
 import router from '@/router';
 import store from '@/store';
-import { useRoute } from 'vue-router';
 
 export const Axios = axios.create({
   baseURL: '/api',
 });
+
+Axios.defaults.transformResponse = [
+  (data, headers) => {
+    if (
+      typeof data === 'string' &&
+      headers['content-type'] === 'application/json'
+    ) {
+      try {
+        data = JSON.parse(data);
+      } catch (e) {}
+    }
+    return data;
+  },
+];
 
 Axios.interceptors.request.use(
   async config => {
@@ -22,7 +35,10 @@ Axios.interceptors.request.use(
 );
 
 Axios.interceptors.response.use(
-  response => response.data,
+  response => {
+    console.log(response);
+    return response.data;
+  },
   async error => {
     if (!error.response) {
       window.$message.error(error.message);
