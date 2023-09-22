@@ -30,6 +30,9 @@ const handleQueryChange = () => {
   for (const key in search.value) {
     search.value[key] = route.query[key] ?? '';
   }
+  for (const key in pagination.value) {
+    if (route.query[key]) pagination.value[key] = parseInt(route.query[key]);
+  }
 
   loading.value = true;
   Axios.get('/discussion/', {

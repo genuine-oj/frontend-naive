@@ -24,6 +24,9 @@ const handleQueryChange = () => {
   if (route.name !== 'user_list') return;
 
   if (route.query.search) search.value = route.query.search;
+  for (const key in pagination.value) {
+    if (route.query[key]) pagination.value[key] = parseInt(route.query[key]);
+  }
 
   loading.value = true;
   Axios.get('/user/', {

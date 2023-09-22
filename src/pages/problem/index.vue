@@ -47,6 +47,9 @@ const handleQueryChange = () => {
     }
   }
   search.value.tags = tags;
+  for (const key in pagination.value) {
+    if (route.query[key]) pagination.value[key] = parseInt(route.query[key]);
+  }
 
   loading.value = true;
   Axios.get('/problem/', {
