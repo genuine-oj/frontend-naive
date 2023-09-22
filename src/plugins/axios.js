@@ -36,7 +36,6 @@ Axios.interceptors.request.use(
 
 Axios.interceptors.response.use(
   response => {
-    console.log(response);
     return response.data;
   },
   async error => {

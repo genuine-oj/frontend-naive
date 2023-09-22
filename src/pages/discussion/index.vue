@@ -5,6 +5,7 @@ import { AddOutline } from '@vicons/ionicons5';
 import DiscussionTable from '@/components/DiscussionTable.vue';
 import { useRoute } from 'vue-router';
 import router from '@/router';
+import { _writeSearchToQuery } from '@/plugins/utils';
 
 const route = useRoute();
 
@@ -17,18 +18,19 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   }),
   data = ref([]),
   loading = ref(false);
-watch(
-  () => route.query,
-  () => {
-    if (route.name !== 'discussion_list') return;
-    for (const key in search.value) {
-      search.value[key] = route.query[key] ?? '';
-    }
-    loadData();
-  }
+const writeSearchToQuery = _writeSearchToQuery(
+  search.value,
+  pagination.value,
+  route
 );
 
-const loadData = () => {
+const handleQueryChange = () => {
+  if (route.name !== 'discussion_list') return;
+
+  for (const key in search.value) {
+    search.value[key] = route.query[key] ?? '';
+  }
+
   loading.value = true;
   Axios.get('/discussion/', {
     params: {
@@ -46,7 +48,8 @@ const loadData = () => {
     });
 };
 
-loadData();
+watch(() => route.query, handleQueryChange);
+handleQueryChange();
 
 const createDiscussion = () => {
   const query = {};
@@ -62,33 +65,36 @@ const createDiscussion = () => {
   <n-layout>
     <h1>讨论列表</h1>
     <n-layout-content>
-      <div style="float: left; display: inline-block">
+      <div style="display: inline-block">
         <n-form inline>
           <n-form-item label="标题">
-            <n-input v-model:value="search.search" @keydown.enter="loadData" />
+            <n-input
+              v-model:value="search.search"
+              @keydown.enter="writeSearchToQuery"
+            />
           </n-form-item>
           <n-form-item label="关联题目ID">
             <n-input
               v-model:value="search.related_problem__id"
               type="number"
-              @keydown.enter="loadData"
+              @keydown.enter="writeSearchToQuery"
             />
           </n-form-item>
-          <n-form-item label="关联比赛（题单）ID">
+          <n-form-item label="关联比赛/题单ID">
             <n-input
               v-model:value="search.related_contest__id"
               type="number"
-              @keydown.enter="loadData"
+              @keydown.enter="writeSearchToQuery"
             />
           </n-form-item>
-          <n-form-item label="作者用户名">
+          <n-form-item label="作者用户名称">
             <n-input
               v-model:value="search.author__username"
-              @keydown.enter="loadData"
+              @keydown.enter="writeSearchToQuery"
             />
           </n-form-item>
           <n-form-item>
-            <n-button type="primary" @click="loadData">搜索</n-button>
+            <n-button type="primary" @click="writeSearchToQuery">搜索</n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -115,12 +121,12 @@ const createDiscussion = () => {
           show-size-picker
           show-quick-jumper
           :page-sizes="[10, 20, 50]"
-          @update:page="loadData"
+          @update:page="writeSearchToQuery"
           @update:page-size="
             pageSize => {
               pagination.pageSize = pageSize;
               pagination.page = 1;
-              loadData();
+              writeSearchToQuery();
             }
           "
         />

@@ -12,7 +12,7 @@
 defineProps({
   code: {
     type: String,
-    required: true,
+    default: '',
   },
 });
 </script>

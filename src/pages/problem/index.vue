@@ -7,6 +7,7 @@ import { difficultyOptions } from '@/plugins/consts';
 import ProblemTable from '@/components/ProblemTable.vue';
 import { useRoute } from 'vue-router';
 import { BookmarksOutline, AddOutline } from '@vicons/ionicons5';
+import { _writeSearchToQuery } from '@/plugins/utils';
 
 const route = useRoute();
 
@@ -20,34 +21,41 @@ Axios.get('/problem/tag/').then(res => {
 });
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
-  search = ref(route.query.search),
-  difficulty = ref(route.query.difficulty && parseInt(route.query.difficulty)),
-  tags = ref((route.query.tag && route.query.tag.split(',')) || []),
+  search = ref({
+    search: '',
+    difficulty: null,
+    tags: [],
+  }),
   data = ref([]),
   loading = ref(false);
-
-const getFilterFromPath = () => {
-  search.value = route.query.search;
-  difficulty.value = route.query.difficulty && parseInt(route.query.difficulty);
-  tags.value = (route.query.tag && route.query.tag.split(',')) || [];
-  loadData();
-};
-watch(
-  () => route.query,
-  () => {
-    if (route.name === 'problem_list') getFilterFromPath();
-  }
+const writeSearchToQuery = _writeSearchToQuery(
+  search.value,
+  pagination.value,
+  route
 );
 
-const loadData = () => {
+const handleQueryChange = () => {
+  if (!route.name === 'problem_list') return;
+
+  search.value.search = route.query.search || '';
+  search.value.difficulty =
+    (route.query.difficulty && parseInt(route.query.difficulty)) || null;
+  const tags = [];
+  if (route.query.tags) {
+    for (const tag of route.query.tags.split(',')) {
+      tags.push(parseInt(tag));
+    }
+  }
+  search.value.tags = tags;
+
   loading.value = true;
   Axios.get('/problem/', {
     params: {
       limit: pagination.value.pageSize,
       offset: (pagination.value.page - 1) * pagination.value.pageSize,
-      search: search.value,
-      difficulty: difficulty.value,
-      tags__id: tags.value.join(','),
+      search: search.value.search,
+      difficulty: search.value.difficulty,
+      tags: search.value.tags.join(','),
     },
   })
     .then(res => {
@@ -58,21 +66,26 @@ const loadData = () => {
       loading.value = false;
     });
 };
-loadData();
+
+watch(() => route.query, handleQueryChange);
+handleQueryChange();
 </script>
 
 <template>
   <n-layout>
-    <h1 style="display: inline">题目列表</h1>
+    <h1>题目列表</h1>
     <n-layout-content>
-      <div style="float: left; display: inline-block">
+      <div style="display: inline-block">
         <n-form inline>
-          <n-form-item>
-            <n-input v-model:value="search" @keydown.enter="loadData" />
+          <n-form-item label="题目ID/名称">
+            <n-input
+              v-model:value="search.search"
+              @keydown.enter="writeSearchToQuery"
+            />
           </n-form-item>
-          <n-form-item>
+          <n-form-item label="题目标签">
             <n-select
-              v-model:value="tags"
+              v-model:value="search.tags"
               :options="tagsOptions"
               clearable
               filterable
@@ -83,9 +96,9 @@ loadData();
               :disabled="!tagsOptions.length"
             />
           </n-form-item>
-          <n-form-item>
+          <n-form-item label="题目难度">
             <n-select
-              v-model:value="difficulty"
+              v-model:value="search.difficulty"
               :options="
                 [{ label: '全部', value: null }].concat(difficultyOptions)
               "
@@ -94,7 +107,9 @@ loadData();
             />
           </n-form-item>
           <n-form-item>
-            <n-button type="primary" @click="loadData"> 搜索 </n-button>
+            <n-button type="primary" @click="writeSearchToQuery">
+              搜索
+            </n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -133,12 +148,12 @@ loadData();
           show-size-picker
           show-quick-jumper
           :page-sizes="[10, 20, 50]"
-          @update:page="loadData"
+          @update:page="writeSearchToQuery"
           @update:page-size="
             pageSize => {
               pagination.pageSize = pageSize;
               pagination.page = 1;
-              loadData();
+              writeSearchToQuery();
             }
           "
         />

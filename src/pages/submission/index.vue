@@ -5,30 +5,39 @@ import Axios from '@/plugins/axios';
 import { languageOptions, statusOptions } from '@/plugins/consts';
 import SubmissionTable from '@/components/SubmissionTable.vue';
 import { useRoute } from 'vue-router';
+import { _writeSearchToQuery } from '@/plugins/utils';
 
 const route = useRoute();
 
 const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref({
-    user__username: route.query.user__username ?? '',
-    problem__id: route.query.problem__id ?? '',
-    language: route.query.language ?? null,
-    status: route.query.status ?? null,
+    user__username: '',
+    problem__id: '',
+    language: null,
+    status: null,
   }),
   data = ref([]),
   loading = ref(false);
-watch(
-  () => route.query,
-  () => {
-    if (route.name !== 'submission_list') return;
-    for (const key in search.value) {
-      search.value[key] = route.query[key] ?? '';
-    }
-    loadData();
-  }
+const writeSearchToQuery = _writeSearchToQuery(
+  search.value,
+  pagination.value,
+  route
 );
 
-const loadData = () => {
+const handleQueryChange = () => {
+  if (route.name !== 'submission_list') return;
+
+  for (const key in search.value) {
+    if (route.query[key]) {
+      let val = route.query[key];
+      if (key === 'status') val = parseInt(val);
+      search.value[key] = val;
+    }
+  }
+  for (const key in pagination.value) {
+    if (route.query[key]) pagination.value[key] = parseInt(route.query[key]);
+  }
+
   loading.value = true;
   Axios.get('/submission/', {
     params: {
@@ -46,7 +55,8 @@ const loadData = () => {
     });
 };
 
-loadData();
+watch(() => route.query, handleQueryChange);
+handleQueryChange();
 </script>
 
 <template>
@@ -57,14 +67,14 @@ loadData();
         <n-form-item label="用户名称">
           <n-input
             v-model:value="search.user__username"
-            @keydown.enter="loadData"
+            @keydown.enter="writeSearchToQuery"
           />
         </n-form-item>
         <n-form-item label="题目ID">
           <n-input
             v-model:value="search.problem__id"
             type="number"
-            @keydown.enter="loadData"
+            @keydown.enter="writeSearchToQuery"
           />
         </n-form-item>
         <n-form-item label="语言">
@@ -84,7 +94,7 @@ loadData();
           />
         </n-form-item>
         <n-form-item>
-          <n-button type="primary" @click="loadData">搜索</n-button>
+          <n-button type="primary" @click="writeSearchToQuery">搜索</n-button>
         </n-form-item>
       </n-form>
     </n-layout-content>
@@ -100,12 +110,12 @@ loadData();
           show-size-picker
           show-quick-jumper
           :page-sizes="[10, 20, 50]"
-          @update:page="loadData"
+          @update:page="writeSearchToQuery"
           @update:page-size="
             pageSize => {
               pagination.pageSize = pageSize;
               pagination.page = 1;
-              loadData();
+              writeSearchToQuery();
             }
           "
         />

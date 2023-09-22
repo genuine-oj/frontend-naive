@@ -5,6 +5,7 @@ import store from '@/store';
 import ContestTable from '@/components/ContestTable.vue';
 import { useRoute } from 'vue-router';
 import { AddOutline } from '@vicons/ionicons5';
+import { _writeSearchToQuery } from '@/plugins/utils';
 
 const route = useRoute();
 
@@ -12,17 +13,17 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   search = ref(''),
   data = ref([]),
   loading = ref(false);
+const writeSearchToQuery = () => {
+  const _search = { search: search.value };
+  console.log(_search);
+  _writeSearchToQuery(_search, pagination.value, route)();
+};
 
-watch(
-  () => route.query,
-  () => {
-    if (route.name !== 'contest_list') return;
-    if (route.query.search) search.value = route.query.search;
-    loadData();
-  }
-);
+const handleQueryChange = () => {
+  if (route.name !== 'contest_list') return;
 
-const loadData = () => {
+  if (route.query.search) search.value = route.query.search;
+
   loading.value = true;
   Axios.get('/contest/', {
     params: {
@@ -40,20 +41,24 @@ const loadData = () => {
     });
 };
 
-loadData();
+watch(() => route.query, handleQueryChange);
+handleQueryChange();
 </script>
 
 <template>
   <n-layout>
-    <h1 style="display: inline">比赛&题单列表</h1>
+    <h1>比赛&amp;题单列表</h1>
     <n-layout-content>
-      <div style="float: left; display: inline-block">
+      <div style="display: inline-block">
         <n-form inline>
-          <n-form-item>
-            <n-input v-model:value="search" @keydown.enter="loadData" />
+          <n-form-item label="比赛/题单 ID/名称">
+            <n-input
+              v-model:value="search"
+              @keydown.enter="handleQueryChange"
+            />
           </n-form-item>
           <n-form-item>
-            <n-button type="primary" @click="loadData">搜索</n-button>
+            <n-button type="primary" @click="handleQueryChange">搜索</n-button>
           </n-form-item>
         </n-form>
       </div>
@@ -81,12 +86,12 @@ loadData();
           show-size-picker
           show-quick-jumper
           :page-sizes="[10, 20, 50]"
-          @update:page="loadData"
+          @update:page="writeSearchToQuery"
           @update:page-size="
             pageSize => {
               pagination.pageSize = pageSize;
               pagination.page = 1;
-              loadData();
+              writeSearchToQuery();
             }
           "
         />

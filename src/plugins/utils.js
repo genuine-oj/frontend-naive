@@ -1,3 +1,34 @@
+import router from '@/router';
+
+const _writeSearchToQuery = (search, pagination, route) => {
+  const __writeSearchToQuery = () => {
+    const query = JSON.parse(JSON.stringify(route.query));
+
+    for (const key in search) {
+      if (search[key] || query[key]) {
+        let val = search[key];
+        if (typeof val === 'number') {
+          val = String(val);
+        } else if (Array.isArray(val)) {
+          val = val.join(',');
+        }
+        query[key] = val;
+      }
+    }
+
+    for (const key of ['page', 'pageSize']) {
+      if (pagination[key] || query[key]) query[key] = pagination[key];
+    }
+
+    for (const key in query) {
+      if (!query[key]) delete query[key];
+    }
+
+    router.replace({ query: { ...query } });
+  };
+  return __writeSearchToQuery;
+};
+
 const formatTime = time => {
   if (time > 1000) {
     return `${Math.round(time / 100) / 10}s`;
@@ -15,4 +46,4 @@ const formatSize = size => {
   return `${Math.round(size * 10) / 10}${units[cur]}`;
 };
 
-export { formatTime, formatSize };
+export { _writeSearchToQuery, formatTime, formatSize };

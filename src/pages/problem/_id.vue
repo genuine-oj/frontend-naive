@@ -210,7 +210,7 @@ const downloadProblemFile = file => {
               <h2>文件</h2>
               <n-upload
                 abstract
-                :default-file-list="problemData.files"
+                :default-file-list="problemData.files || []"
                 :show-remove-button="false"
                 show-download-button
                 @download="downloadProblemFile"
@@ -263,7 +263,11 @@ const downloadProblemFile = file => {
           </n-row>
         </n-tab-pane>
         <n-tab-pane name="submission" tab="提交记录" />
-        <n-tab-pane name="discussion" tab="讨论" />
+        <n-tab-pane
+          name="discussion"
+          tab="讨论"
+          :disabled="problemData.hide_discussions"
+        />
         <n-tab-pane
           name="edit"
           tab="修改题目"
