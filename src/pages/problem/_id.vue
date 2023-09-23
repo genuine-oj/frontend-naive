@@ -17,13 +17,18 @@ const id = route.params.id,
   problemData = ref({});
 
 const loadData = () => {
-  Axios.get(`/problem/${id}/`).then(res => {
-    res.files = res.files.map(file => ({
-      name: file,
-      status: 'finished',
-    }));
-    problemData.value = res;
-  });
+  Axios.get(`/problem/${id}/`)
+    .then(res => {
+      res.files = res.files.map(file => ({
+        name: file,
+        status: 'finished',
+      }));
+      problemData.value = res;
+    })
+    .catch(() => {
+      message.error('题目不存在或暂时无法查看！');
+      router.push({ name: 'problem_list' });
+    });
 };
 
 loadData();
@@ -246,7 +251,10 @@ const downloadProblemFile = file => {
                 </div>
                 <div v-if="!config.forceHideSubmissions">
                   <h3>是否隐藏</h3>
-                  <n-switch v-model:value="submitData.is_hidden" size="large" />
+                  <n-switch
+                    v-model:value="submitData._is_hidden"
+                    size="large"
+                  />
                 </div>
                 <n-button
                   type="primary"

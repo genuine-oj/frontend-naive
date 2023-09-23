@@ -25,7 +25,7 @@ const problem = ref({
   hint: '',
   memory_limit: 128,
   time_limit: 1000,
-  is_hidden: false,
+  _is_hidden: false,
   _hide_submissions: false,
   _hide_discussions: false,
   _allow_submit: true,
@@ -205,7 +205,7 @@ const deleteProblem = () => {
         <n-col :span="1"></n-col>
         <n-col :span="4">
           <h3>是否隐藏</h3>
-          <n-switch v-model:value="problem.is_hidden" />
+          <n-switch v-model:value="problem._is_hidden" />
         </n-col>
         <n-col :span="1"></n-col>
         <n-col :span="4">
