@@ -1,22 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-
-import { useMessage } from 'naive-ui';
 import store from '@/store';
 import router from '@/router';
 import { useRoute } from 'vue-router';
+import Captcha from '@/plugins/captcha.vue';
 
 const message = useMessage(),
   route = useRoute();
 
 const form = ref({
-  username: '',
-  password: '',
-  re_password: '',
-});
+    username: '',
+    password: '',
+    re_password: '',
+    captcha: '',
+  }),
+  captchaRef = ref(null);
 
-const register = () => {
+const register = async () => {
   if (!form.value.username || !form.value.password) {
     message.error('用户名或密码不能为空');
     return;
@@ -24,10 +25,9 @@ const register = () => {
     message.error('两次密码不一致');
     return;
   }
-  Axios.post('/user/register/', {
-    username: form.value.username,
-    password: form.value.password,
-  }).then(res => {
+
+  if (!(await captchaRef.value.checkCaptcha())) return;
+  Axios.post('/user/register/', form.value).then(res => {
     message.success('注册成功');
     if (store.getters.loggedIn) {
       router.push({ name: 'user_edit', params: { id: res.id } });
@@ -71,6 +71,11 @@ const register = () => {
           @keydown.enter="register"
         />
       </n-form-item>
+      <Captcha
+        scene="register"
+        v-model:captcha="form.captcha"
+        ref="captchaRef"
+      />
       <n-form-item>
         <n-button @click="register" style="width: 100%"> 注册 </n-button>
       </n-form-item>

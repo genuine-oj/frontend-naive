@@ -47,19 +47,18 @@ Axios.interceptors.response.use(
         '恭喜你找到了开发者写的一个脑残Bug（认真的），请联系开发者，谢谢！'
       );
       return Promise.reject(error.response);
-    } else if (error.response.status === 404) {
-      return Promise.reject(error.response);
     } else if (error.response.status === 403) {
       if (!store.getters.loggedIn) {
-        if (router.currentRoute.value.name !== 'login') {
+        if (!['login', 'register'].includes(router.currentRoute.value.name)) {
           window.$message.warning('请先登录');
           store.commit('logout');
           router.push({
             name: 'login',
             query: { next: router.options.history.location },
           });
+        } else {
+          return Promise.reject(error.response);
         }
-        return;
       }
       if (error.response.data.message) {
         window.$message.error(error.response.data.message);

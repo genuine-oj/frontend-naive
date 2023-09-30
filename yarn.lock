@@ -706,6 +706,13 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hccaptcha-vue@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/hccaptcha-vue/-/hccaptcha-vue-1.0.1.tgz#de801e232a04181449c79224098df7ef88ec1e34"
+  integrity sha512-mEmVP4YBo3/Bw+CcKDrfODl3yVF2UrIDimuyRAUdZpNPrJ+3C5l7GQ9fCEA8xh3vOdg5sLSCbLpDLKIbWfYwxg==
+  dependencies:
+    vue "^3.2.37"
+
 highlight.js@^11.5.0, highlight.js@^11.6.0:
   version "11.8.0"
   resolved "https://registry.npmmirror.com/highlight.js/-/highlight.js-11.8.0.tgz#966518ea83257bae2e7c9a48596231856555bb65"
@@ -989,6 +996,11 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+recaptcha-v3@^1.8.0:
+  version "1.10.0"
+  resolved "https://registry.npmmirror.com/recaptcha-v3/-/recaptcha-v3-1.10.0.tgz#f966b5a0d8021fd2ed85ac4be832f6acb6ec1ed1"
+  integrity sha512-aGTxYSk3FFNKnXeKDbLpgRDRyIHRZNBF5HyaXXAN1Aj4TSyyZvmoAn9CylvpqLV3pYpIQavwc+2rzhNFn5SsLQ==
+
 regenerator-runtime@^0.13.11:
   version "0.13.11"
   resolved "https://registry.npmmirror.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
@@ -1197,6 +1209,13 @@ vue-codemirror@^6.1.1:
     "@codemirror/language" "6.x"
     "@codemirror/state" "6.x"
     "@codemirror/view" "6.x"
+
+vue-recaptcha-v3@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/vue-recaptcha-v3/-/vue-recaptcha-v3-2.0.1.tgz#10b07bbe07881734b9997111cfe3c9a9ca786bdb"
+  integrity sha512-isEDtOfHU4wWRrZZuxciAELtQmPOeEEdicPNa0f1AOyLPy3sCcBEcpFt+FOcO3RQv5unJ3Yn5NlsWtXv9rXqjg==
+  dependencies:
+    recaptcha-v3 "^1.8.0"
 
 vue-router@^4.1.6:
   version "4.2.2"

@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-
-import { useMessage } from 'naive-ui';
+import Captcha from '@/plugins/captcha.vue';
 import store from '@/store';
 import router from '@/router';
 import { useRoute } from 'vue-router';
@@ -11,15 +10,18 @@ const message = useMessage(),
   route = useRoute();
 
 const form = ref({
-  username: '',
-  password: '',
-});
+    username: '',
+    password: '',
+    captcha: '',
+  }),
+  captchaRef = ref(null);
 
-const login = () => {
+const login = async () => {
   if (!form.value.username || !form.value.password) {
     message.error('用户名或密码不能为空');
     return;
   }
+  if (!(await captchaRef.value.checkCaptcha())) return;
   Axios.post('/user/login/', form.value).then(res => {
     store.commit('setUser', res);
     if (route.query.next) {
@@ -51,6 +53,7 @@ const login = () => {
           @keydown.enter="login"
         />
       </n-form-item>
+      <Captcha scene="login" v-model:captcha="form.captcha" ref="captchaRef" />
       <n-form-item>
         <n-button @click="login" style="width: 100%"> 登录 </n-button>
       </n-form-item>

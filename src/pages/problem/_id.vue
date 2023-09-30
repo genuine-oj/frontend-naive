@@ -10,6 +10,7 @@ import { languageOptions } from '@/plugins/consts';
 import CodeMirror from '@/components/CodeMirror.vue';
 import CodeWithCard from '@/components/CodeWithCard.vue';
 import { MemoryOutlined, AccessTimeOutlined } from '@vicons/material';
+import Captcha from '@/plugins/captcha.vue';
 
 const route = useRoute(),
   message = useMessage();
@@ -59,15 +60,18 @@ const beforeLeave = tabName => {
 const submitData = ref({
     source: '',
     language: config.defaultSubmitLanguage,
-    is_hidden: config.forceHideSubmissions,
+    _is_hidden: config.forceHideSubmissions,
+    captcha: '',
   }),
+  captchaRef = ref(null),
   submiting = ref(false);
 
-const submit = () => {
+const submit = async () => {
   if (!submitData.value.source) {
     message.warning('代码不能为空');
     return;
   }
+  if (!(await captchaRef.value.checkCaptcha())) return;
   submiting.value = true;
   Axios.post('/submission/', { problem_id: id, ...submitData.value })
     .then(res => {
@@ -256,6 +260,11 @@ const downloadProblemFile = file => {
                     size="large"
                   />
                 </div>
+                <Captcha
+                  scene="submission"
+                  v-model:captcha="submitData.captcha"
+                  ref="captchaRef"
+                />
                 <n-button
                   type="primary"
                   size="large"

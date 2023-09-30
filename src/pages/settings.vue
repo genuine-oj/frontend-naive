@@ -59,6 +59,38 @@
 
     <n-divider />
 
+    <n-form-item label="启用人机验证" prop="captcha_enabled">
+      <n-switch v-model:value="siteSettingsForm.captcha.enabled" />
+    </n-form-item>
+    <n-form-item label="人机验证服务" name="captcha.type">
+      <n-select
+        v-model:value="siteSettingsForm.captcha.type"
+        :options="captchaTypeOptions"
+        style="min-width: 125px"
+      />
+    </n-form-item>
+    <n-form-item label="客户端密钥" prop="captcha_clientKey">
+      <n-input v-model:value="siteSettingsForm.captcha.clientKey" />
+    </n-form-item>
+    <n-form-item label="服务端密钥" prop="captcha_serverKey">
+      <n-input v-model:value="siteSettingsForm.captcha.serverKey" />
+    </n-form-item>
+    <n-form-item label="验证服务后端URL" prop="captcha_backendUrl">
+      <n-input
+        v-model:value="siteSettingsForm.captcha.backendUrl"
+        placeholder="建议你留空，除非你知道自己在干什么"
+      />
+    </n-form-item>
+    <n-form-item label="人机验证场景" prop="captcha_scenes">
+      <n-transfer
+        v-model:value="siteSettingsForm.captcha.scenes"
+        :options="captchaSceneOptions"
+      />
+    </n-form-item>
+    <p>reCAPTCHA V3类型的验证不会展示可见的验证码，验证会自动完成。</p>
+
+    <n-divider />
+
     <n-form-item label="主题" name="displaySettings_theme">
       <n-select
         v-model:value="siteSettingsForm.displaySettings.theme"
@@ -147,6 +179,16 @@ watch(languages, () => {
     value: item.key,
   }));
 });
+const captchaTypeOptions = [
+  { label: 'reCAPTCHA V3', value: 'recaptcha-v3' },
+  { label: 'HCCAPTCHA', value: 'hccaptcha' },
+];
+const captchaSceneOptions = [
+  { label: '注册', value: 'register' },
+  { label: '登录', value: 'login' },
+  { label: '评测', value: 'submission' },
+  { label: '讨论', value: 'discussion' },
+];
 const themeOptions = [
   { label: '浅色', value: 'light' },
   { label: '深色', value: 'dark' },
