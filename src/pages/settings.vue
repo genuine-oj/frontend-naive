@@ -122,6 +122,7 @@
           </template>
           您确认要重置所有站点设置为默认值吗？
         </n-popconfirm>
+        <n-button @click="refresh"> 清除缓存 </n-button>
       </n-space>
     </n-form-item>
   </n-form>
@@ -169,6 +170,12 @@ const submit = () => {
 const reset = () => {
   Axios.delete('/site_settings/').then(() => {
     message.success('重置成功，请刷新页面');
+  });
+};
+
+const refresh = () => {
+  Axios.patch('/site_settings/').then(() => {
+    message.success('清除缓存成功，请刷新页面');
   });
 };
 
