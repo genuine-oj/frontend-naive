@@ -15,7 +15,7 @@ const store = createStore({
     return {
       user: {},
       displaySettings: {
-        theme: 'dark',
+        theme: 'auto',
         markdownTheme: 'vuepress',
         sentenceApi: 'hitokoto',
         lock: false,
@@ -28,11 +28,6 @@ const store = createStore({
     },
     logout(state) {
       state.user = {};
-    },
-    changeTheme(state) {
-      state.displaySettings.theme =
-        state.displaySettings.theme === 'light' ? 'dark' : 'light';
-      state.displaySettings.lock = true;
     },
     setDisplaySettings(state, data) {
       Object.assign(state.displaySettings, data);
@@ -47,6 +42,15 @@ const store = createStore({
   },
   getters: {
     loggedIn: state => state.user && state.user.id,
+    theme: state => {
+      if (state.displaySettings.theme === 'system') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+      } else {
+        return state.displaySettings.theme;
+      }
+    },
   },
   plugins: [vuexPersistState.plugin],
 });

@@ -144,18 +144,6 @@ const handleUserOptionSelect = key => {
           用户
         </n-button>
       </router-link>
-      <n-button quaternary @click="store.commit('changeTheme')">
-        <template #icon>
-          <n-icon
-            :component="
-              store.state.displaySettings.theme === 'dark'
-                ? SunnyOutline
-                : MoonOutline
-            "
-          />
-        </template>
-        {{ store.state.displaySettings.theme === 'dark' ? '浅色' : '深色' }}
-      </n-button>
     </n-space>
   </div>
   <div style="display: inline; float: right">

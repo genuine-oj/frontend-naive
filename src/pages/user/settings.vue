@@ -79,6 +79,13 @@
       :label-width="80"
       style="max-width: min(100%, 500px)"
     >
+      <n-form-item label="主题" name="theme">
+        <n-select
+          v-model:value="displayForm.theme"
+          :options="themeOptions"
+          style="min-width: 125px"
+        />
+      </n-form-item>
       <n-form-item label="MarkDown 主题" name="markdownTheme">
         <n-select
           v-model:value="displayForm.markdownTheme"
@@ -117,6 +124,11 @@ import store from '@/store';
 import router from '../../router';
 import config from '../../config';
 import { useRoute } from 'vue-router';
+import {
+  themeOptions,
+  markdownThemeOptions,
+  sentenceApiOptions,
+} from '@/plugins/consts';
 
 const route = useRoute(),
   message = useMessage();
@@ -206,20 +218,6 @@ const changePassword = () => {
     router.push({ name: 'login' });
   });
 };
-
-const markdownThemeOptions = [
-  { label: 'default', value: 'default' },
-  { label: 'github', value: 'github' },
-  { label: 'vuepress', value: 'vuepress' },
-  { label: 'mk-cute', value: 'mk-cute' },
-  { label: 'smart-blue', value: 'smart-blue' },
-  { label: 'cyanosis', value: 'cyanosis' },
-  { label: 'arknights', value: 'arknights' },
-];
-const sentenceApiOptions = [
-  { label: '异想之旅亿言', value: 'yxzl' },
-  { label: 'Hitokoto - 一言', value: 'hitokoto' },
-];
 
 const displayForm = ref({
   ...store.state.displaySettings,

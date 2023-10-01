@@ -4,18 +4,20 @@ import { useRoute } from 'vue-router';
 import Axios from '@/plugins/axios';
 import router from '@/router';
 import MdEditor from '@/components/MdEditor.vue';
+import Captcha from '@/plugins/captcha.vue';
 
 const route = useRoute(),
   message = useMessage();
 const id = route.params.id;
 
 const discussion = ref({
-  related_content_type: 'none',
-  related_content_id: null,
-  title: '',
-  content: '',
-});
-
+    related_content_type: 'none',
+    related_content_id: null,
+    title: '',
+    content: '',
+    captcha: '',
+  }),
+  captchaRef = ref(null);
 if (route.query.related_problem__id) {
   discussion.value.related_content_type = 'problem';
   discussion.value.related_content_id = route.query.related_problem__id;
@@ -31,7 +33,7 @@ if (route.query.related_problem__id) {
 // }
 
 const submiting = ref(false);
-const submit = () => {
+const submit = async () => {
   if (!discussion.value.title) {
     message.warning('讨论标题不能为空');
     return;
@@ -42,6 +44,7 @@ const submit = () => {
     message.warning('关联内容ID不能为空');
     return;
   }
+  if (!(await captchaRef.value.checkCaptcha())) return;
   submiting.value = true;
   let req;
   if (id) req = Axios.put(`/discussion/${id}/`, data);
@@ -129,6 +132,14 @@ const deleteDiscussion = () => {
       </n-row>
     </div> -->
   </n-space>
+
+  <n-divider />
+
+  <Captcha
+    scene="discussion"
+    v-model:captcha="discussion.captcha"
+    ref="captchaRef"
+  />
 
   <n-divider />
 

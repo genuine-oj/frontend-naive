@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import ContestTable from '@/components/ContestTable.vue';
 import ProblemTable from '@/components/ProblemTable.vue';
 import MdEditor from '@/components/MdEditor.vue';
+import Captcha from '@/plugins/captcha.vue';
 
 const route = useRoute(),
   message = useMessage();
@@ -46,9 +47,11 @@ const loadReply = () => {
 loadReply();
 
 const newReply = ref({
-  content: '',
-  reply_to: null,
-});
+    content: '',
+    reply_to: null,
+    captcha: '',
+  }),
+  captchaRef = ref(null);
 const replyTo = (reply_id, go = true) => {
   const match = newReply.value.content.match(/^Reply to #\d+\n+/);
   if (match) {
@@ -60,13 +63,13 @@ const replyTo = (reply_id, go = true) => {
     document.getElementById('new-reply').scrollIntoView();
   }
 };
-const submitReply = () => {
+const submitReply = async () => {
   const match = newReply.value.content.match(/^Reply to #(\d+)\n+/);
   if (match) {
     newReply.value.reply_to = parseInt(match[1]);
     newReply.value.content = newReply.value.content.replace(match[0], '');
   }
-
+  if (!(await captchaRef.value.checkCaptcha())) return;
   Axios.post(`/discussion/${id}/reply/`, newReply.value)
     .then(() => {
       message.success('回复成功');
@@ -184,6 +187,11 @@ const goto = reply_id => {
     <p>第一行“Reply to #X”格式的内容会在发布时自动转义和消去。</p>
     <p>暂不支持@用户。</p>
     <MdEditor v-model:content="newReply.content" />
+    <Captcha
+      scene="discussion"
+      v-model:captcha="newReply.captcha"
+      ref="captchaRef"
+    />
     <n-button
       id="new-reply"
       type="primary"

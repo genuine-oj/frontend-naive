@@ -20,20 +20,17 @@ Axios.get('/site_settings/').then(res => {
   store.commit('updateDisplaySettings', res.displaySettings);
 });
 
-Axios.get('/user/info/')
-  .then(res => {
-    store.commit('setUser', res);
-  })
-  .catch(() => {
-    store.commit('logout');
-  });
+Axios.get('/user/info/').then(res => {
+  if (res.id) store.commit('setUser', res);
+  else store.commit('logout');
+});
 </script>
 
 <template>
   <n-config-provider
     :locale="zhCN"
     :date-locale="dateZhCN"
-    :theme="store.state.displaySettings.theme === 'dark' ? darkTheme : null"
+    :theme="store.getters.theme === 'dark' ? darkTheme : null"
     :hljs="hljs"
   >
     <n-global-style />

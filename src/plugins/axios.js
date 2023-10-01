@@ -66,7 +66,10 @@ Axios.interceptors.response.use(
       }
       window.$message.error('身份校验失败');
       return Promise.reject('身份校验失败');
+    } else if (error.response.status === 404) {
+      return Promise.reject(error.response);
     }
+
     const reason =
       error.response.data.message ??
       error.response.data.detail ??

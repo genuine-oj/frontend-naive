@@ -123,6 +123,34 @@ for (const key in difficulty) {
   }
 }
 
+const themeOptions = [
+  { label: '跟随系统', value: 'system' },
+  { label: '浅色', value: 'light' },
+  { label: '深色', value: 'dark' },
+];
+const markdownThemeOptions = [
+  { label: 'default', value: 'default' },
+  { label: 'github', value: 'github' },
+  { label: 'vuepress', value: 'vuepress' },
+  { label: 'mk-cute', value: 'mk-cute' },
+  { label: 'smart-blue', value: 'smart-blue' },
+  { label: 'cyanosis', value: 'cyanosis' },
+  { label: 'arknights', value: 'arknights' },
+];
+const sentenceApiOptions = [
+  { label: '异想之旅亿言', value: 'yxzl' },
+  { label: 'Hitokoto - 一言', value: 'hitokoto' },
+];
+const captchaTypeOptions = [
+  { label: 'reCAPTCHA V3', value: 'recaptcha-v3' },
+  { label: 'HCCAPTCHA', value: 'hccaptcha' },
+];
+const captchaSceneOptions = [
+  { label: '注册', value: 'register' },
+  { label: '登录', value: 'login' },
+  { label: '评测', value: 'submission' },
+  { label: '讨论', value: 'discussion' },
+];
 export {
   judgeStatus,
   languageOptions,
@@ -132,4 +160,9 @@ export {
   difficulty,
   difficultyColor,
   difficultyOptions,
+  themeOptions,
+  markdownThemeOptions,
+  sentenceApiOptions,
+  captchaTypeOptions,
+  captchaSceneOptions,
 };
