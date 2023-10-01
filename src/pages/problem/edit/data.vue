@@ -3,6 +3,7 @@ import JSZip from 'jszip';
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
 import CodeWithCard from '@/components/CodeWithCard.vue';
+import CodeMirror from '@/components/CodeMirror.vue';
 import { useRoute } from 'vue-router';
 import { NButton, NDropdown, NInputNumber, NSpace, NPopover } from 'naive-ui';
 import ShowOrEdit from '@/components/ShowOrEdit';
@@ -282,6 +283,7 @@ const useSubcheck = value => {
     }
     clacAverageScore();
   }
+  data.value.use_spj = false;
 };
 
 const handleCaseSort = key => {
@@ -473,6 +475,7 @@ const columns = [
                     max: data.value.test_case_config.length,
                     style: 'width: 120px; text-align: center',
                     buttonPlacement: 'both',
+                    disabled: !data.value.use_subcheck,
                     onUpdateValue: value => {
                       autoSubcheckCnt.value = value;
                     },
@@ -487,6 +490,7 @@ const columns = [
                         width: '120px',
                       },
                       onClick: autoSubcheck,
+                      disabled: !data.value.use_subcheck,
                     },
                     {
                       default: () => `每 ${autoSubcheckCnt.value} 个点一组`,
@@ -606,10 +610,17 @@ const columns = [
       <n-checkbox
         v-model:checked="data.use_subcheck"
         @update:checked="useSubcheck"
+        :disabled="data.use_spj"
       >
         捆绑测试
       </n-checkbox>
-      <n-checkbox v-model:checked="data.allow_download">
+      <n-checkbox v-model:checked="data.use_spj" :disabled="data.use_subcheck">
+        Special Judge
+      </n-checkbox>
+      <n-checkbox
+        v-model:checked="data.allow_download"
+        @update:checked="() => (data.use_subcheck = false)"
+      >
         允许下载测试点
       </n-checkbox>
     </n-space>
@@ -622,7 +633,7 @@ const columns = [
     />
   </n-space>
 
-  <n-divider v-if="data.use_subcheck" />
+  <n-divider v-if="data.use_subcheck || data.use_spj" />
 
   <n-table v-if="data.use_subcheck" :bordered="false" :single-line="false">
     <thead>
@@ -662,6 +673,13 @@ const columns = [
       </tr>
     </tbody>
   </n-table>
+
+  <CodeMirror
+    v-if="data.use_spj"
+    v-model:code="data.spj_source"
+    language="cpp"
+    placeholder='请粘贴 SPJ Checker 代码...'
+  />
 
   <n-divider />
 

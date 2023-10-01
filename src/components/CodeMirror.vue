@@ -33,7 +33,7 @@ watch(_code, val => emit('update:code', val));
     :tab-size="4"
     :extensions="
       (extensions[language] ?? []).concat(
-        store.state.displaySettings.theme === 'dark' ? [oneDark] : []
+        store.getters.theme === 'dark' ? [oneDark] : []
       )
     "
   />
