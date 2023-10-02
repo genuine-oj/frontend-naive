@@ -15,7 +15,7 @@ const id = route.params.id;
 const data = ref({
     test_case_config: [],
     subcheck_config: [],
-    spj_source: null,
+    spj_source: '',
     delete_cases: [],
     use_subcheck: false,
   }),
@@ -235,7 +235,7 @@ const checkSubcheckSumScore = () => {
 
 const submiting = ref(false);
 const submit = async () => {
-  if (!(data.value.use_subcheck ? checkSubcheckSumScore() : checkSumScore()))
+    if (!(data.value.use_subcheck ? checkSubcheckSumScore() : checkSumScore()))
     return;
   submiting.value = true;
   const formData = new FormData();
@@ -258,6 +258,9 @@ const submit = async () => {
   })
     .then(() => {
       message.success('保存成功');
+    })
+    .catch(() => {
+      message.error('保存失败');
     })
     .finally(() => {
       submiting.value = false;
@@ -678,7 +681,7 @@ const columns = [
     v-if="data.use_spj"
     v-model:code="data.spj_source"
     language="cpp"
-    placeholder='请粘贴 SPJ Checker 代码...'
+    placeholder="请粘贴 SPJ Checker 代码..."
   />
 
   <n-divider />
