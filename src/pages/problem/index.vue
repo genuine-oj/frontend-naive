@@ -116,7 +116,10 @@ handleQueryChange();
           </n-form-item>
         </n-form>
       </div>
-      <router-link :to="{ name: 'tag_edit' }" v-if="store.state.user.is_staff">
+      <router-link
+        :to="{ name: 'tag_edit' }"
+        v-if="store.state.user.permissions.includes('problem')"
+      >
         <n-button style="float: right; margin-top: 25px" type="primary">
           <template #icon>
             <n-icon :component="BookmarksOutline" />
@@ -126,7 +129,7 @@ handleQueryChange();
       </router-link>
       <router-link
         :to="{ name: 'problem_create' }"
-        v-if="store.state.user.is_staff"
+        v-if="store.state.user.permissions.includes('problem')"
       >
         <n-button
           style="float: right; margin-top: 25px; margin-right: 10px"

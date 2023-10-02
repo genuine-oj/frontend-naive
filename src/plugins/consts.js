@@ -151,6 +151,14 @@ const captchaSceneOptions = [
   { label: '评测', value: 'submission' },
   { label: '讨论', value: 'discussion' },
 ];
+const permissionOptions = [
+  { label: '站点设置', value: 'site_setting' },
+  { label: '用户管理', value: 'user' },
+  { label: '题目管理', value: 'problem' },
+  { label: '评测管理', value: 'submission' },
+  { label: '讨论管理', value: 'discussion' },
+  { label: '比赛管理', value: 'contest' },
+];
 export {
   judgeStatus,
   languageOptions,
@@ -165,4 +173,5 @@ export {
   sentenceApiOptions,
   captchaTypeOptions,
   captchaSceneOptions,
+  permissionOptions,
 };

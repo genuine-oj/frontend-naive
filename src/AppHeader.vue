@@ -51,7 +51,7 @@ const userOptions = [
     icon: renderIcon(LogOutOutline),
   },
 ];
-if (store.state.user.is_staff) {
+if (store.state.user.permissions.includes('site_setting')) {
   userOptions.splice(2, 0, {
     label: '站点设置',
     key: 'site_settings',

@@ -67,7 +67,7 @@ handleQueryChange();
       </div>
       <router-link
         :to="{ name: 'contest_create' }"
-        v-if="store.state.user.is_staff"
+        v-if="store.state.user.permissions.includes('contest')"
       >
         <n-button style="float: right; margin-top: 25px" type="primary">
           <template #icon>

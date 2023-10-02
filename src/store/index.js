@@ -13,7 +13,7 @@ const vuexPersistState = new VuexPersistence({
 const store = createStore({
   state() {
     return {
-      user: {},
+      user: { permissions: [] },
       displaySettings: {
         theme: 'auto',
         markdownTheme: 'vuepress',

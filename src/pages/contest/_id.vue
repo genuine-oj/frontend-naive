@@ -179,7 +179,7 @@ const signUp = () => {
             说明：比赛排行榜仅统计比赛持续时间中的提交，每分钟更新一次。上次更新时间：<n-time
               :time="Number(new Date(rankingData.time))"
             />。
-            <n-popover v-if="store.state.user.is_staff">
+            <n-popover v-if="store.state.user.permissions.includes('contest')">
               <template #trigger>
                 <n-button
                   @click="getRankingData(true)"
@@ -191,7 +191,9 @@ const signUp = () => {
               仅管理员可用，将会立即刷新排行榜缓存，该缓存对所有用户生效。
             </n-popover>
           </p>
-          <n-popover v-else-if="store.state.user.is_staff">
+          <n-popover
+            v-else-if="store.state.user.permissions.includes('contest')"
+          >
             <template #trigger>
               <n-button
                 @click="getRankingData(true)"
@@ -220,7 +222,7 @@ const signUp = () => {
         <n-tab-pane
           name="edit"
           :tab="'修改' + mode"
-          v-if="store.state.user.is_staff"
+          v-if="store.state.user.permissions.includes('contest')"
         />
       </n-tabs>
     </n-layout-content>

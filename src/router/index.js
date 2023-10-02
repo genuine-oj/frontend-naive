@@ -31,6 +31,7 @@ const routes = [
       title: '注册',
       cate: 'register',
       requiredAdmin: !config.allowRegister,
+      permission: 'user',
     },
   },
   {
@@ -72,6 +73,7 @@ const routes = [
       cate: 'user',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'user',
     },
   },
   {
@@ -102,6 +104,7 @@ const routes = [
       cate: 'problem',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'problem',
     },
   },
   {
@@ -113,6 +116,7 @@ const routes = [
       cate: 'problem',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'problem',
     },
   },
   {
@@ -124,6 +128,7 @@ const routes = [
       cate: 'problem',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'problem',
     },
   },
   {
@@ -155,6 +160,7 @@ const routes = [
       cate: 'contest',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'contest',
     },
   },
   {
@@ -166,6 +172,7 @@ const routes = [
       cate: 'contest',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'contest',
     },
   },
   {
@@ -226,6 +233,7 @@ const routes = [
       title: '站点设置',
       requiredLogin: true,
       requiredAdmin: true,
+      permission: 'site_setting',
     },
   },
   {
@@ -251,8 +259,11 @@ router.beforeEach((to, from, next) => {
   ) {
     window.$message.warning('请先登录');
     next({ name: 'login', query: { next: to.path } });
-  } else if (to.meta.requiredAdmin && !store.state.user.is_staff) {
-    window.$message.error('该页面需要管理员权限！');
+  } else if (
+    to.meta.requiredAdmin &&
+    !store.state.user.permissions.includes(to.meta.permission)
+  ) {
+    window.$message.error('您没有权限访问该页面');
     NProgress.done();
   } else next();
 });

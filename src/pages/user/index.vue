@@ -66,7 +66,10 @@ handleQueryChange();
           </n-form-item>
         </n-form>
       </div>
-      <router-link :to="{ name: 'register' }" v-if="store.state.user.is_staff">
+      <router-link
+        :to="{ name: 'register' }"
+        v-if="store.state.user.permissions.includes('user')"
+      >
         <n-button style="float: right; margin-top: 25px" type="primary">
           <template #icon>
             <n-icon :component="AddOutline" />

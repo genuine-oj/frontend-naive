@@ -60,7 +60,7 @@ const beforeLeave = tabName => {
 const submitData = ref({
     source: '',
     language: config.defaultSubmitLanguage,
-    _is_hidden: config.forceHideSubmissions,
+    _is_hidden: false,
     captcha: '',
   }),
   captchaRef = ref(null),
@@ -253,7 +253,7 @@ const downloadProblemFile = file => {
                     :options="languageOptions"
                   />
                 </div>
-                <div v-if="!config.forceHideSubmissions">
+                <div>
                   <h3>是否隐藏</h3>
                   <n-switch
                     v-model:value="submitData._is_hidden"
@@ -288,7 +288,7 @@ const downloadProblemFile = file => {
         <n-tab-pane
           name="edit"
           tab="修改题目"
-          v-if="store.state.user.is_staff"
+          v-if="store.state.user.permissions.includes('problem')"
         />
       </n-tabs>
     </n-layout-content>

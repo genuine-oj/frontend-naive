@@ -45,7 +45,7 @@ Axios.get(`/user/${id.value}/`).then(res => {
         </n-statistic>
         <router-link
           :to="{ name: 'user_edit', params: { id } }"
-          v-if="store.state.user.is_staff"
+          v-if="store.state.user.permissions.includes('user')"
         >
           <n-button type="primary" style="margin-top: 10px">管理</n-button>
         </router-link>

@@ -22,8 +22,11 @@
       <n-form-item label="头像" prop="avatar">
         <n-input v-model:value="userInfoForm.avatar" />
       </n-form-item>
-      <n-form-item label="管理员权限" name="is_staff" v-if="id">
-        <n-switch v-model:value="userInfoForm.is_staff" />
+      <n-form-item label="管理员权限" name="permissions" v-if="id">
+        <n-transfer
+          v-model:value="userInfoForm.permissions"
+          :options="permissionOptions"
+        />
       </n-form-item>
       <n-form-item>
         <n-space>
@@ -128,6 +131,7 @@ import {
   themeOptions,
   markdownThemeOptions,
   sentenceApiOptions,
+  permissionOptions,
 } from '@/plugins/consts';
 
 const route = useRoute(),
