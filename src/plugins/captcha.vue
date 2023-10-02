@@ -5,7 +5,7 @@ import { Hccaptcha } from 'hccaptcha-vue';
 
 const message = useMessage();
 let executeRecaptcha, recaptchaLoaded;
-if (config.captcha.type === 'recaptcha-v3') {
+if (config.captcha.enabled && config.captcha.type === 'recaptcha-v3') {
   const RECAPTCHA = useReCaptcha();
   executeRecaptcha = RECAPTCHA.executeRecaptcha;
   recaptchaLoaded = RECAPTCHA.recaptchaLoaded;
