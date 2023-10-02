@@ -144,6 +144,8 @@ import {
   themeOptions,
   markdownThemeOptions,
   sentenceApiOptions,
+  captchaTypeOptions,
+  captchaSceneOptions,
 } from '@/plugins/consts';
 
 const message = useMessage();
@@ -191,5 +193,4 @@ watch(languages, () => {
     value: item.key,
   }));
 });
-
 </script>
