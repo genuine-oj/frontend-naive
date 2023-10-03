@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import Axios from '@/plugins/axios';
 import router from '@/router';
 import MdEditor from '@/components/MdEditor.vue';
-import Captcha from '@/plugins/captcha.vue';
+import Captcha from '../../components/captcha.vue';
 
 const route = useRoute(),
   message = useMessage();

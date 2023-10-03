@@ -1,6 +1,6 @@
 <script setup>
 import AppHeader from './AppHeader.vue';
-import NaiveMessage from './plugins/naiveMessage.vue';
+import NaiveMessage from './components/naiveMessage.vue';
 import { config, setSiteSettings } from './config';
 import { darkTheme, zhCN, dateZhCN } from 'naive-ui';
 import store from './store';

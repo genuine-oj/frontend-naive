@@ -10,7 +10,7 @@ import { languageOptions } from '@/plugins/consts';
 import CodeMirror from '@/components/CodeMirror.vue';
 import CodeWithCard from '@/components/CodeWithCard.vue';
 import { MemoryOutlined, AccessTimeOutlined } from '@vicons/material';
-import Captcha from '@/plugins/captcha.vue';
+import Captcha from '../../components/captcha.vue';
 
 const route = useRoute(),
   message = useMessage();

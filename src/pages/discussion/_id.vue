@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router';
 import ContestTable from '@/components/ContestTable.vue';
 import ProblemTable from '@/components/ProblemTable.vue';
 import MdEditor from '@/components/MdEditor.vue';
-import Captcha from '@/plugins/captcha.vue';
+import Captcha from '../../components/captcha.vue';
 
 const route = useRoute(),
   message = useMessage();

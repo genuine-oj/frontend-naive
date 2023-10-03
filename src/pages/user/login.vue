@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Axios from '@/plugins/axios';
-import Captcha from '@/plugins/captcha.vue';
+import Captcha from '../../components/captcha.vue';
 import store from '@/store';
 import router from '@/router';
 import { useRoute } from 'vue-router';
