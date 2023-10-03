@@ -16,7 +16,6 @@ const pagination = ref({ pageSize: 20, page: 1, count: 0 }),
   loading = ref(false);
 const writeSearchToQuery = () => {
   const _search = { search: search.value };
-  console.log(_search);
   _writeSearchToQuery(_search, pagination.value, route)();
 };
 

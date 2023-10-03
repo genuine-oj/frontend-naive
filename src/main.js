@@ -12,7 +12,7 @@ runAfterConfig(() => {
   if (config.captcha.enabled) {
     switch (config.captcha.type) {
       case 'recaptcha-v3':
-        console.log('Using reCAPTCHA v3');
+        console.log('reCAPTCHA V3 initialized');
         app.use(VueReCaptcha, {
           siteKey: config.captcha.clientKey,
           loaderOptions: {

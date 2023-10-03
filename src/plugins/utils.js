@@ -4,6 +4,7 @@ const _writeSearchToQuery = (search, pagination, route) => {
   const __writeSearchToQuery = () => {
     const query = JSON.parse(JSON.stringify(route.query));
 
+    let flag = false;
     for (const key in search) {
       if (search[key] || query[key]) {
         let val = search[key];
@@ -12,9 +13,14 @@ const _writeSearchToQuery = (search, pagination, route) => {
         } else if (Array.isArray(val)) {
           val = val.join(',');
         }
-        query[key] = val;
+        if (val !== query[key]) {
+          flag = true;
+          query[key] = val;
+        }
       }
     }
+
+    if (flag) pagination.page = 1;
 
     for (const key of ['page', 'pageSize']) {
       if (pagination[key] || query[key]) query[key] = pagination[key];
