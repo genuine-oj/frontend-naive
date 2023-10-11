@@ -13,7 +13,7 @@ const _writeSearchToQuery = (search, pagination, route) => {
         } else if (Array.isArray(val)) {
           val = val.join(',');
         }
-        if (val !== query[key]) {
+        if ((val || query[key]) && val !== query[key]) {
           flag = true;
           query[key] = val;
         }
