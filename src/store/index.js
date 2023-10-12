@@ -1,12 +1,13 @@
 import { createStore } from 'vuex';
 import VuexPersistence from 'vuex-persist';
+import config from '@/config';
 
 const vuexPersistState = new VuexPersistence({
   storage: window.localStorage,
   reducer: state => ({
     user: state.user,
-    theme: state.theme,
     displaySettings: state.displaySettings,
+    lastSubmitLanguage: state.lastSubmitLanguage,
   }),
 });
 
@@ -18,8 +19,10 @@ const store = createStore({
         theme: 'auto',
         markdownTheme: 'vuepress',
         sentenceApi: 'hitokoto',
+        defaultSubmitLanguage: '__last__',
         lock: false,
       },
+      lastSubmitLanguage: config.defaultSubmitLanguage,
     };
   },
   mutations: {
@@ -39,6 +42,9 @@ const store = createStore({
       }
       state.displaySettings.lock = true;
     },
+    setSubmitLanguage(state, data) {
+      state.lastSubmitLanguage = data;
+    },
   },
   getters: {
     loggedIn: state => state.user && state.user.id,
@@ -50,6 +56,11 @@ const store = createStore({
       } else {
         return state.displaySettings.theme;
       }
+    },
+    defaultSubmitLanguage: state => {
+      return state.displaySettings.defaultSubmitLanguage === '__last__'
+        ? state.lastSubmitLanguage
+        : state.displaySettings.defaultSubmitLanguage;
     },
   },
   plugins: [vuexPersistState.plugin],

@@ -103,6 +103,22 @@
           style="min-width: 125px"
         />
       </n-form-item>
+      <n-form-item label="默认提交语言" name="defaultSubmitLanguage">
+        <n-select
+          v-model:value="displayForm.defaultSubmitLanguage"
+          :options="
+            [
+              {
+                label: `跟随上次提交（${
+                  config.languages[store.state.lastSubmitLanguage]
+                }）`,
+                value: '__last__',
+              },
+            ].concat(languageOptions)
+          "
+          style="min-width: 125px"
+        />
+      </n-form-item>
       <n-form-item>
         <n-space>
           <n-button type="primary" @click="changeDisplaySettings">
@@ -132,6 +148,7 @@ import {
   markdownThemeOptions,
   sentenceApiOptions,
   permissionOptions,
+  languageOptions,
 } from '@/plugins/consts';
 
 const route = useRoute(),

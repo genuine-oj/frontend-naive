@@ -59,7 +59,7 @@ const beforeLeave = tabName => {
 
 const submitData = ref({
     source: '',
-    language: config.defaultSubmitLanguage,
+    language: store.getters.defaultSubmitLanguage,
     _is_hidden: false,
     captcha: '',
   }),
@@ -75,6 +75,7 @@ const submit = async () => {
   submiting.value = true;
   Axios.post('/submission/', { problem_id: id, ...submitData.value })
     .then(res => {
+      store.commit('setSubmitLanguage', submitData.value.language);
       router.push({ name: 'submission_detail', params: { id: res.id } });
     })
     .finally(() => {
