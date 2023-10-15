@@ -23,9 +23,6 @@
 
     <n-divider />
 
-    <p style="font-weight: bold">
-      该分区中的设置会在保存后立即对前端生效，但后端接口的权限须在重启服务端方可生效。
-    </p>
     <n-form-item label="允许注册" prop="allowRegister">
       <n-switch v-model:value="siteSettingsForm.allowRegister" />
     </n-form-item>
