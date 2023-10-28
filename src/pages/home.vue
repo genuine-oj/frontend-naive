@@ -113,12 +113,14 @@ Axios.get('/discussion/', {
     display:store.getters.loggedIn?'block':'none',
   }">
     <div style="display: flex;">
-      <div style="width: 76%;">
-        <h2>最近的比赛&题单</h2>
-        <ContestTable :data="contest_data" />
-      </div>
+      <n-card>
+        <div>
+          <h2>最近的比赛&题单</h2>
+          <ContestTable :data="contest_data" />
+        </div>
+      </n-card>
       <div style="width: 30%;margin-left: 10px;">
-        <n-card style="width: 100%;" content-style="padding: 0px;">
+        <n-card style="width: 100%;" content-style="padding: 42px;">
           <div :style="{
             display: 'flex',
             alignItems: 'center',
@@ -127,7 +129,7 @@ Axios.get('/discussion/', {
             transition: 'all 0.5s',
             opacity: !loadingYiyan ? 1 : 0,
           }" @click="getYiyan">
-            <p style="text-align: center">
+            <p style="white-space: break-spaces;text-align: center;">
               <n-gradient-text :type="['primary', 'info', 'danger', 'warning', 'success'][
                 parseInt((Math.random() * 1000) % 5)
                 ]
@@ -149,16 +151,20 @@ Axios.get('/discussion/', {
       </div>
     </div>
     <div style="display: flex;">
-      <div style="width: 100%;">
-        <h2>最近的讨论</h2>
-        <DiscussionTable :data="discussion_data" />
-      </div>
+      <n-card style="margin-top: 10px;">
+        <div style="width: 100%;">
+          <h2>最近的讨论</h2>
+          <DiscussionTable :data="discussion_data" />
+        </div>
+      </n-card>
     </div>
     <div style="display: flex;">
-      <div style="width: 100%;">
-        <h2>我最近的提交</h2>
-        <SubmissionTable :data="submission_data" />
-      </div>
+      <n-card style="margin-top: 10px;">
+        <div style="width: 100%;">
+          <h2>我最近的提交</h2>
+          <SubmissionTable :data="submission_data" />
+        </div>
+      </n-card>
     </div>
   </n-layout-content>
 </template>
