@@ -254,7 +254,7 @@ NProgress.configure({
 router.beforeEach((to, from, next) => {
   NProgress.start();
   if (
-    !['login', 'register'].includes(to.name) &&
+    !['home', 'login', 'register'].includes(to.name) &&
     !store.getters.loggedIn
   ) {
     window.$message.warning('请先登录');

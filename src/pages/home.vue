@@ -43,6 +43,7 @@ Axios.get('/contest/', {
   params: {
     limit: 3,
     offset: 0,
+    user__username: store.state.user.username,
   },
 }).then(res => {
   contest_data.value = res.results;
@@ -64,6 +65,7 @@ Axios.get('/discussion/', {
   params: {
     limit: 5,
     offset: 0,
+    user__username: store.state.user.username,
   },
 }).then(res => {
   discussion_data.value = res.results;
@@ -71,7 +73,45 @@ Axios.get('/discussion/', {
 </script>
 
 <template>
-  <n-layout-content>
+  <n-layout-content :style="{
+    display:store.getters.loggedIn?'none':'block',
+  }">
+    <div
+      :style="{
+        height: 'calc(100vh - 250px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        userSelect: 'none',
+        transition: 'all 0.5s',
+        opacity: !loadingYiyan ? 1 : 0,
+      }"
+      @click="getYiyan"
+    >
+      <h1 style="text-align: center">
+        <n-gradient-text
+          :type="
+            ['primary', 'info', 'danger', 'warning', 'success'][
+              parseInt((Math.random() * 1000) % 5)
+            ]
+          "
+        >
+          <div style="letter-spacing: 2px; font-weight: 600">
+            {{ yiyan.content }}
+          </div>
+          <div
+            v-show="yiyan.from_show"
+            style="margin-top: 50px; letter-spacing: 2px"
+          >
+            - 「 {{ yiyan.from_show }} 」
+          </div>
+        </n-gradient-text>
+      </h1>
+    </div>
+  </n-layout-content>
+  <n-layout-content :style="{
+    display:store.getters.loggedIn?'block':'none',
+  }">
     <div style="display: flex;">
       <div style="width: 76%;">
         <h2>最近的比赛&题单</h2>
