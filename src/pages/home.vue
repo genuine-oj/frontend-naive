@@ -12,6 +12,7 @@ const getYiyan = async () => {
   let res;
   if (store.state.displaySettings.sentenceApi === 'hitokoto') {
     res = await Axios.get('https://v1.hitokoto.cn/?encode=json').then(res => {
+      res = JSON.parse(res.data);
       res.provenance = res.from;
       res.author = res.from_who;
       res.content = res.hitokoto;

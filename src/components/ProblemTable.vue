@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import router from '@/router';
 import store from '@/store';
-import { NButton, NIcon, NTag } from 'naive-ui';
+import { NButton, NIcon } from 'naive-ui';
 import { CheckCircleTwotone } from '@vicons/antd';
 import { difficulty, difficultyColor } from '@/plugins/consts';
 import { RouterLink } from 'vue-router';
