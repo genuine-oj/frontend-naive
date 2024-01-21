@@ -10,7 +10,7 @@ const getYiyan = async () => {
   const time = Date.now();
 
   let res;
-  if (1 || store.state.displaySettings.sentenceApi === 'hitokoto') {
+  if (store.state.displaySettings.sentenceApi === 'hitokoto') {
     res = await Axios.get('https://v1.hitokoto.cn/?encode=json').then(res => {
       res = JSON.parse(res);
       res.provenance = res.from;
