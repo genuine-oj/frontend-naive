@@ -10,9 +10,9 @@ const getYiyan = async () => {
   const time = Date.now();
 
   let res;
-  if (store.state.displaySettings.sentenceApi === 'hitokoto') {
+  if (1 || store.state.displaySettings.sentenceApi === 'hitokoto') {
     res = await Axios.get('https://v1.hitokoto.cn/?encode=json').then(res => {
-      res = JSON.parse(res.data);
+      res = JSON.parse(res);
       res.provenance = res.from;
       res.author = res.from_who;
       res.content = res.hitokoto;
@@ -37,33 +37,24 @@ getYiyan();
 
 <template>
   <n-layout-content>
-    <div
-      :style="{
-        height: 'calc(100vh - 250px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        userSelect: 'none',
-        transition: 'all 0.5s',
-        opacity: !loadingYiyan ? 1 : 0,
-      }"
-      @click="getYiyan"
-    >
+    <div :style="{
+      height: 'calc(100vh - 250px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      userSelect: 'none',
+      transition: 'all 0.5s',
+      opacity: !loadingYiyan ? 1 : 0,
+    }" @click="getYiyan">
       <h1 style="text-align: center">
-        <n-gradient-text
-          :type="
-            ['primary', 'info', 'danger', 'warning', 'success'][
-              parseInt((Math.random() * 1000) % 5)
-            ]
-          "
-        >
+        <n-gradient-text :type="['primary', 'info', 'danger', 'warning', 'success'][
+          parseInt((Math.random() * 1000) % 5)
+          ]
+          ">
           <div style="letter-spacing: 2px; font-weight: 600">
             {{ yiyan.content }}
           </div>
-          <div
-            v-show="yiyan.from_show"
-            style="margin-top: 50px; letter-spacing: 2px"
-          >
+          <div v-show="yiyan.from_show" style="margin-top: 50px; letter-spacing: 2px">
             - 「 {{ yiyan.from_show }} 」
           </div>
         </n-gradient-text>
