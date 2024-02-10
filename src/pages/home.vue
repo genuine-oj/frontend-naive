@@ -17,6 +17,7 @@ const getYiyan = async () => {
   let res;
   if (store.state.displaySettings.sentenceApi === 'hitokoto') {
     res = await Axios.get('https://v1.hitokoto.cn/?encode=json').then(res => {
+      res = JSON.parse(res);
       res.provenance = res.from;
       res.author = res.from_who;
       res.content = res.hitokoto;
@@ -89,20 +90,14 @@ Axios.get('/discussion/', {
       @click="getYiyan"
     >
       <h1 style="text-align: center">
-        <n-gradient-text
-          :type="
-            ['primary', 'info', 'danger', 'warning', 'success'][
-              parseInt((Math.random() * 1000) % 5)
-            ]
-          "
-        >
+        <n-gradient-text :type="['primary', 'info', 'danger', 'warning', 'success'][
+          parseInt((Math.random() * 1000) % 5)
+          ]
+          ">
           <div style="letter-spacing: 2px; font-weight: 600">
             {{ yiyan.content }}
           </div>
-          <div
-            v-show="yiyan.from_show"
-            style="margin-top: 50px; letter-spacing: 2px"
-          >
+          <div v-show="yiyan.from_show" style="margin-top: 50px; letter-spacing: 2px">
             - 「 {{ yiyan.from_show }} 」
           </div>
         </n-gradient-text>

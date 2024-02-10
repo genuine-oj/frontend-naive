@@ -20,20 +20,6 @@ Axios.defaults.transformResponse = [
   },
 ];
 
-Axios.interceptors.request.use(
-  async config => {
-    if (config.url.indexOf('http') !== 0) {
-      if (store.state.jwt) {
-        config.headers.Authorization = store.state.jwt;
-      }
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
-
 Axios.interceptors.response.use(
   response => {
     return response.data;
